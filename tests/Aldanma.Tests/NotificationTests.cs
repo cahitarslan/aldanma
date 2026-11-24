@@ -43,7 +43,7 @@ public class NotificationTests(ApiFactory factory) : IClassFixture<ApiFactory>
             .UseSetting("Aldanma:Notify:ResendApiKey", "re_test")
             .UseSetting("Aldanma:Notify:From", "Aldanma <aldanma@mail.example.com>")
             .UseSetting("Aldanma:Notify:To", "owner@example.com")
-            .UseSetting("Aldanma:Notify:BatchDelaySeconds", "1")
+            .UseSetting("Aldanma:Notify:BatchDelaySeconds", "3")
             .UseSetting("Aldanma:Notify:MinIntervalSeconds", minIntervalSeconds.ToString())
             .ConfigureServices(s =>
             {
@@ -89,7 +89,7 @@ public class NotificationTests(ApiFactory factory) : IClassFixture<ApiFactory>
         Assert.Equal(HttpStatusCode.Created, (await From(app, "198.18.80.3").PostAsJsonAsync("/api/reports", new { inputs = new[] { "0532 888 77 67" }, category = "job", channel = "sms" })).StatusCode);
 
         Assert.True(await WaitFor(() => !sender.Sent.IsEmpty), "a mail should be sent");
-        await Task.Delay(1500); // anything more would be a second mail inside the throttle window
+        await Task.Delay(3500); // anything more would be a second mail inside the throttle window
         var mail = Assert.Single(sender.Sent);
         Assert.Equal("Aldanma: 1 yeni itiraz, 2 yeni ihbar", mail.Subject);
         Assert.Contains("Açık itiraz: 1", mail.Text);

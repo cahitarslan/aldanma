@@ -76,6 +76,7 @@ builder.Services.AddHttpClient<UsomClient>(c =>
     c.Timeout = TimeSpan.FromMinutes(2);
     c.DefaultRequestHeaders.UserAgent.ParseAdd("Aldanma/0.5 (+https://github.com/cahitarslan/aldanma)");
 });
+builder.Services.AddSingleton<BlocklistImportStatus>();
 builder.Services.AddHostedService<UsomFeedService>();
 builder.Services.AddSingleton<ModerationNotifier>();
 builder.Services.AddSingleton<IModerationNotifier>(sp => sp.GetRequiredService<ModerationNotifier>());

@@ -1,5 +1,7 @@
 using System.Net;
+using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -11,7 +13,11 @@ namespace Aldanma.Tests;
 
 public class UsomClientTests
 {
-    /// <summary>Serves the paged USOM API from memory: two domain pages and one URL page.</summary>
+    /// <summary>
+    /// Serves the paged USOM API from memory the way the live one behaves: the page query is 1-based, the page field
+    /// 0-based, and a page past the end repeats the last page. Domains: two pages (the second repeats id 2, as when
+    /// new entries push older ones down during a download). URLs: one page.
+    /// </summary>
     private sealed class FakeUsom(bool html = false) : HttpMessageHandler
     {
         public List<string> Requests { get; } = [];
@@ -23,19 +29,19 @@ public class UsomClientTests
             if (html) return Task.FromResult(Respond("<!DOCTYPE html><html><body>Swagger</body></html>", "text/html"));
             var json = url switch
             {
-                _ when url.Contains("type=domain") && url.Contains("page=0") =>
-                    """{"totalCount":3,"count":2,"models":[{"url":"kargo-takip-ptt.xyz","type":"domain"},{"url":"odeme-iade.top","type":"domain"}],"page":0,"pageCount":2}""",
-                _ when url.Contains("type=domain") && url.Contains("page=1") =>
-                    """{"totalCount":3,"count":1,"models":[{"url":"e-devlet-iade.click","type":"domain"}],"page":1,"pageCount":2}""",
+                _ when url.Contains("type=domain") && url.Contains("page=1&") =>
+                    """{"totalCount":3,"count":2,"models":[{"id":3,"url":"kargo-takip-ptt.xyz"},{"id":2,"url":"odeme-iade.top"}],"page":0,"pageCount":2}""",
+                _ when url.Contains("type=domain") =>
+                    """{"totalCount":3,"count":2,"models":[{"id":2,"url":"odeme-iade.top"},{"id":1,"url":"e-devlet-iade.click"}],"page":1,"pageCount":2}""",
                 _ when url.Contains("type=url") =>
-                    """{"totalCount":1,"count":1,"models":[{"url":"https://banka-giris.example.top/login","type":"url"}],"page":0,"pageCount":1}""",
+                    """{"totalCount":1,"count":1,"models":[{"id":9,"url":"https://banka-giris.example.top/login"}],"page":0,"pageCount":1}""",
                 _ => """{"message":"unexpected"}""",
             };
-            return Task.FromResult(Respond(json, "application/json"));
+            return Task.FromResult(Respond(json, "application/json; charset=UTF-8"));
         }
 
         private static HttpResponseMessage Respond(string body, string mediaType) =>
-            new(HttpStatusCode.OK) { Content = new StringContent(body, Encoding.UTF8, mediaType) };
+            new(HttpStatusCode.OK) { Content = new StringContent(body, Encoding.UTF8) { Headers = { ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse(mediaType) } } };
     }
 
     private static UsomClient Client(FakeUsom handler) => new(
@@ -43,45 +49,105 @@ public class UsomClientTests
         Options.Create(new AldanmaOptions { Usom = new UsomOptions { PageSize = 2, PageDelayMilliseconds = 0 } }),
         NullLogger<UsomClient>.Instance);
 
+    private static BlocklistImportStatus Status() => new(TimeProvider.System);
+
     [Fact]
-    public async Task Reads_every_page_of_every_type()
+    public async Task Reads_every_page_of_every_type_once_from_page_1()
     {
         var handler = new FakeUsom();
-        var entries = await Client(handler).FetchAllAsync(CancellationToken.None);
+        var status = Status();
+        status.Start(BlocklistImportStatus.Full);
+        var entries = await Client(handler).FetchAsync(since: null, status, CancellationToken.None);
 
         Assert.Equal(["kargo-takip-ptt.xyz", "odeme-iade.top", "e-devlet-iade.click", "https://banka-giris.example.top/login"], entries);
         Assert.Equal(3, handler.Requests.Count);
-        Assert.All(handler.Requests, r => Assert.Contains("per-page=2", r));
-        Assert.StartsWith("https://siberguvenlik.gov.tr/api/address/index?", handler.Requests[0]);
+        Assert.Contains("page=1&", handler.Requests[0]);
+        Assert.All(handler.Requests, r => Assert.DoesNotContain("page=0", r));
+        Assert.All(handler.Requests, r => Assert.DoesNotContain("date_gte", r));
+        var s = status.Snapshot();
+        Assert.Equal((3, 3, 4), (s.PagesDone, s.PagesTotal, s.ItemsSoFar));
+    }
+
+    [Fact]
+    public async Task A_refresh_asks_only_for_entries_since_a_day()
+    {
+        var handler = new FakeUsom();
+        await Client(handler).FetchAsync(new DateOnly(2026, 11, 22), Status(), CancellationToken.None);
+        Assert.All(handler.Requests, r => Assert.Contains("date_gte=2026-11-22", r));
     }
 
     [Fact]
     public async Task An_html_page_instead_of_the_api_is_an_error()
     {
-        var e = await Assert.ThrowsAsync<UsomFeedException>(() => Client(new FakeUsom(html: true)).FetchAllAsync(CancellationToken.None));
+        var e = await Assert.ThrowsAsync<UsomFeedException>(() => Client(new FakeUsom(html: true)).FetchAsync(null, Status(), CancellationToken.None));
         Assert.Contains("instead of JSON", e.Message);
     }
 
     [Fact]
     public void The_moved_plain_text_list_is_no_longer_the_default() =>
         Assert.DoesNotContain("url-list.txt", new UsomOptions().Url);
+
+    [Fact]
+    public void Status_estimates_the_time_left_and_hides_internals_on_failure()
+    {
+        var status = Status();
+        status.Start(BlocklistImportStatus.Full);
+        status.AddPages(50);
+        status.PageDone(9999);
+        var running = status.Snapshot();
+        Assert.Equal(BlocklistImportStatus.Running, running.State);
+        Assert.NotNull(running.SecondsRemaining);
+
+        status.Fail("download failed");
+        var failed = status.Snapshot();
+        Assert.Equal((BlocklistImportStatus.Failed, "download failed"), (failed.State, failed.LastError));
+        Assert.Null(failed.SecondsRemaining);
+    }
 }
 
 public class BlocklistImportTests(ApiFactory factory) : IClassFixture<ApiFactory>
 {
     [DatabaseFact]
-    public async Task A_download_with_no_usable_entries_fails_instead_of_importing_nothing()
+    public async Task First_import_is_full_later_ones_refresh_and_never_remove()
     {
         await using var scope = factory.Services.CreateAsyncScope();
         var importer = scope.ServiceProvider.GetRequiredService<BlocklistImporter>();
+        var week = TimeSpan.FromDays(7);
+        int Active() => factory.WithDb(db => db.BlocklistEntries.CountAsync(b => b.Source == "plan-test" && b.RemovedAt == null)).Result;
 
+        // Nothing stored yet: a full import. An HTML page is refused rather than imported as nothing.
+        Assert.True((await importer.PlanAsync("plan-test", week, CancellationToken.None)).Full);
         var e = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            importer.ImportAsync("usom", "<!DOCTYPE html>\n<html lang=\"en\">\n<title>Swagger</title>\n</html>\n", CancellationToken.None));
+            importer.ImportAsync("plan-test", "<!DOCTYPE html>\n<html lang=\"en\">\n<title>Swagger</title>\n</html>\n", CancellationToken.None));
         Assert.Contains("no usable entries", e.Message);
 
-        var result = await importer.ImportAsync("usom", ["odgiris.com", "https://banka-giris.example.top/login", "not a domain"], CancellationToken.None);
-        Assert.Equal(2, result.Total);
-        Assert.Equal(1, result.Skipped);
-        Assert.Equal(2, await factory.WithDb(db => db.BlocklistEntries.CountAsync(b => b.Source == "usom" && b.RemovedAt == null)));
+        var full = await importer.ImportAsync("plan-test", ["odgiris.com", "https://banka-giris.example.top/login", "not a domain"], full: true, CancellationToken.None);
+        Assert.Equal((2, 2, 1), (full.Total, full.Added, full.Skipped));
+
+        // Stored list, recent full import: a refresh from two days before the last import.
+        var plan = await importer.PlanAsync("plan-test", week, CancellationToken.None);
+        Assert.False(plan.Full);
+        Assert.Equal(DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-2)), plan.Since);
+
+        // A refresh adds and removes nothing that is missing from it; an empty refresh is fine.
+        var refresh = await importer.ImportAsync("plan-test", ["yeni-kargo-iade.top"], full: false, CancellationToken.None);
+        Assert.Equal((1, 0), (refresh.Added, refresh.Removed));
+        Assert.Equal(0, (await importer.ImportAsync("plan-test", [], full: false, CancellationToken.None)).Total);
+        Assert.Equal(3, Active());
+
+        // Once the full import is older than the resync period, the next one is full again.
+        Assert.True((await importer.PlanAsync("plan-test", TimeSpan.Zero, CancellationToken.None)).Full);
+    }
+
+    [DatabaseFact]
+    public async Task Meta_shows_the_import_progress()
+    {
+        factory.Services.GetRequiredService<BlocklistImportStatus>().Start(BlocklistImportStatus.Incremental);
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Add("CF-Connecting-IP", "198.51.100.77");
+        var meta = await client.GetFromJsonAsync<JsonElement>("/api/meta");
+        var import = meta.GetProperty("blocklistImport");
+        Assert.Equal("running", import.GetProperty("state").GetString());
+        Assert.Equal("incremental", import.GetProperty("mode").GetString());
     }
 }

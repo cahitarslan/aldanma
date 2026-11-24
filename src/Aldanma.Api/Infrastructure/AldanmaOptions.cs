@@ -116,9 +116,13 @@ public sealed class UsomOptions
     public int MaxPages { get; set; } = 200;
     /// <summary>Pause between page requests, to stay polite to a public service.</summary>
     public int PageDelayMilliseconds { get; set; } = 500;
-    public int IntervalHours { get; set; } = 12;
+    /// <summary>How often to ask for new entries; a refresh is usually one page.</summary>
+    public int IntervalHours { get; set; } = 6;
+    /// <summary>How often to read the whole list again, which also catches entries USOM removed.</summary>
+    public int FullSyncDays { get; set; } = 7;
 
     public bool IsValid() =>
         Uri.TryCreate(Url, UriKind.Absolute, out var u) && u.Scheme == Uri.UriSchemeHttps && Types.Length > 0
-        && PageSize is >= 1 and <= 9999 && MaxPages is >= 1 and <= 10_000 && PageDelayMilliseconds is >= 0 and <= 10_000;
+        && PageSize is >= 1 and <= 9999 && MaxPages is >= 1 and <= 10_000 && PageDelayMilliseconds is >= 0 and <= 10_000
+        && IntervalHours is >= 1 and <= 168 && FullSyncDays is >= 1 and <= 90;
 }
