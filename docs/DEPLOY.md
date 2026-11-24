@@ -113,3 +113,10 @@ Watch `aldanma.rate_limited` and `aldanma.rdap.skipped` in the metrics: a sustai
   `aldanma.rate_limited`, `aldanma.blocklist.imports`) go to `OTEL_EXPORTER_OTLP_ENDPOINT` when it is set.
 - `GET /api/meta` shows `blocklistCount` > 0 about 20 seconds after the first start (USOM import).
 - Check that a lookup from the site works and that reports need the Turnstile check.
+
+## Updating the live site
+
+- Front end: Cloudflare Workers Builds rebuilds and redeploys the site automatically on every push to `main`.
+  If the Worker's GitHub connection breaks, pushes are ignored silently; push a new commit once it is fixed.
+- API: Coolify currently redeploys only when a deploy is started by hand in the Coolify panel.
+  Automatic deploys through a GitHub webhook are planned.
