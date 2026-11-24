@@ -137,7 +137,7 @@ ALDANMA_TEST_DATABASE="Host=localhost;Username=aldanma;Password=dev-password" do
 | Bütün uç noktalar birlikte | Dakikada 120 istek, 30'luk ani yük |
 | `/api/check`, `/api/lookup` | Dakikada 30 |
 | `/api/reports` | Saatte 10 |
-| `/api/disputes` | Saatte 3 |
+| `/api/disputes` | Saatte 5 |
 | `/api/feedback` | Saatte 30 |
 | `/api/submissions` | Saatte 5 |
 | `/api/admin/*` | Dakikada 60 |

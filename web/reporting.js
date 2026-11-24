@@ -1,7 +1,11 @@
 // Report and dispute forms. Both need a server; without one the site runs in message-only mode and hides them.
 import { $, el } from './dom.js';
 import { callApi } from './lookup.js';
-import { humanCheck, humanToken } from './human-check.js';
+import { humanCheck, humanToken, humanPending, resetHumanCheck, HUMAN_PENDING } from './human-check.js';
+
+const MIN_REASON = 20;
+// Loose on purpose: the server does the real check. This only catches an empty or obviously wrong address.
+const looksLikeEmail = (s) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
 
 function radios(containerId, name, options, checkedFirst) {
   const box = $(containerId);
@@ -45,18 +49,20 @@ export function initReporting({ api, turnstileKey, identifierRules, onReported }
     const category = document.querySelector('input[name=category]:checked')?.value;
     const channel = document.querySelector('input[name=channel]:checked')?.value;
     const loss = document.querySelector('input[name=loss]:checked')?.value || 'none';
-    const problem = inputs.length === 0 ? 'En az bir numara, IBAN ya da adres seç.' : !category ? '"Ne oldu?" sorusunu cevapla.' : !channel ? 'Nereden iletişime geçtiklerini seç.' : null;
+    const box = $('report-turnstile');
+    const problem = inputs.length === 0 ? 'En az bir numara, IBAN ya da adres seç.' : !category ? '"Ne oldu?" sorusunu cevapla.' : !channel ? 'Nereden iletişime geçtiklerini seç.'
+      : humanPending(box, turnstileKey) ? HUMAN_PENDING : null;
     if (problem) { err.textContent = problem; err.hidden = false; return; }
 
     const btn = $('report-submit');
     btn.disabled = true;
-    const res = await callApi(api, '/api/reports', { inputs, category, channel, loss, occurredOn: $('report-month').value || null, humanToken: humanToken($('report-turnstile')) });
+    const res = await callApi(api, '/api/reports', { inputs, category, channel, loss, occurredOn: $('report-month').value || null, humanToken: humanToken(box) });
     btn.disabled = false;
+    resetHumanCheck(box);
     if (res.ok) {
       const done = $('report-done');
       done.textContent = `Teşekkürler. İhbarın kaydedildi (${res.data.accepted.join(', ')}). Bir sonraki kişi bu kaydı sorduğunda uyarı görecek.`;
       done.hidden = false;
-      if (window.turnstile) window.turnstile.reset();
       onReported();
     } else {
       err.textContent = res.data?.error || 'İhbar gönderilemedi. Bağlantını kontrol edip tekrar dene.';
@@ -69,10 +75,22 @@ export function initReporting({ api, turnstileKey, identifierRules, onReported }
     e.preventDefault();
     const err = $('dispute-error');
     err.hidden = true;
-    const res = await callApi(api, '/api/disputes', {
-      input: $('dispute-input').value.trim(), contact: $('dispute-contact').value.trim(), reason: $('dispute-reason').value.trim(),
-      humanToken: humanToken($('dispute-turnstile')),
-    });
+    $('dispute-done').hidden = true;
+    const box = $('dispute-turnstile');
+    const input = $('dispute-input').value.trim();
+    const contact = $('dispute-contact').value.trim();
+    const reason = $('dispute-reason').value.trim();
+    const problem = !input ? "İtiraz ettiğin numarayı, IBAN'ı ya da adresi yaz."
+      : !looksLikeEmail(contact) ? 'Sana dönebilmemiz için geçerli bir e-posta adresi yaz.'
+      : reason.length < MIN_REASON ? `Açıklama en az ${MIN_REASON} karakter olmalı (şu an ${reason.length}).`
+      : humanPending(box, turnstileKey) ? HUMAN_PENDING : null;
+    if (problem) { err.textContent = problem; err.hidden = false; return; }
+
+    const btn = $('dispute-submit');
+    btn.disabled = true;
+    const res = await callApi(api, '/api/disputes', { input, contact, reason, humanToken: humanToken(box) });
+    btn.disabled = false;
+    resetHumanCheck(box);
     if (res.ok) {
       $('dispute-done').textContent = 'İtirazın alındı. İnceleyip e-postayla döneceğiz.';
       $('dispute-done').hidden = false;

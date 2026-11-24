@@ -164,7 +164,8 @@
           </div>
           <div>
             <label class="big" for="dispute-reason">Neden yanlış olduğunu kısaca anlat</label>
-            <textarea id="dispute-reason" rows="4" maxlength="1000"></textarea>
+            <p class="hint" id="dispute-reason-help">En az 20 karakter.</p>
+            <textarea id="dispute-reason" rows="4" minlength="20" maxlength="1000" aria-describedby="dispute-reason-help"></textarea>
           </div>
           <div id="dispute-turnstile"></div>
           <div class="row flush"><button class="btn btn-secondary" type="submit" id="dispute-submit">İtirazı gönder</button></div>

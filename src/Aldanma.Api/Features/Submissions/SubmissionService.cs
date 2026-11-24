@@ -22,31 +22,42 @@ public sealed class SubmissionService(AppDbContext db, AldanmaMetrics metrics, T
 
     private static readonly HashSet<string> Levels = [RiskLevel.High, RiskLevel.Suspicious, RiskLevel.NoSigns];
 
-    public async Task<string?> SubmitAsync(SubmissionRequest request, CancellationToken ct)
+    /// <summary>
+    /// Every check that does not need the human check. The endpoint runs it first, so a form with a mistake in it
+    /// does not use up the single-use Turnstile token.
+    /// </summary>
+    public static string? Validate(SubmissionRequest request)
     {
         if (!request.Consent) return "Göndermek için onay kutusunu işaretlemelisin.";
         var text = request.Text?.Trim() ?? "";
         if (text.Length is < MinTextLength or > MaxTextLength) return $"Mesaj {MinTextLength} ile {MaxTextLength} karakter arasında olmalı.";
-        var sender = string.IsNullOrEmpty(request.Sender) ? Sender.Unknown : request.Sender;
-        if (!Sender.All.Contains(sender)) return "Geçersiz gönderen türü.";
+        if (!Sender.All.Contains(SenderOf(request))) return "Geçersiz gönderen türü.";
         if (request.Claim is not { } claim || !Claims.Contains(claim)) return "Geçersiz bildirim türü.";
         if (request.Level is not { } level || !Levels.Contains(level)) return "Geçersiz sonuç seviyesi.";
-        if (request.RulesVersion is not { Length: > 0 and <= 20 } version) return "Geçersiz kural sürümü.";
+        if (request.RulesVersion is not { Length: > 0 and <= 20 }) return "Geçersiz kural sürümü.";
+        return null;
+    }
+
+    private static string SenderOf(SubmissionRequest request) => string.IsNullOrEmpty(request.Sender) ? Sender.Unknown : request.Sender;
+
+    public async Task<string?> SubmitAsync(SubmissionRequest request, CancellationToken ct)
+    {
+        if (Validate(request) is { } invalid) return invalid;
 
         var submission = new Submission
         {
             Id = Guid.CreateVersion7(),
             CreatedAt = time.GetUtcNow(),
-            Text = InputParser.MaskIdentifiers(text),
-            Sender = sender,
-            Claim = claim,
-            Level = level,
-            RulesVersion = version,
+            Text = InputParser.MaskIdentifiers(request.Text!.Trim()),
+            Sender = SenderOf(request),
+            Claim = request.Claim!,
+            Level = request.Level!,
+            RulesVersion = request.RulesVersion!,
         };
         db.Submissions.Add(submission);
         await db.SaveChangesAsync(ct);
-        metrics.SubmissionReceived(claim);
-        log.LogInformation("Submission {SubmissionId} queued for review: {Claim}", submission.Id, claim);
+        metrics.SubmissionReceived(submission.Claim);
+        log.LogInformation("Submission {SubmissionId} queued for review: {Claim}", submission.Id, submission.Claim);
         return null;
     }
 

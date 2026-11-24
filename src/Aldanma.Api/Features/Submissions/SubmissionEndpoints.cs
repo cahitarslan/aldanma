@@ -9,6 +9,8 @@ public static class SubmissionEndpoints
         api.MapPost("/submissions", async (SubmissionRequest? req, SubmissionService submissions, IHumanCheck human, ClientAddress client, HttpContext ctx, CancellationToken ct) =>
         {
             if (req is null) return Results.BadRequest(new ErrorResponse("Boş gönderim."));
+            // Validate before the human check: a Turnstile token is single-use, so a form with a mistake must not spend it.
+            if (SubmissionService.Validate(req) is { } invalid) return Results.BadRequest(new ErrorResponse(invalid));
             if (!await human.VerifyAsync(req.HumanToken, client.Of(ctx), ct)) return Results.BadRequest(new ErrorResponse(ErrorResponse.HumanCheckFailed));
             var error = await submissions.SubmitAsync(req, ct);
             return error is null ? Results.Accepted() : Results.BadRequest(new ErrorResponse(error));

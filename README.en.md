@@ -137,7 +137,7 @@ Rate limits per client (IPv4 address, IPv6 /64):
 | Every endpoint together | 120 requests/minute, bursts of 30 |
 | `/api/check`, `/api/lookup` | 30/minute |
 | `/api/reports` | 10/hour |
-| `/api/disputes` | 3/hour |
+| `/api/disputes` | 5/hour |
 | `/api/feedback` | 30/hour |
 | `/api/submissions` | 5/hour |
 | `/api/admin/*` | 60/minute |

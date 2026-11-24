@@ -7,6 +7,8 @@ public static class DisputeEndpoints
         api.MapPost("/disputes", async (DisputeRequest? req, DisputeService disputes, IHumanCheck human, ClientAddress client, HttpContext ctx, CancellationToken ct) =>
         {
             if (req is null) return Results.BadRequest(new ErrorResponse("Boş itiraz."));
+            // Validate before the human check: a Turnstile token is single-use, so a form with a mistake must not spend it.
+            if (await disputes.ValidateAsync(req, ct) is { } invalid) return Results.BadRequest(new ErrorResponse(invalid));
             if (!await human.VerifyAsync(req.HumanToken, client.Of(ctx), ct)) return Results.BadRequest(new ErrorResponse(ErrorResponse.HumanCheckFailed));
             var (ok, error) = await disputes.SubmitAsync(req, ct);
             return ok ? Results.Accepted() : Results.BadRequest(new ErrorResponse(error!));

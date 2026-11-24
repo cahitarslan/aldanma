@@ -24,7 +24,7 @@ public static class RateLimits
         o.GlobalLimiter = PartitionedRateLimiter.CreateChained(PerClientBucket(limits), ServerWide(limits));
         o.AddPolicy(Check, ctx => PerClient(ctx, 30, TimeSpan.FromMinutes(1)));
         o.AddPolicy(Report, ctx => PerClient(ctx, 10, TimeSpan.FromHours(1)));
-        o.AddPolicy(Dispute, ctx => PerClient(ctx, 3, TimeSpan.FromHours(1)));
+        o.AddPolicy(Dispute, ctx => PerClient(ctx, 5, TimeSpan.FromHours(1)));
         o.AddPolicy(Feedback, ctx => PerClient(ctx, 30, TimeSpan.FromHours(1)));
         o.AddPolicy(Submission, ctx => PerClient(ctx, 5, TimeSpan.FromHours(1)));
         // Slows down guessing of the admin key; real moderation needs far fewer requests.

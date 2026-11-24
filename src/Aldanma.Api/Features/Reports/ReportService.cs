@@ -26,16 +26,26 @@ public sealed class ReportService(
     /// </summary>
     public const int MaxIdentifiersPerReporterPerDay = 20;
 
-    public async Task<ReportOutcome> SubmitAsync(ReportRequest request, string clientAddress, CancellationToken ct)
+    private sealed record Checked(string? Error, DateOnly? Occurred, List<Identifier> Identifiers, List<string> Skipped);
+
+    /// <summary>
+    /// Every check that does not need the human check. The endpoint runs it first, so a form with a mistake in it
+    /// does not use up the single-use Turnstile token. Null when the report may go on.
+    /// </summary>
+    public ReportOutcome? Validate(ReportRequest request)
     {
-        static ReportOutcome Fail(string error) => new(false, error, null, [], []);
+        var c = Check(request, time.GetUtcNow());
+        return c.Error is null ? null : new ReportOutcome(false, c.Error, null, [], c.Skipped);
+    }
+
+    private Checked Check(ReportRequest request, DateTimeOffset now)
+    {
+        static Checked Fail(string error) => new(error, null, [], []);
 
         if (request.Category is null || !rules.ReportCategories.ContainsKey(request.Category)) return Fail("Geçersiz dolandırıcılık türü.");
         if (request.Channel is null || !rules.ReportChannels.ContainsKey(request.Channel)) return Fail("Geçersiz kanal.");
-        var loss = request.Loss ?? "none";
-        if (!rules.LossBands.ContainsKey(loss)) return Fail("Geçersiz kayıp aralığı.");
+        if (!rules.LossBands.ContainsKey(request.Loss ?? "none")) return Fail("Geçersiz kayıp aralığı.");
         DateOnly? occurred = null;
-        var now = time.GetUtcNow();
         if (!string.IsNullOrEmpty(request.OccurredOn))
         {
             if (!DateOnly.TryParseExact(request.OccurredOn + "-01", "yyyy-MM-dd", out var d) || d > DateOnly.FromDateTime(now.UtcDateTime) || d.Year < 2000)
@@ -52,7 +62,17 @@ public sealed class ReportService(
             if (!scorer.IsReportable(id)) { skipped.Add(id.Display); continue; }
             if (!identifiers.Contains(id)) identifiers.Add(id);
         }
-        if (identifiers.Count == 0) return new ReportOutcome(false, "İhbar edilecek geçerli bir numara, IBAN ya da adres bulunamadı.", null, [], skipped);
+        return identifiers.Count == 0
+            ? new Checked("İhbar edilecek geçerli bir numara, IBAN ya da adres bulunamadı.", null, [], skipped)
+            : new Checked(null, occurred, identifiers, skipped);
+    }
+
+    public async Task<ReportOutcome> SubmitAsync(ReportRequest request, string clientAddress, CancellationToken ct)
+    {
+        var now = time.GetUtcNow();
+        var (error, occurred, identifiers, skipped) = Check(request, now);
+        if (error is not null) return new ReportOutcome(false, error, null, [], skipped);
+        var loss = request.Loss ?? "none";
 
         var reporter = hasher.Reporter(clientAddress);
         var records = new List<(Identifier Id, IdentifierRecord Record)>();
@@ -79,8 +99,8 @@ public sealed class ReportService(
         {
             Id = Guid.CreateVersion7(),
             CreatedAt = now,
-            Category = request.Category,
-            Channel = request.Channel,
+            Category = request.Category!, // checked above
+            Channel = request.Channel!,
             Loss = loss,
             OccurredOn = occurred,
             ReporterHash = reporter,

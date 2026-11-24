@@ -4,7 +4,7 @@
 // that gives the corpus a confirmed example ("confirmed"). Phone numbers and IBANs are masked by the API before storage.
 import { el } from './dom.js';
 import { callApi } from './lookup.js';
-import { humanCheck, humanToken } from './human-check.js';
+import { humanCheck, humanToken, humanPending, resetHumanCheck, HUMAN_PENDING } from './human-check.js';
 
 export function createFeedback({ api, turnstileKey, rulesVersion }) {
   return (r, level, score) => {
@@ -40,11 +40,13 @@ export function createFeedback({ api, turnstileKey, rulesVersion }) {
     const button = el('button', { class: 'btn btn-secondary', type: 'button', text: correct ? 'Mesajı paylaş' : 'Mesajı incelemeye gönder' });
     button.addEventListener('click', async () => {
       if (!consent.checked) { result.textContent = 'Göndermek için onay kutusunu işaretle.'; return; }
+      if (humanPending(turnstile, turnstileKey)) { result.textContent = HUMAN_PENDING; return; }
       button.disabled = true;
       const res = await callApi(api, '/api/submissions', {
         text: r.text, sender: r.sender, claim, level, rulesVersion, consent: true, humanToken: humanToken(turnstile),
       });
       button.disabled = res.ok;
+      if (!res.ok) resetHumanCheck(turnstile);
       const done = correct ? 'Paylaştığın için teşekkürler. Bir kişi inceleyip örneklere ekleyecek.' : 'Gönderildi. Bir kişi inceleyecek; gerekiyorsa kurallar güncellenecek.';
       result.textContent = res.ok ? done : res.data?.error || 'Gönderilemedi. Tekrar dene.';
     });
