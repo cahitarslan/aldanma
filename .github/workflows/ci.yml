@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: aldanma
+          POSTGRES_PASSWORD: ci-password
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U aldanma" --health-interval 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: JS engine tests
+        run: npm test
+
+      - name: Parity file is up to date (expected JS engine output)
+        run: node tools/parity.mjs --check
+
+      - name: Static site builds
+        run: npm run build:web
+
+      - name: Measurement (informational)
+        run: |
+          for s in train holdout hard blind1 blind2; do node tools/evaluate.mjs corpus/corpus.json --split $s | head -9; done
+
+      - name: .NET build and tests (C#/JS parity and API tests against PostgreSQL)
+        env:
+          ALDANMA_TEST_DATABASE: Host=localhost;Username=aldanma;Password=ci-password
+        run: dotnet test Aldanma.slnx --configuration Release

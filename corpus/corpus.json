@@ -1,0 +1,2237 @@
+{
+ "description": "Synthetic labelled test corpus. Messages were written by the project author based on patterns reported in the press; they contain no real person, phone number or IBAN. Splits: train (rules were tuned against it), holdout (30% set aside at the start; never looked at while building v0.1.0), hard (written after v0.1.0 was frozen with phrasings the rules did not know; v0.2.0 was tuned against it), blind1 (written after v0.2.0 was frozen; v0.3.0 was tuned against it), blind2 (written after v0.3.0 was frozen; v0.4.0 was tuned against it).",
+ "messages": [
+  {
+   "id": "D001",
+   "label": "scam",
+   "category": "fake-enforcement",
+   "sender": "mobile",
+   "text": "Sayın ilgili, hakkınızda 2026/48213 E. sayılı icra takibi başlatılmıştır. Hacze gidilmeden dosyanızı kapatmak için: uyap-dosyasorgu.com/icra",
+   "split": "holdout"
+  },
+  {
+   "id": "D002",
+   "label": "scam",
+   "category": "fake-enforcement",
+   "sender": "header",
+   "text": "UZLASMA DOSYANIZIN SON ONAY GUNUDUR. Cezai islemle karsilasmamak icin 0850 555 01 23 nolu hatti arayiniz. B001",
+   "split": "holdout"
+  },
+  {
+   "id": "D003",
+   "label": "scam",
+   "category": "fake-enforcement",
+   "sender": "mobile",
+   "text": "T.C. Adalet Bakanligi: Adiniza kayitli e-tebligat ulasmistir. Goruntulemek icin https://e-tebligat-goruntule.net/giris adresine TC kimlik numaraniz ile giris yapiniz.",
+   "split": "holdout"
+  },
+  {
+   "id": "D004",
+   "label": "scam",
+   "category": "fake-enforcement",
+   "sender": "unknown",
+   "text": "Borcunuzdan dolayı hakkınızda haciz işlemi başlatılacaktır. 2.800 TL öderseniz dosya kapanır. Bilgi: 0542 555 01 47 Av. bürosu",
+   "split": "train"
+  },
+  {
+   "id": "D005",
+   "label": "scam",
+   "category": "fake-enforcement",
+   "sender": "header",
+   "text": "Sn. borclu, arabuluculuk dosyanizin son gunudur. Yasal takip baslamadan yapilandirma icin hemen arayin 08505550199",
+   "split": "train"
+  },
+  {
+   "id": "D006",
+   "label": "scam",
+   "category": "fake-enforcement",
+   "sender": "foreign",
+   "text": "UYAP BİLGİLENDİRME: Dosya No 2026/7731 icra müdürlüğünce maaşınıza haciz konulacaktır. İtiraz ve ödeme: bit.ly/uyap-itiraz",
+   "split": "train"
+  },
+  {
+   "id": "D007",
+   "label": "scam",
+   "category": "fake-enforcement",
+   "sender": "whatsapp",
+   "text": "İyi günler, İstanbul 14. İcra Dairesinden arıyoruz ulaşamadık. Hakkınızda dava açılmış, bugün saat 17.00'ye kadar ödeme yapılmazsa evinize hacze gelinecek. Dosya masrafı 3.450 TL, IBAN göndereyim mi?",
+   "split": "holdout"
+  },
+  {
+   "id": "D008",
+   "label": "scam",
+   "category": "fake-enforcement",
+   "sender": "mobile",
+   "text": "Hakkinizda suc duyurusunda bulunulmustur. Dosya detayi ve ifade tarihi icin tiklayin: http://adliye-sorgulama.info/d/8812",
+   "split": "train"
+  },
+  {
+   "id": "D009",
+   "label": "scam",
+   "category": "fake-police-prosecutor",
+   "sender": "whatsapp",
+   "text": "Ben Ankara Cumhuriyet Başsavcılığından Savcı Kemal Bey'in kalemindenim. Kimlik bilgileriniz bir terör örgütünün kara para dosyasında kullanılmış. Operasyon gizli, kimseye bilgi vermeyin. Hesabınızdaki parayı korumaya almak için güvenli hesaba aktarmanız gerekiyor.",
+   "split": "holdout"
+  },
+  {
+   "id": "D010",
+   "label": "scam",
+   "category": "fake-police-prosecutor",
+   "sender": "foreign",
+   "text": "Emniyet Müdürlüğü Siber Suçlar: Adınıza açılan hesap dolandırıcılıkta kullanılmış tespit edilmiştir. İfadeniz görüntülü alınacak, telefonu kapatmayın ve kimseye söylemeyin.",
+   "split": "train"
+  },
+  {
+   "id": "D011",
+   "label": "scam",
+   "category": "fake-police-prosecutor",
+   "sender": "mobile",
+   "text": "Komiser Yilmaz ben. Hesabiniz suc orgutu tarafindan kullanilmis. Paranizi guvenli hesaba aktarmazsaniz bloke konulacak. Banka gorevlisine bilgi vermeyin, sorarlarsa araba alacagim deyin.",
+   "split": "train"
+  },
+  {
+   "id": "D012",
+   "label": "scam",
+   "category": "edevlet",
+   "sender": "mobile",
+   "text": "e-Devlet: Sifrenizin suresi dolmustur. Hesabinizin askiya alinmamasi icin 24 saat icinde guncelleyin: turkiye-gov-giris.com",
+   "split": "holdout"
+  },
+  {
+   "id": "D013",
+   "label": "scam",
+   "category": "edevlet",
+   "sender": "header",
+   "text": "E-DEVLET uzerinden adiniza 4.250 TL aidat iadesi tanimlanmistir. Almak icin kart bilgilerinizi dogrulayin https://edevlet-iade.online/basvuru",
+   "split": "train"
+  },
+  {
+   "id": "D014",
+   "label": "scam",
+   "category": "edevlet",
+   "sender": "unknown",
+   "text": "Sayın vatandaşımız, e-Devlet kayıtlarında 1.186,40 TL borcunuz bulunmaktadır. Faiz işlemeden ödemek için: e-devlet.borc-odeme.site",
+   "split": "train"
+  },
+  {
+   "id": "D015",
+   "label": "scam",
+   "category": "edevlet",
+   "sender": "mobile",
+   "text": "TURKIYE.GOV.TR Kimlik dogrulamaniz eksik. Hesabiniz kapatilacak. Dogrulamak icin: https://türkiye-gov.com/dogrula",
+   "split": "holdout"
+  },
+  {
+   "id": "D016",
+   "label": "scam",
+   "category": "edevlet",
+   "sender": "whatsapp",
+   "text": "Merhaba e devlet destek ekibindeniz. Hesabınızda şüpheli giriş tespit edildi. Güvenliğiniz için e-Devlet şifrenizi ve telefonunuza gelen kodu bize iletin.",
+   "split": "train"
+  },
+  {
+   "id": "D017",
+   "label": "scam",
+   "category": "social-aid",
+   "sender": "mobile",
+   "text": "Aile ve Sosyal Hizmetler Bakanligi: 7.500 TL sosyal yardim basvurunuz onaylandi. Hesabiniza yatirilmasi icin formu doldurun: sosyalyardim-basvuru.xyz",
+   "split": "holdout"
+  },
+  {
+   "id": "D018",
+   "label": "scam",
+   "category": "social-aid",
+   "sender": "whatsapp",
+   "text": "Devletten Ramazan yardımı! Her aileye 5.000 TL nakdi yardım veriliyor. Başvuru için tıkla, 10 kişiye gönder: https://ramazan-destek2026.top",
+   "split": "train"
+  },
+  {
+   "id": "D019",
+   "label": "scam",
+   "category": "social-aid",
+   "sender": "unknown",
+   "text": "KYK disinda 3.000 TL ogrenci destegi cikti, burs basvurusu icin son gun yarin. Basvuru linki: cutt.ly/burs2026",
+   "split": "train"
+  },
+  {
+   "id": "D020",
+   "label": "scam",
+   "category": "cargo",
+   "sender": "mobile",
+   "text": "Kargonuz adres bilgisi eksik oldugu icin teslim edilemedi. Adresinizi guncelleyin: pttkargo-teslimat.xyz/adres",
+   "split": "holdout"
+  },
+  {
+   "id": "D021",
+   "label": "scam",
+   "category": "cargo",
+   "sender": "foreign",
+   "text": "PTT: Gonderiniz depoda beklemektedir. 24,90 TL yeniden gonderim ucretini odeyiniz, aksi halde iade edilecektir. http://ptt-gonderitakip.com",
+   "split": "holdout"
+  },
+  {
+   "id": "D022",
+   "label": "scam",
+   "category": "cargo",
+   "sender": "header",
+   "text": "Yurtiçi Kargo: Paketiniz dağıtıma çıkarılamadı. Teslimat ücreti 18,50 TL eksik ödenmiştir. Ödeme için: yurtici-kargo-odeme.net",
+   "split": "train"
+  },
+  {
+   "id": "D023",
+   "label": "scam",
+   "category": "cargo",
+   "sender": "mobile",
+   "text": "Sayin musterimiz gumruk vergisi odenmedigi icin paketiniz beklemede. 3 gun icinde odeme yapilmazsa iade edilecektir bit.ly/3xKargoTR",
+   "split": "train"
+  },
+  {
+   "id": "D024",
+   "label": "scam",
+   "category": "cargo",
+   "sender": "unknown",
+   "text": "ARAS KARG0: Gonderiniz teslim edilemedi. Teslimat tercihinizi secin ve kart bilgilerinizi dogrulayin: https://araskargo.teslimat-onay.live",
+   "split": "train"
+  },
+  {
+   "id": "D025",
+   "label": "scam",
+   "category": "cargo",
+   "sender": "whatsapp",
+   "text": "Merhaba kargo görevlisiyim, adresinizi bulamadım. Paketiniz şubeye iade olmadan şu linkten adres teyit edip 9,90 TL dağıtım bedelini ödeyin: https://kargo-takip-tr.shop/t/9921",
+   "split": "train"
+  },
+  {
+   "id": "D026",
+   "label": "scam",
+   "category": "cargo",
+   "sender": "mobile",
+   "text": "Mng Kargo gonderi no 7744120 adresinize ulastirilamamistir. Bilgi guncelleme: http://185.203.118.44/mng",
+   "split": "holdout"
+  },
+  {
+   "id": "D027",
+   "label": "scam",
+   "category": "toll-hgs",
+   "sender": "mobile",
+   "text": "HGS: Gecis ucretiniz odenmemistir. 87,50 TL borcunuzu bugun odemezseniz 10 kat ceza uygulanacaktir. hgs-odeme.online",
+   "split": "train"
+  },
+  {
+   "id": "D028",
+   "label": "scam",
+   "category": "toll-hgs",
+   "sender": "header",
+   "text": "KGM BILGILENDIRME: Aracınıza ait ihlalli geçiş tespit edilmiştir. Cezalı duruma düşmemek için ödeme yapınız: https://kgm-ihlalligecis.com",
+   "split": "train"
+  },
+  {
+   "id": "D029",
+   "label": "scam",
+   "category": "toll-hgs",
+   "sender": "foreign",
+   "text": "PTT HGS hesabinizda bakiye yetersiz. Otoyol gecis borcunuz 142 TL. Son gun bugun! Odeme: hgs.ptt-avm.net/odeme",
+   "split": "holdout"
+  },
+  {
+   "id": "D030",
+   "label": "scam",
+   "category": "toll-hgs",
+   "sender": "unknown",
+   "text": "Sayin surucu, OGS/HGS etiketiniz iptal edilecektir. Bakiyenizi guncellemek icin tiklayin tinyurl.com/hgsyukle",
+   "split": "train"
+  },
+  {
+   "id": "D031",
+   "label": "scam",
+   "category": "toll-hgs",
+   "sender": "mobile",
+   "text": "Köprü ve otoyol geçiş ücretiniz ödenmemiştir. Yasal işlem başlatılmadan önce borcunuzu ödeyin: https://hgsmusteri-ptt.com/borc",
+   "split": "train"
+  },
+  {
+   "id": "D032",
+   "label": "scam",
+   "category": "bank",
+   "sender": "mobile",
+   "text": "Ziraat Bankasi: Hesabiniz guvenlik nedeniyle bloke edilmistir. Blokeyi kaldirmak icin: ziraat-mobilsube.net/giris",
+   "split": "train"
+  },
+  {
+   "id": "D033",
+   "label": "scam",
+   "category": "bank",
+   "sender": "header",
+   "text": "Sayın müşterimiz, kartınızdan 14.750 TL şüpheli işlem yapılmıştır. İşlem size ait değilse iptal için tıklayın: https://isbank-islemiptal.com",
+   "split": "train"
+  },
+  {
+   "id": "D034",
+   "label": "scam",
+   "category": "bank",
+   "sender": "foreign",
+   "text": "GARANTI BBVA: Musteri bilgi guncellemesi yapilmadigi icin internet bankaciliginiz kapatilacak. Guncelleme: garantibbva.com.tr.guncelle-sube.info",
+   "split": "train"
+  },
+  {
+   "id": "D035",
+   "label": "scam",
+   "category": "bank",
+   "sender": "unknown",
+   "text": "Kredi kartı aidat iadeniz hazır! Son 5 yılın kart aidatı 2.340 TL iadesini almak için kart numaranızı ve son kullanma tarihini girin: aidat-iadesi.com",
+   "split": "holdout"
+  },
+  {
+   "id": "D036",
+   "label": "scam",
+   "category": "bank",
+   "sender": "whatsapp",
+   "text": "Akbank müşteri hizmetlerinden yazıyorum. Hesabınıza yetkisiz giriş denemesi oldu. İşlemi durdurmak için telefonunuza gelen SMS kodunu söyleyin lütfen.",
+   "split": "train"
+  },
+  {
+   "id": "D037",
+   "label": "scam",
+   "category": "bank",
+   "sender": "mobile",
+   "text": "Yapi Kredi World puanlariniz bugun silinecek. 1.850 TL degerindeki puaninizi kullanmak icin tikla: yapikredi-puan.click",
+   "split": "train"
+  },
+  {
+   "id": "D038",
+   "label": "scam",
+   "category": "bank",
+   "sender": "mobile",
+   "text": "Kredi basvurunuz onaylandi! 150.000 TL krediniz hazir. Hesabiniza aktarilmasi icin 1.250 TL dosya masrafini IBAN TR00 0000 ile gondermeniz yeterli. Wp: 0553 555 01 88",
+   "split": "holdout"
+  },
+  {
+   "id": "D039",
+   "label": "scam",
+   "category": "bank",
+   "sender": "unknown",
+   "text": "VakıfBank: Güvenlik uygulamamızı yüklemeniz zorunludur. Aksi halde hesabınız dondurulacaktır. İndir: https://vakif-guvenlik.app/vakifbank.apk",
+   "split": "train"
+  },
+  {
+   "id": "D040",
+   "label": "scam",
+   "category": "bank",
+   "sender": "header",
+   "text": "QNB Bilgi: Kartiniz gecici olarak kullanima kapatilmistir. Tekrar acmak icin https://qnb.com.tr-kartislem.net",
+   "split": "holdout"
+  },
+  {
+   "id": "D041",
+   "label": "scam",
+   "category": "tax-gib",
+   "sender": "mobile",
+   "text": "GIB: 2025 yili vergi iadeniz 3.912 TL olarak tanimlanmistir. Iadenizi almak icin basvurun: gib-vergi-iade.com",
+   "split": "holdout"
+  },
+  {
+   "id": "D042",
+   "label": "scam",
+   "category": "tax-gib",
+   "sender": "unknown",
+   "text": "Gelir İdaresi Başkanlığı: MTV borcunuz nedeniyle aracınıza haciz konulacaktır. Ödeme için tıklayın https://ivd-gib-odeme.online",
+   "split": "train"
+  },
+  {
+   "id": "D043",
+   "label": "scam",
+   "category": "tax-gib",
+   "sender": "header",
+   "text": "VERGI DAIRESI: Odenmemis vergi borcunuz icin son gun bugundur. Faiziyle birlikte icraya verilmeden odeyin: bit.ly/gibodeme",
+   "split": "train"
+  },
+  {
+   "id": "D044",
+   "label": "scam",
+   "category": "sgk-pension",
+   "sender": "mobile",
+   "text": "SGK: GSS prim borcunuz 12.480 TL. Yapilandirma firsati icin son gun! Borc silinmesi basvurusu: sgk-yapilandirma.net",
+   "split": "holdout"
+  },
+  {
+   "id": "D045",
+   "label": "scam",
+   "category": "sgk-pension",
+   "sender": "whatsapp",
+   "text": "Emeklilere müjde! Bayram ikramiyesi 4.000 TL hesaplara yatırılacak. Almak için başvuru yapın: https://emekli-ikramiye.site/basvur",
+   "split": "holdout"
+  },
+  {
+   "id": "D046",
+   "label": "scam",
+   "category": "sgk-pension",
+   "sender": "unknown",
+   "text": "Sayin emeklimiz, 12.000 TL emekli promosyonunuz tanimlanmistir. Promosyonu almak icin banka kart bilgilerinizi girerek onaylayin: promosyon-emekli.com",
+   "split": "train"
+  },
+  {
+   "id": "D047",
+   "label": "scam",
+   "category": "sgk-pension",
+   "sender": "foreign",
+   "text": "Sosyal Guvenlik Kurumu: Adiniza 6.240 TL prim iadesi odemesi cikmistir. Giris yap: sgk.gov.tr.iade-islem.top",
+   "split": "train"
+  },
+  {
+   "id": "D048",
+   "label": "scam",
+   "category": "health",
+   "sender": "mobile",
+   "text": "e-Nabiz: Tahlil sonuclariniz sisteme yuklenmistir. Goruntulemek icin tiklayin https://enabiz-sonuc.com",
+   "split": "train"
+  },
+  {
+   "id": "D049",
+   "label": "scam",
+   "category": "health",
+   "sender": "unknown",
+   "text": "Sağlık Bakanlığı: Adınıza kayıtlı muayene katılım payı borcu 186 TL. Ödenmezse icra işlemi başlatılacaktır. Ödeme linki: saglik-odeme.xyz",
+   "split": "train"
+  },
+  {
+   "id": "D050",
+   "label": "scam",
+   "category": "health",
+   "sender": "whatsapp",
+   "text": "MHRS randevunuz iptal edilmiştir. Yeniden randevu almak için e-Nabız uygulamasını güncelleyin: http://e-nabiz-guncelle.club/indir",
+   "split": "train"
+  },
+  {
+   "id": "D051",
+   "label": "scam",
+   "category": "traffic-license",
+   "sender": "mobile",
+   "text": "EGM: Aracınıza trafik cezası kesilmiştir. %25 indirimli ödeme için son gün bugün: egm-cezaodeme.com",
+   "split": "holdout"
+  },
+  {
+   "id": "D052",
+   "label": "scam",
+   "category": "traffic-license",
+   "sender": "header",
+   "text": "Ehliyetiniz ceza puani nedeniyle askiya alinacaktir. Itiraz ve odeme icin 24 saat icinde giris yapin: ehliyet-sorgu.online",
+   "split": "train"
+  },
+  {
+   "id": "D053",
+   "label": "scam",
+   "category": "traffic-license",
+   "sender": "unknown",
+   "text": "Sayin arac sahibi, 34 ABC 000 plakali araciniza radar cezasi yazilmistir. Ihlal fotografini goruntule: trafik-ceza-sorgula.net/foto",
+   "split": "train"
+  },
+  {
+   "id": "D054",
+   "label": "scam",
+   "category": "traffic-license",
+   "sender": "foreign",
+   "text": "Trafik para cezaniz odenmedi, faiz uygulanmadan odeyiniz. Odeme icin https://ceza.turkiye-gov.org/trafik",
+   "split": "train"
+  },
+  {
+   "id": "D055",
+   "label": "scam",
+   "category": "notary-deposit",
+   "sender": "whatsapp",
+   "text": "Daire hâlâ boş ama çok arayan var. Ben şu an şehir dışındayım, evi göstermeden tutmak isterseniz 5.000 TL kapora gönderin, anahtarı kargoyla yollayacağım. IBAN: TR00 0000 0000",
+   "split": "train"
+  },
+  {
+   "id": "D056",
+   "label": "scam",
+   "category": "notary-deposit",
+   "sender": "whatsapp",
+   "text": "Aracı almak istiyorum, noter güvenli ödeme sistemi üzerinden parayı yatırdım. Onaylamak için şu linkten kart bilgilerinizi girin: https://noter-guvenliodeme.com/onay",
+   "split": "holdout"
+  },
+  {
+   "id": "D057",
+   "label": "scam",
+   "category": "notary-deposit",
+   "sender": "mobile",
+   "text": "Merhaba ilan icin yaziyorum. Arac icin baska alici da var, bu aksam kaporayi atarsaniz size ayirtirim. Noter masrafi 1.800 TL pesin gondermeniz lazim.",
+   "split": "train"
+  },
+  {
+   "id": "D058",
+   "label": "scam",
+   "category": "notary-deposit",
+   "sender": "whatsapp",
+   "text": "Ürünü kargo ile güvenli ödeme yöntemiyle alacağım. Param güvende sisteminden ödemeyi yaptım, paranızı almak için linkten kart bilgisi girip onay verin: sahibinden-guvenliodeme.net",
+   "split": "train"
+  },
+  {
+   "id": "D059",
+   "label": "scam",
+   "category": "notary-deposit",
+   "sender": "mobile",
+   "text": "Yurt dışında çalışıyorum o yüzden evi gösteremiyorum. Depozito ve ilk kirayı havale yaparsanız anahtarları kargo ile gönderirim, sözleşme de içinde.",
+   "split": "train"
+  },
+  {
+   "id": "D060",
+   "label": "scam",
+   "category": "fake-job",
+   "sender": "whatsapp",
+   "text": "Merhaba! İK departmanından Elif ben. Özgeçmişiniz onaylandı. Evden part-time çalışarak günlük 1.500-4.000 TL kazanabilirsiniz. Detay için WhatsApp'tan yazın: wa.me/905535550166",
+   "split": "train"
+  },
+  {
+   "id": "D061",
+   "label": "scam",
+   "category": "fake-job",
+   "sender": "foreign",
+   "text": "Online is firsati! Telefonunuzdan YouTube videolarini begeni yaparak gunluk 2.000 TL kazanin. Tecrube sart degil. Telegram: t.me/kolaykazanc_tr",
+   "split": "train"
+  },
+  {
+   "id": "D062",
+   "label": "scam",
+   "category": "fake-job",
+   "sender": "mobile",
+   "text": "Evde paketleme isi. Haftalik 6.500 TL kazanc, malzemeler adresinize gelir. Kayit icin 550 TL malzeme ucretini yatirin ise baslayin. Bilgi 0545 555 01 32",
+   "split": "holdout"
+  },
+  {
+   "id": "D063",
+   "label": "scam",
+   "category": "fake-job",
+   "sender": "whatsapp",
+   "text": "Trendyol mağazalarına sipariş vererek komisyon kazan! Her görev başına 80-300 TL ödeme. İlk görev için 500 TL yatır, 780 TL çek. Başlamak için yaz.",
+   "split": "train"
+  },
+  {
+   "id": "D064",
+   "label": "scam",
+   "category": "fake-job",
+   "sender": "unknown",
+   "text": "Amazon Turkiye personel alimi: Evden calis, saatlik 450 TL kazan. Basvuru icin linke tikla: amazon-kariyer-tr.work",
+   "split": "train"
+  },
+  {
+   "id": "D065",
+   "label": "scam",
+   "category": "iban-rental",
+   "sender": "whatsapp",
+   "text": "Banka hesabı kiralıyoruz. Hesap başına günlük 3.000 TL komisyon. Sadece IBAN ve internet şubesi bilgisi yeterli, risk yok.",
+   "split": "holdout"
+  },
+  {
+   "id": "D066",
+   "label": "scam",
+   "category": "iban-rental",
+   "sender": "mobile",
+   "text": "Abi hesabina 85 bin TL para gelecek, yuzde 10'u senin komisyonun, kalanini verecegim IBAN'a aktarirsin. Var misin?",
+   "split": "train"
+  },
+  {
+   "id": "D067",
+   "label": "scam",
+   "category": "iban-rental",
+   "sender": "foreign",
+   "text": "Kullanmadığın banka kartını ve hesabını kiraya ver, aylık 15.000 TL kazan. Telegram'dan yaz.",
+   "split": "holdout"
+  },
+  {
+   "id": "D068",
+   "label": "scam",
+   "category": "investment-crypto",
+   "sender": "whatsapp",
+   "text": "VIP Borsa Sinyal Grubumuza ücretsiz katılın! Uzman analistimiz her gün tavan yapacak hisseleri paylaşıyor. Katılmak için tıklayın: https://chat.borsa-vip-sinyal.club",
+   "split": "train"
+  },
+  {
+   "id": "D069",
+   "label": "scam",
+   "category": "investment-crypto",
+   "sender": "foreign",
+   "text": "Kripto firsatini kacirma! 5.000 TL yatir 3 gunde 25.000 TL kazan. Garantili kazanc, cekim aninda. Telegram: t.me/kriptokazanc",
+   "split": "train"
+  },
+  {
+   "id": "D070",
+   "label": "scam",
+   "category": "investment-crypto",
+   "sender": "mobile",
+   "text": "500 TL DENEME BONUSU! Yatirimsiz, cevrimsiz. Hemen uye ol freespinleri kap: betgiris-2026.vip",
+   "split": "train"
+  },
+  {
+   "id": "D071",
+   "label": "scam",
+   "category": "investment-crypto",
+   "sender": "unknown",
+   "text": "Altin ve forex yatirim danismaniniz olarak ariyoruz. Aylik %40 getiri garanti. Paranizi katlamak icin WhatsApp'tan yazin 0552 555 01 71",
+   "split": "train"
+  },
+  {
+   "id": "D072",
+   "label": "scam",
+   "category": "prize-discount",
+   "sender": "whatsapp",
+   "text": "Tebrikler! A101'in 30. yıl dönümü çekilişinde 10.000 TL hediye çeki kazandınız. Almak için tıklayın ve 5 gruba paylaşın: a101-hediye.top",
+   "split": "holdout"
+  },
+  {
+   "id": "D073",
+   "label": "scam",
+   "category": "prize-discount",
+   "sender": "mobile",
+   "text": "TEBRIKLER!!! iPhone 16 Pro kazandiniz. Odulunuzun teslimi icin 49 TL kargo ucretini odeyin: odul-teslim.shop/iphone",
+   "split": "train"
+  },
+  {
+   "id": "D074",
+   "label": "scam",
+   "category": "prize-discount",
+   "sender": "unknown",
+   "text": "Trendyol depo boşaltma! Tüm ürünlerde %90 indirim, stoklarla sınırlı. Kaçırma: trendyol-outlet-firsat.shop",
+   "split": "train"
+  },
+  {
+   "id": "D075",
+   "label": "scam",
+   "category": "prize-discount",
+   "sender": "whatsapp",
+   "text": "Turkcell 30. yılına özel herkese ücretsiz 50 GB internet hediye ediyor! Almak için tıkla: turkcell-hediye-gb.online",
+   "split": "train"
+  },
+  {
+   "id": "D076",
+   "label": "scam",
+   "category": "prize-discount",
+   "sender": "foreign",
+   "text": "Sayin talihli, Milli Piyango cekilisinde 250.000 TL ikramiye kazandiniz. Odul teslimi icin vergi bedeli 1.900 TL yatirmaniz gerekmektedir.",
+   "split": "train"
+  },
+  {
+   "id": "D077",
+   "label": "scam",
+   "category": "relative-impersonation",
+   "sender": "whatsapp",
+   "text": "Anne telefonum suya düştü bozuldu, bu yeni numaram kaydet. Acil bir ödeme yapmam lazım, şu IBAN'a 12.000 TL atar mısın akşam geri veririm",
+   "split": "train"
+  },
+  {
+   "id": "D078",
+   "label": "scam",
+   "category": "relative-impersonation",
+   "sender": "mobile",
+   "text": "Baba ben, telefonum kırıldı arkadaşın telefonundan yazıyorum. Hastanedeyim acil para lazım, IBAN atıyorum gönder sonra anlatırım",
+   "split": "train"
+  },
+  {
+   "id": "D079",
+   "label": "scam",
+   "category": "relative-impersonation",
+   "sender": "whatsapp",
+   "text": "Selam canım nasılsın? Bugün limitim doldu da bir yere acil 8.500 TL göndermem lazım. Sen şu hesaba atabilir misin, yarın sabah hemen geri yollarım.",
+   "split": "holdout"
+  },
+  {
+   "id": "D080",
+   "label": "scam",
+   "category": "code-request",
+   "sender": "whatsapp",
+   "text": "Merhaba, yanlışlıkla senin numarana 6 haneli bir kod gönderdim. Bana iletir misin, çok acil.",
+   "split": "train"
+  },
+  {
+   "id": "D081",
+   "label": "scam",
+   "category": "code-request",
+   "sender": "whatsapp",
+   "text": "Canım grubumuza oy veriyoruz, telefonuna gelen kodu bana gönderir misin?",
+   "split": "train"
+  },
+  {
+   "id": "D082",
+   "label": "scam",
+   "category": "code-request",
+   "sender": "mobile",
+   "text": "WhatsApp Destek: Hesabinizi dogrulamak icin size gonderilen 6 haneli kodu bu numaraya iletin. Aksi halde hesabiniz 12 saat icinde kapatilacak.",
+   "split": "train"
+  },
+  {
+   "id": "D083",
+   "label": "scam",
+   "category": "operator",
+   "sender": "mobile",
+   "text": "Turk Telekom: Faturanizdan cifte tahsilat yapilmistir. 389 TL iade almak icin kart bilgilerinizi girin: turktelekom-iade.net",
+   "split": "train"
+  },
+  {
+   "id": "D084",
+   "label": "scam",
+   "category": "operator",
+   "sender": "unknown",
+   "text": "Vodafone: Kimlik bilgileriniz guncel olmadigi icin hattiniz kapatilacak. BTK geregi kimlik dogrulama: vodafone-kimlik.com",
+   "split": "train"
+  },
+  {
+   "id": "D085",
+   "label": "scam",
+   "category": "operator",
+   "sender": "header",
+   "text": "TURKCELL: E-SIM guncelleme islemi icin size gelen onay kodunu 0533 555 01 05 numarali hatta SMS ile gonderin.",
+   "split": "train"
+  },
+  {
+   "id": "D086",
+   "label": "scam",
+   "category": "subscription",
+   "sender": "unknown",
+   "text": "Netflix: Odemeniz alinamadi. Uyeliginiz askiya alindi. Odeme bilgilerinizi guncelleyin: netflix-odeme-tr.com",
+   "split": "holdout"
+  },
+  {
+   "id": "D087",
+   "label": "scam",
+   "category": "subscription",
+   "sender": "whatsapp",
+   "text": "Instagram: Hesabınız telif hakkı ihlali nedeniyle 24 saat içinde silinecektir. İtiraz formu: https://ig-telif-itiraz.help/form",
+   "split": "train"
+  },
+  {
+   "id": "D088",
+   "label": "scam",
+   "category": "subscription",
+   "sender": "mobile",
+   "text": "iCloud depolama alaniniz doldu, fotograflariniz silinecek. Odeme yontemini guncelleyin: apple-id-destek.support",
+   "split": "train"
+  },
+  {
+   "id": "M001",
+   "label": "legit",
+   "category": "bank",
+   "sender": "header",
+   "text": "Hesabiniza 11.11.2026 tarihinde 4.500,00 TL HAVALE girisi olmustur. Bakiye: 12.840,15 TL. B001",
+   "split": "train"
+  },
+  {
+   "id": "M002",
+   "label": "legit",
+   "category": "bank",
+   "sender": "header",
+   "text": "Sayın müşterimiz, 4821 ile biten kartınızla 349,90 TL tutarında MIGROS işlemi yapılmıştır. Bilginiz dışındaysa 0850 222 0 000'ı arayınız.",
+   "split": "train"
+  },
+  {
+   "id": "M003",
+   "label": "legit",
+   "category": "bank",
+   "sender": "header",
+   "text": "Kredi kartı ekstreniz kesilmiştir. Dönem borcu: 8.412,36 TL, asgari tutar: 3.364,94 TL, son ödeme tarihi: 21.11.2026.",
+   "split": "train"
+  },
+  {
+   "id": "M004",
+   "label": "legit",
+   "category": "bank",
+   "sender": "header",
+   "text": "Dogrulama kodunuz: 482913. Bu kodu banka personeli dahil kimseyle paylasmayiniz. Islem tutari 1.250,00 TL.",
+   "split": "train"
+  },
+  {
+   "id": "M005",
+   "label": "legit",
+   "category": "bank",
+   "sender": "header",
+   "text": "Sayın müşterimiz, kredi kartı borcunuzun son ödeme günü yarındır. Ödediyseniz bu mesajı dikkate almayınız.",
+   "split": "train"
+  },
+  {
+   "id": "M006",
+   "label": "legit",
+   "category": "bank",
+   "sender": "header",
+   "text": "Mobil bankacılığa 11.11.2026 09:42'de yeni bir cihazdan giriş yapıldı. Bilginiz dışındaysa müşteri iletişim merkezimizi arayınız.",
+   "split": "train"
+  },
+  {
+   "id": "M007",
+   "label": "legit",
+   "category": "bank",
+   "sender": "header",
+   "text": "Maasiniz hesabiniza yatmistir. Tutar: 38.250,00 TL. Iyi gunlerde kullanin.",
+   "split": "train"
+  },
+  {
+   "id": "M008",
+   "label": "legit",
+   "category": "bank",
+   "sender": "header",
+   "text": "Bankkart Lira kampanyası: Kasım ayında market alışverişlerinize 250 TL Bankkart Lira. Detaylar ziraatbank.com.tr adresinde.",
+   "split": "holdout"
+  },
+  {
+   "id": "M009",
+   "label": "legit",
+   "category": "bank",
+   "sender": "header",
+   "text": "Vadeli hesabinizin vadesi 15.11.2026 tarihinde dolacaktir. Yenileme talimatinizi mobil subeden verebilirsiniz.",
+   "split": "train"
+  },
+  {
+   "id": "M010",
+   "label": "legit",
+   "category": "bank",
+   "sender": "header",
+   "text": "Kredi karti aidatiniz 890 TL olarak ekstrenize yansitilmistir. Bilgi icin isbank.com.tr",
+   "split": "holdout"
+  },
+  {
+   "id": "M011",
+   "label": "legit",
+   "category": "bank",
+   "sender": "header",
+   "text": "FAST ile 750,00 TL gonderdiniz. Alici: A*** K***. Islem saati 14:07. Bilginiz disindaysa bizi arayin.",
+   "split": "train"
+  },
+  {
+   "id": "M012",
+   "label": "legit",
+   "category": "bank",
+   "sender": "header",
+   "text": "Otomatik ödeme talimatınız gereği 612,40 TL elektrik faturanız hesabınızdan ödenmiştir.",
+   "split": "train"
+  },
+  {
+   "id": "M013",
+   "label": "legit",
+   "category": "bank",
+   "sender": "header",
+   "text": "Sifreniz 3 kez hatali girildigi icin internet subeniz gecici olarak kapatilmistir. Subemizden veya mobil uygulamadan yeniden sifre alabilirsiniz.",
+   "split": "holdout"
+  },
+  {
+   "id": "M014",
+   "label": "legit",
+   "category": "bank",
+   "sender": "header",
+   "text": "Sayın müşterimiz, bankamız hiçbir zaman sizden şifre, kart bilgisi veya SMS kodu istemez. Dolandırıcılara karşı dikkatli olunuz.",
+   "split": "train"
+  },
+  {
+   "id": "M015",
+   "label": "legit",
+   "category": "bank",
+   "sender": "header",
+   "text": "Kredi basvurunuz degerlendirmeye alinmistir. Sonuc en gec 2 is gunu icinde SMS ile bildirilecektir.",
+   "split": "train"
+  },
+  {
+   "id": "M016",
+   "label": "legit",
+   "category": "cargo",
+   "sender": "header",
+   "text": "Yurtiçi Kargo: 3391204477 no'lu gönderiniz yola çıkmıştır. Takip: https://www.yurticikargo.com/tr/online-servisler/gonderi-sorgula",
+   "split": "train"
+  },
+  {
+   "id": "M017",
+   "label": "legit",
+   "category": "cargo",
+   "sender": "header",
+   "text": "Aras Kargo: Gonderiniz bugun dagitima cikmistir. Teslimat kodunuz: 4471. Kodu yalnizca kuryeye soyleyiniz.",
+   "split": "holdout"
+  },
+  {
+   "id": "M018",
+   "label": "legit",
+   "category": "cargo",
+   "sender": "header",
+   "text": "PTT: RR123456789TR barkodlu gonderiniz teslim edilmistir. Sorgulama: gonderitakip.ptt.gov.tr",
+   "split": "holdout"
+  },
+  {
+   "id": "M019",
+   "label": "legit",
+   "category": "cargo",
+   "sender": "header",
+   "text": "Trendyol siparişiniz kargoya verildi. Tahmini teslimat 13 Kasım. Siparişlerim sayfasından takip edebilirsiniz.",
+   "split": "train"
+  },
+  {
+   "id": "M020",
+   "label": "legit",
+   "category": "cargo",
+   "sender": "header",
+   "text": "hepsiJET: Paketiniz yarin 09:00-18:00 arasinda teslim edilecektir. Adreste yoksaniz teslimat noktasina birakilacaktir.",
+   "split": "train"
+  },
+  {
+   "id": "M021",
+   "label": "legit",
+   "category": "cargo",
+   "sender": "header",
+   "text": "MNG Kargo: Gönderiniz adreste bulunamadığınız için şubemize alınmıştır. 3 iş günü içinde kimliğinizle teslim alabilirsiniz.",
+   "split": "train"
+  },
+  {
+   "id": "M022",
+   "label": "legit",
+   "category": "cargo",
+   "sender": "mobile",
+   "text": "Merhaba kuryeyim, paketinizi getirdim ama zile basıyorum açan yok. Kapıcıya bırakayım mı?",
+   "split": "holdout"
+  },
+  {
+   "id": "M023",
+   "label": "legit",
+   "category": "cargo",
+   "sender": "header",
+   "text": "Siparisiniz teslim edildi. Bizi degerlendirmek ister misiniz? hepsiburada.com/siparislerim",
+   "split": "train"
+  },
+  {
+   "id": "M024",
+   "label": "legit",
+   "category": "cargo",
+   "sender": "header",
+   "text": "Surat Kargo: Gonderiniz transfer merkezine ulasmistir. Takip no: 55120098. suratkargo.com.tr",
+   "split": "train"
+  },
+  {
+   "id": "M025",
+   "label": "legit",
+   "category": "edevlet",
+   "sender": "header",
+   "text": "e-Devlet Kapisi dogrulama kodunuz: 739201. Bu kodu kimseyle paylasmayiniz.",
+   "split": "train"
+  },
+  {
+   "id": "M026",
+   "label": "legit",
+   "category": "edevlet",
+   "sender": "header",
+   "text": "e-Devlet Kapısı'na 11.11.2026 10:15'te giriş yapıldı. Giriş size ait değilse şifrenizi değiştiriniz. turkiye.gov.tr",
+   "split": "holdout"
+  },
+  {
+   "id": "M027",
+   "label": "legit",
+   "category": "edevlet",
+   "sender": "header",
+   "text": "Sayin vatandasimiz, nufus mudurlugu randevunuz 14.11.2026 saat 10:30'dadir. Randevu saatinden 10 dakika once hazir bulununuz.",
+   "split": "train"
+  },
+  {
+   "id": "M028",
+   "label": "legit",
+   "category": "edevlet",
+   "sender": "header",
+   "text": "Pasaport başvurunuz onaylanmış olup pasaportunuz PTT'ye teslim edilmiştir.",
+   "split": "train"
+  },
+  {
+   "id": "M029",
+   "label": "legit",
+   "category": "edevlet",
+   "sender": "header",
+   "text": "Ikametgah degisikliginiz sisteme islenmistir. Bilgilerinizi turkiye.gov.tr uzerinden goruntuleyebilirsiniz.",
+   "split": "train"
+  },
+  {
+   "id": "M030",
+   "label": "legit",
+   "category": "fake-enforcement",
+   "sender": "header",
+   "text": "UYAP: 2026/1184 Esas sayılı dosyanızda duruşma günü 03.12.2026 saat 10:20 olarak belirlenmiştir.",
+   "split": "train"
+  },
+  {
+   "id": "M031",
+   "label": "legit",
+   "category": "fake-enforcement",
+   "sender": "mobile",
+   "text": "Merhaba, avukatınız Av. S.'nin bürosundan arıyorum. Dosyanızla ilgili vekâletname için yarın büroya uğrayabilir misiniz?",
+   "split": "holdout"
+  },
+  {
+   "id": "M032",
+   "label": "legit",
+   "category": "fake-enforcement",
+   "sender": "header",
+   "text": "e-Tebligat adresinize yeni bir tebligat ulaşmıştır. Tebligatlarınızı e-Devlet üzerinden görüntüleyebilirsiniz.",
+   "split": "train"
+  },
+  {
+   "id": "M033",
+   "label": "legit",
+   "category": "toll-hgs",
+   "sender": "header",
+   "text": "HGS: 34 ABC 000 plakali aracinizdan 11.11.2026 tarihinde 78,00 TL gecis ucreti tahsil edilmistir. Kalan bakiye: 212,50 TL.",
+   "split": "holdout"
+  },
+  {
+   "id": "M034",
+   "label": "legit",
+   "category": "toll-hgs",
+   "sender": "header",
+   "text": "PTT HGS: Hesabınıza 500,00 TL yükleme yapılmıştır. İyi yolculuklar dileriz.",
+   "split": "holdout"
+  },
+  {
+   "id": "M035",
+   "label": "legit",
+   "category": "toll-hgs",
+   "sender": "header",
+   "text": "HGS bakiyeniz 50 TL'nin altina dusmustur. PTT subeleri, anlasmali bankalar veya e-Devlet uzerinden yukleme yapabilirsiniz.",
+   "split": "holdout"
+  },
+  {
+   "id": "M036",
+   "label": "legit",
+   "category": "tax-gib",
+   "sender": "header",
+   "text": "GİB: Motorlu Taşıtlar Vergisi 2. taksit ödemeleri için son gün 31 Temmuz'dur. Ödemelerinizi dijital.gib.gov.tr üzerinden yapabilirsiniz.",
+   "split": "train"
+  },
+  {
+   "id": "M037",
+   "label": "legit",
+   "category": "tax-gib",
+   "sender": "header",
+   "text": "GIB: 2026/10 donemi KDV beyannameniz onaylanmistir. Tahakkuk fisi Dijital Vergi Dairesinde goruntulenebilir.",
+   "split": "holdout"
+  },
+  {
+   "id": "M038",
+   "label": "legit",
+   "category": "tax-gib",
+   "sender": "header",
+   "text": "Emlak vergisi 2. taksit son odeme tarihi 30 Kasim'dir. Odemelerinizi belediyemiz veznelerinden veya e-belediye uzerinden yapabilirsiniz.",
+   "split": "train"
+  },
+  {
+   "id": "M039",
+   "label": "legit",
+   "category": "sgk-pension",
+   "sender": "header",
+   "text": "SGK: 2026/10 donemine ait sigorta primleriniz isvereniniz tarafindan bildirilmistir. Hizmet dokumunuzu e-Devlet'ten goruntuleyebilirsiniz.",
+   "split": "train"
+  },
+  {
+   "id": "M040",
+   "label": "legit",
+   "category": "sgk-pension",
+   "sender": "header",
+   "text": "Emekli aylığınız 17.11.2026 tarihinde hesabınıza yatırılacaktır.",
+   "split": "train"
+  },
+  {
+   "id": "M041",
+   "label": "legit",
+   "category": "sgk-pension",
+   "sender": "header",
+   "text": "SGK: Is goremezlik odemeniz 2.184,60 TL olarak PTT subelerine gonderilmistir. Kimliginizle teslim alabilirsiniz.",
+   "split": "train"
+  },
+  {
+   "id": "M042",
+   "label": "legit",
+   "category": "health",
+   "sender": "header",
+   "text": "MHRS: 13.11.2026 09:40 Ankara Bilkent Şehir Hastanesi Göz Hastalıkları randevunuz oluşturulmuştur. İptal için 182.",
+   "split": "train"
+  },
+  {
+   "id": "M043",
+   "label": "legit",
+   "category": "health",
+   "sender": "header",
+   "text": "e-Nabiz: Hesabiniza 11.11.2026 tarihinde giris yapilmistir. Bilginiz disindaysa sifrenizi degistiriniz.",
+   "split": "train"
+  },
+  {
+   "id": "M044",
+   "label": "legit",
+   "category": "health",
+   "sender": "header",
+   "text": "Sayin hastamiz, tahlil sonuclariniz cikmistir. Sonuclarinizi e-Nabiz uzerinden veya hastanemizden alabilirsiniz.",
+   "split": "holdout"
+  },
+  {
+   "id": "M045",
+   "label": "legit",
+   "category": "health",
+   "sender": "mobile",
+   "text": "Merhaba, dis klinigimizden ariyoruz. Yarin saat 15:30 randevunuzu hatirlatmak isteriz. Gelemeyecekseniz lutfen bilgi verin.",
+   "split": "train"
+  },
+  {
+   "id": "M046",
+   "label": "legit",
+   "category": "health",
+   "sender": "header",
+   "text": "Aile hekiminiz: Grip aşısı uygulamaları başlamıştır. 65 yaş üstü vatandaşlarımız aile sağlığı merkezine başvurabilir.",
+   "split": "holdout"
+  },
+  {
+   "id": "M047",
+   "label": "legit",
+   "category": "health",
+   "sender": "header",
+   "text": "Eczane: Recetenizdeki ilaclariniz hazirlanmistir. 19:00'a kadar teslim alabilirsiniz.",
+   "split": "holdout"
+  },
+  {
+   "id": "M048",
+   "label": "legit",
+   "category": "traffic-license",
+   "sender": "header",
+   "text": "Aracinizin muayene suresi 05.12.2026 tarihinde dolacaktir. Randevu icin tuvturk.com.tr",
+   "split": "train"
+  },
+  {
+   "id": "M049",
+   "label": "legit",
+   "category": "traffic-license",
+   "sender": "header",
+   "text": "Zorunlu trafik sigortanızın bitiş tarihi 28.11.2026'dır. Yenileme teklifiniz için acentenizi arayabilirsiniz.",
+   "split": "holdout"
+  },
+  {
+   "id": "M050",
+   "label": "legit",
+   "category": "traffic-license",
+   "sender": "header",
+   "text": "EGM: Sürücü belgeniz hazırlanmış olup PTT aracılığıyla adresinize gönderilmiştir.",
+   "split": "holdout"
+  },
+  {
+   "id": "M051",
+   "label": "legit",
+   "category": "operator",
+   "sender": "header",
+   "text": "Turkcell: Kasım ayı faturanız 412,50 TL'dir. Son ödeme tarihi 24.11.2026. Faturanızı Turkcell uygulamasından ödeyebilirsiniz.",
+   "split": "train"
+  },
+  {
+   "id": "M052",
+   "label": "legit",
+   "category": "operator",
+   "sender": "header",
+   "text": "Vodafone: Paketinizdeki internetin %80'ini kullandiniz. Ek paket almak icin EK yazip 7000'e gonderebilirsiniz.",
+   "split": "train"
+  },
+  {
+   "id": "M053",
+   "label": "legit",
+   "category": "operator",
+   "sender": "header",
+   "text": "Turk Telekom: Faturaniz son odeme tarihinde odenmemistir. Odeme yapilmamasi halinde hattiniz kullanima kapatilacaktir. Odediyseniz dikkate almayiniz.",
+   "split": "train"
+  },
+  {
+   "id": "M054",
+   "label": "legit",
+   "category": "operator",
+   "sender": "header",
+   "text": "TURKCELL: Yurt disinda hos geldiniz. Yurt disi paketleri icin turkcell.com.tr/yurtdisi",
+   "split": "train"
+  },
+  {
+   "id": "M055",
+   "label": "legit",
+   "category": "operator",
+   "sender": "header",
+   "text": "Taahhüdünüzün bitmesine 30 gün kalmıştır. Yeni tarife seçenekleri için mağazalarımıza bekleriz.",
+   "split": "train"
+  },
+  {
+   "id": "M056",
+   "label": "legit",
+   "category": "operator",
+   "sender": "header",
+   "text": "Vodafone: Numara tasima talebiniz alinmistir. Islem 2 is gunu icinde tamamlanacaktir.",
+   "split": "train"
+  },
+  {
+   "id": "M057",
+   "label": "legit",
+   "category": "ecommerce",
+   "sender": "header",
+   "text": "Trendyol: Kasım indirimleri başladı! Seçili ürünlerde %50'ye varan indirim. trendyol.com SMS almamak için RET yazıp 3000'e gönderin.",
+   "split": "train"
+  },
+  {
+   "id": "M058",
+   "label": "legit",
+   "category": "ecommerce",
+   "sender": "header",
+   "text": "A101: Bu persembe aktuel urunler magazalarimizda. Katalog: a101.com.tr/aktuel B002",
+   "split": "train"
+  },
+  {
+   "id": "M059",
+   "label": "legit",
+   "category": "ecommerce",
+   "sender": "header",
+   "text": "Migros Money: 200 TL ve uzeri alisverisinize 30 TL Money puan hediye. Kampanya 15 Kasim'a kadar gecerlidir.",
+   "split": "train"
+  },
+  {
+   "id": "M060",
+   "label": "legit",
+   "category": "ecommerce",
+   "sender": "header",
+   "text": "LC Waikiki: Sezon sonu indirimi! Tum kabanlarda 2. urun %50 indirimli. lcw.com Mersis: 0000000000000000",
+   "split": "train"
+  },
+  {
+   "id": "M061",
+   "label": "legit",
+   "category": "ecommerce",
+   "sender": "header",
+   "text": "Yemeksepeti: Siparişiniz yola çıktı! Kuryeniz yaklaşık 15 dakika içinde adresinizde olacak.",
+   "split": "holdout"
+  },
+  {
+   "id": "M062",
+   "label": "legit",
+   "category": "ecommerce",
+   "sender": "header",
+   "text": "Hepsiburada: Sepetinizdeki urunun fiyati dustu. Hemen incele: hepsiburada.com/sepetim",
+   "split": "holdout"
+  },
+  {
+   "id": "M063",
+   "label": "legit",
+   "category": "ecommerce",
+   "sender": "header",
+   "text": "Çekiliş sonucu: 1-31 Ekim alışveriş kampanyamızın MPİ izinli çekilişinde asil talihliler web sitemizde ilan edilmiştir.",
+   "split": "holdout"
+  },
+  {
+   "id": "M064",
+   "label": "legit",
+   "category": "ecommerce",
+   "sender": "header",
+   "text": "Optik magazamizda yilbasina ozel tum cercevelerde %30 indirim. Detaylar icin magazamiza bekleriz. RET icin 0850 555 01 00",
+   "split": "train"
+  },
+  {
+   "id": "M065",
+   "label": "legit",
+   "category": "ecommerce",
+   "sender": "header",
+   "text": "Sayın üyemiz, spor salonu üyeliğiniz 30.11.2026 tarihinde sona erecektir. Yenileme için resepsiyona uğrayabilirsiniz.",
+   "split": "holdout"
+  },
+  {
+   "id": "M066",
+   "label": "legit",
+   "category": "ecommerce",
+   "sender": "header",
+   "text": "Kuafor randevunuz yarin 14:00. Iptal veya degisiklik icin bit.ly/randevum-kuafor",
+   "split": "train"
+  },
+  {
+   "id": "M067",
+   "label": "legit",
+   "category": "ecommerce",
+   "sender": "header",
+   "text": "Sahibinden: Ilaniniz yayina alinmistir. Ilan no: 1188442207. Ilanlarinizi sahibinden.com'dan yonetebilirsiniz.",
+   "split": "train"
+  },
+  {
+   "id": "M068",
+   "label": "legit",
+   "category": "subscription",
+   "sender": "header",
+   "text": "Netflix kodunuz: 884213. Bu kodu kimseyle paylasmayin.",
+   "split": "holdout"
+  },
+  {
+   "id": "M069",
+   "label": "legit",
+   "category": "subscription",
+   "sender": "header",
+   "text": "WhatsApp kodunuz: 317-204. Kodu kimseyle paylaşmayın.",
+   "split": "train"
+  },
+  {
+   "id": "M070",
+   "label": "legit",
+   "category": "subscription",
+   "sender": "header",
+   "text": "Spotify Premium aboneliginiz yenilendi. 59,99 TL kartinizdan tahsil edildi.",
+   "split": "train"
+  },
+  {
+   "id": "M071",
+   "label": "legit",
+   "category": "subscription",
+   "sender": "header",
+   "text": "Google dogrulama kodunuz G-558201",
+   "split": "train"
+  },
+  {
+   "id": "M072",
+   "label": "legit",
+   "category": "subscription",
+   "sender": "header",
+   "text": "Instagram hesabınıza yeni bir cihazdan giriş yapıldı. Siz değilseniz uygulamadan şifrenizi değiştirin.",
+   "split": "train"
+  },
+  {
+   "id": "M073",
+   "label": "legit",
+   "category": "bill",
+   "sender": "header",
+   "text": "ASKI: 2026/10 donemi su faturaniz 318,40 TL'dir. Son odeme 25.11.2026. Abone no: 000000",
+   "split": "train"
+  },
+  {
+   "id": "M074",
+   "label": "legit",
+   "category": "bill",
+   "sender": "header",
+   "text": "Enerjisa: Bölgenizde 12.11.2026 09:00-13:00 arasında planlı bakım nedeniyle elektrik kesintisi yapılacaktır.",
+   "split": "train"
+  },
+  {
+   "id": "M075",
+   "label": "legit",
+   "category": "bill",
+   "sender": "header",
+   "text": "Dogalgaz faturaniz 1.240,75 TL. Son odeme tarihinde odenmeyen faturalar icin gecikme bedeli uygulanir.",
+   "split": "train"
+  },
+  {
+   "id": "M076",
+   "label": "legit",
+   "category": "bill",
+   "sender": "header",
+   "text": "Apartman yönetimi: Kasım ayı aidatı 1.500 TL'dir. Ödemelerinizi ayın 15'ine kadar yönetim hesabına yapmanızı rica ederiz.",
+   "split": "train"
+  },
+  {
+   "id": "M077",
+   "label": "legit",
+   "category": "school",
+   "sender": "header",
+   "text": "Sayin veli, ogrencimiz bugun 2. derse katilmamistir. Bilginize. Okul idaresi",
+   "split": "train"
+  },
+  {
+   "id": "M078",
+   "label": "legit",
+   "category": "school",
+   "sender": "header",
+   "text": "Veli toplantımız 20 Kasım Cuma saat 17:00'de okulumuz konferans salonunda yapılacaktır. Katılımınızı bekleriz.",
+   "split": "train"
+  },
+  {
+   "id": "M079",
+   "label": "legit",
+   "category": "personal",
+   "sender": "mobile",
+   "text": "Anne ben çıkıyorum şimdi, akşam yemeğe geç kalırım beklemeyin.",
+   "split": "holdout"
+  },
+  {
+   "id": "M080",
+   "label": "legit",
+   "category": "personal",
+   "sender": "whatsapp",
+   "text": "Halı saha parasını topluyorum, kişi başı 250 TL. IBAN'ımı gruba attım, müsait olunca atarsınız.",
+   "split": "holdout"
+  },
+  {
+   "id": "M081",
+   "label": "legit",
+   "category": "personal",
+   "sender": "whatsapp",
+   "text": "Canım yarın kahvaltıya geliyor musunuz? Saat 10 gibi bekliyoruz.",
+   "split": "train"
+  },
+  {
+   "id": "M082",
+   "label": "legit",
+   "category": "personal",
+   "sender": "mobile",
+   "text": "Abi numaramı değiştirdim, bu yeni numaram kaydedersin. Akşam maçta görüşürüz.",
+   "split": "train"
+  },
+  {
+   "id": "M083",
+   "label": "legit",
+   "category": "personal",
+   "sender": "whatsapp",
+   "text": "Ev sahibi aradı, kirayı bu ay 5'inde yatırabilir miyiz diye sordu. Sen mi yatırırsın ben mi?",
+   "split": "train"
+  },
+  {
+   "id": "M084",
+   "label": "legit",
+   "category": "personal",
+   "sender": "whatsapp",
+   "text": "Toplantı linki: https://zoom.us/j/0000000000 Saat 14:00'te başlıyoruz.",
+   "split": "train"
+  },
+  {
+   "id": "M085",
+   "label": "legit",
+   "category": "personal",
+   "sender": "mobile",
+   "text": "Usta yarın 9 gibi kombi bakımına gelecek, evde olur musun?",
+   "split": "train"
+  },
+  {
+   "id": "M086",
+   "label": "legit",
+   "category": "job",
+   "sender": "header",
+   "text": "kariyer.net: Başvurduğunuz Muhasebe Uzmanı ilanı için özgeçmişiniz işverene iletildi.",
+   "split": "holdout"
+  },
+  {
+   "id": "M087",
+   "label": "legit",
+   "category": "job",
+   "sender": "mobile",
+   "text": "Merhaba, firmamızın insan kaynaklarından arıyorum. Başvurunuzla ilgili perşembe 11:00'de ofisimizde mülakata bekliyoruz. Uygun musunuz?",
+   "split": "train"
+  },
+  {
+   "id": "M088",
+   "label": "legit",
+   "category": "job",
+   "sender": "header",
+   "text": "ISKUR: Kayitli oldugunuz meslekte yeni is ilanlari yayinlanmistir. Ilanlari iskur.gov.tr uzerinden inceleyebilirsiniz.",
+   "split": "holdout"
+  },
+  {
+   "id": "M089",
+   "label": "legit",
+   "category": "notary",
+   "sender": "header",
+   "text": "Noter randevunuz 12.11.2026 saat 11:00 icin olusturulmustur. Kimliginizle birlikte gelmeyi unutmayiniz.",
+   "split": "holdout"
+  },
+  {
+   "id": "M090",
+   "label": "legit",
+   "category": "investment",
+   "sender": "header",
+   "text": "Hisse senedi alim emriniz gerceklesmistir. 100 adet, ortalama fiyat 48,20 TL. Araci kurumunuz.",
+   "split": "train"
+  },
+  {
+   "id": "M091",
+   "label": "legit",
+   "category": "donation",
+   "sender": "header",
+   "text": "Kizilay: Kan stoklarimiz azalmistir. En yakin kan bagis noktasi icin kizilay.org.tr",
+   "split": "train"
+  },
+  {
+   "id": "ZD001",
+   "label": "scam",
+   "category": "fake-enforcement",
+   "sender": "unknown",
+   "text": "Merhabalar, alacaklı vekili olarak yazıyorum. Ödenmeyen borcunuz için mal varlığınıza el konulması aşamasına gelindi. Uzlaşmak isterseniz bana dönüş yapın.",
+   "split": "hard"
+  },
+  {
+   "id": "ZD002",
+   "label": "scam",
+   "category": "fake-enforcement",
+   "sender": "header",
+   "text": "Tebliğ evrakınız dağıtıcıda kalmıştır. Evrak içeriği: ödeme emri. Görmek için dokunun -> evrak-teslim.co/x7",
+   "split": "hard"
+  },
+  {
+   "id": "ZD003",
+   "label": "scam",
+   "category": "cargo",
+   "sender": "mobile",
+   "text": "Teslimatınız yapılamadı çünkü kapı numarası okunamıyor. Şuradan düzeltin lütfen kurye bekliyor: teslimat-duzelt.co/tr",
+   "split": "hard"
+  },
+  {
+   "id": "ZD004",
+   "label": "scam",
+   "category": "cargo",
+   "sender": "unknown",
+   "text": "Siparisin yolda kaldi :( 12 lira eksik posta ucreti var, tamamlarsan yarin elinde. rb.gy/q1w2e3",
+   "split": "hard"
+  },
+  {
+   "id": "ZD005",
+   "label": "scam",
+   "category": "bank",
+   "sender": "header",
+   "text": "Sn. müşterimiz mobil uygulamamız yenilendi. Eski sürüm 3 gün sonra çalışmayacaktır. Yeni sürüme geçiş: mobil-gecis.net",
+   "split": "hard"
+  },
+  {
+   "id": "ZD006",
+   "label": "scam",
+   "category": "bank",
+   "sender": "mobile",
+   "text": "Hesabınızdan az önce 23.000 lira çıkış oldu. Siz yapmadıysanız geri almak için bu numarayı arayın, temsilcimiz yardımcı olacak.",
+   "split": "hard"
+  },
+  {
+   "id": "ZD007",
+   "label": "scam",
+   "category": "bank",
+   "sender": "whatsapp",
+   "text": "Bankanızın güvenlik biriminden ulaşıyoruz. Kartınız kopyalanmış. Yeni kart çıkarmak için kartın ön ve arka yüzünün fotoğrafını atın.",
+   "split": "hard"
+  },
+  {
+   "id": "ZD008",
+   "label": "scam",
+   "category": "edevlet",
+   "sender": "unknown",
+   "text": "Vatandaşlık maaşı ödemeleri başladı, T.C. numaranızın son hanesine göre gününüzü öğrenin: vatandaslik-maasi.info",
+   "split": "hard"
+  },
+  {
+   "id": "ZD009",
+   "label": "scam",
+   "category": "toll-hgs",
+   "sender": "mobile",
+   "text": "Otoban gişesinden kaçak geçtiğiniz görüldü, plakanıza işlem yapılmadan 60 liralık tutarı kapatın: otoyol-tahsilat.co",
+   "split": "hard"
+  },
+  {
+   "id": "ZD010",
+   "label": "scam",
+   "category": "traffic-license",
+   "sender": "unknown",
+   "text": "Aracınız çekilmiştir. Otopark ve çekici ücretini online ödeyip aracınızın yerini öğrenin: otopark-sorgu.net",
+   "split": "hard"
+  },
+  {
+   "id": "ZD011",
+   "label": "scam",
+   "category": "fake-job",
+   "sender": "whatsapp",
+   "text": "Selam, bir tanıdığın numaranı verdi. Otel yorumu yazıp para kazanıyoruz, akşamları 1 saat yetiyor. İlgilenirsen anlatayım, ilk ödemeyi bugün alırsın.",
+   "split": "hard"
+  },
+  {
+   "id": "ZD012",
+   "label": "scam",
+   "category": "fake-job",
+   "sender": "mobile",
+   "text": "Yurt dışında garsonluk, aylık 3.500 euro, vize bizden. Sadece dosya parası 9.000 TL alıyoruz, kontenjan dolmak üzere.",
+   "split": "hard"
+  },
+  {
+   "id": "ZD013",
+   "label": "scam",
+   "category": "investment-crypto",
+   "sender": "whatsapp",
+   "text": "Hocam geçen ay verdiğim coinle herkes 4 katına çıktı. Yeni proje listelenmeden son 2 gün, minimum giriş 10 bin. Cüzdan adresini atıyorum.",
+   "split": "hard"
+  },
+  {
+   "id": "ZD014",
+   "label": "scam",
+   "category": "investment-crypto",
+   "sender": "foreign",
+   "text": "Hello dear, I am a financial advisor. Do you want to earn 500 USD daily with simple crypto trading? Reply YES.",
+   "split": "hard"
+  },
+  {
+   "id": "ZD015",
+   "label": "scam",
+   "category": "prize-discount",
+   "sender": "unknown",
+   "text": "Anketimize katılan ilk 100 kişiye airfryer gönderiyoruz, sadece gönderim masrafını siz karşılıyorsunuz. Katıl: anket-hediye.co",
+   "split": "hard"
+  },
+  {
+   "id": "ZD016",
+   "label": "scam",
+   "category": "relative-impersonation",
+   "sender": "whatsapp",
+   "text": "Teyzeciğim ben Burak, eski hattı kapattım. Bir arkadaşa borcum var bugün ödemem gerek ama bankam kilitlendi, sen halledebilir misin? Bilgileri yolluyorum.",
+   "split": "hard"
+  },
+  {
+   "id": "ZD017",
+   "label": "scam",
+   "category": "code-request",
+   "sender": "whatsapp",
+   "text": "Kanka telefonuna bi mesaj düşecek şimdi, içindeki rakamları bana yazsana, hesabıma giremiyorum.",
+   "split": "hard"
+  },
+  {
+   "id": "ZD018",
+   "label": "scam",
+   "category": "notary-deposit",
+   "sender": "whatsapp",
+   "text": "Telefonu almak istiyorum ama şu an müsait değilim, kuzenim gelip alacak. Ödemeyi kurye getirecek, sigorta bedeli 400 TL sizden çıkıyor sonra iade.",
+   "split": "hard"
+  },
+  {
+   "id": "ZD019",
+   "label": "scam",
+   "category": "sgk-pension",
+   "sender": "unknown",
+   "text": "Eksik gününüzü tamamlayıp erken emekli olabilirsiniz. Devlet destekli borçlanma için danışmanlarımız sizi arasın: erken-emeklilik.co",
+   "split": "hard"
+  },
+  {
+   "id": "ZD020",
+   "label": "scam",
+   "category": "subscription",
+   "sender": "unknown",
+   "text": "Depolama alanınız doldu ve yedeklemeniz durdu. 2 TL karşılığında 50 GB kazanmak için: bulut-yukselt.co",
+   "split": "hard"
+  },
+  {
+   "id": "ZM001",
+   "label": "legit",
+   "category": "bank",
+   "sender": "header",
+   "text": "Sayın müşterimiz, hesabınızda şüpheli işlem tespit edildiğinden kartınız geçici olarak kullanıma kapatılmıştır. Lütfen 0850 222 0 000 müşteri iletişim merkezimizi arayınız.",
+   "split": "hard"
+  },
+  {
+   "id": "ZM002",
+   "label": "legit",
+   "category": "bank",
+   "sender": "header",
+   "text": "Kredi kartı borcunuz 45 gündür ödenmemiştir. Ödeme yapılmaması halinde yasal takip başlatılacaktır. Ödeme için şubelerimize veya mobil uygulamamıza başvurabilirsiniz.",
+   "split": "hard"
+  },
+  {
+   "id": "ZM003",
+   "label": "legit",
+   "category": "bank",
+   "sender": "header",
+   "text": "Tebrikler! Kredi kartı başvurunuz onaylandı. Kartınız 5 iş günü içinde adresinize teslim edilecektir.",
+   "split": "hard"
+  },
+  {
+   "id": "ZM004",
+   "label": "legit",
+   "category": "bank",
+   "sender": "header",
+   "text": "Musteri bilgilerinizin guncellenmesi yasal zorunluluktur. Kimliginizle en yakin subemize ugrayabilir veya mobil uygulamamizdan guncelleyebilirsiniz.",
+   "split": "hard"
+  },
+  {
+   "id": "ZM005",
+   "label": "legit",
+   "category": "cargo",
+   "sender": "header",
+   "text": "Gonderiniz adres yetersizligi nedeniyle teslim edilememistir. Lutfen 444 0 000 numarali cagri merkezimizi arayiniz veya subemize basvurunuz.",
+   "split": "hard"
+  },
+  {
+   "id": "ZM006",
+   "label": "legit",
+   "category": "cargo",
+   "sender": "header",
+   "text": "Yurt dışı siparişiniz gümrükte. Gümrük vergisi 184 TL teslimatta kuryeye ödenecektir. Takip: ptt.gov.tr",
+   "split": "hard"
+  },
+  {
+   "id": "ZM007",
+   "label": "legit",
+   "category": "toll-hgs",
+   "sender": "header",
+   "text": "HGS bakiyeniz yetersizdir. Ihlalli gecisinizin cezasiz tahsili icin 15 gun icinde bakiye yuklemeniz gerekmektedir. PTT",
+   "split": "hard"
+  },
+  {
+   "id": "ZM008",
+   "label": "legit",
+   "category": "tax-gib",
+   "sender": "header",
+   "text": "GİB: Vadesi geçmiş 1.240,00 TL vergi borcunuz bulunmaktadır. Ödeme yapılmaması halinde cebri icra yoluna gidilecektir. Ödeme için dijital.gib.gov.tr",
+   "split": "hard"
+  },
+  {
+   "id": "ZM009",
+   "label": "legit",
+   "category": "sgk-pension",
+   "sender": "header",
+   "text": "SGK: GSS prim borcunuz bulunmaktadir. Borcunuzu e-Devlet, anlasmali bankalar veya PTT araciligiyla odeyebilirsiniz.",
+   "split": "hard"
+  },
+  {
+   "id": "ZM010",
+   "label": "legit",
+   "category": "traffic-license",
+   "sender": "header",
+   "text": "EGM: 34 ABC 000 plakalı aracınıza 2.167 TL trafik idari para cezası düzenlenmiştir. 1 ay içinde ödemelerde %25 indirim uygulanır.",
+   "split": "hard"
+  },
+  {
+   "id": "ZM011",
+   "label": "legit",
+   "category": "operator",
+   "sender": "header",
+   "text": "Turkcell: Hattiniz adiniza kayitli gorunmuyor. Kimlik bilgilerinizi guncellemek icin kimliginizle en yakin Turkcell magazasina basvurunuz. Aksi halde hattiniz kapatilacaktir.",
+   "split": "hard"
+  },
+  {
+   "id": "ZM012",
+   "label": "legit",
+   "category": "ecommerce",
+   "sender": "header",
+   "text": "Tebrikler! Yılbaşı çekilişimizde 500 TL hediye çeki kazandınız. Hediye çekiniz hesabınıza tanımlandı, uygulamadan görebilirsiniz. Trendyol",
+   "split": "hard"
+  },
+  {
+   "id": "ZM013",
+   "label": "legit",
+   "category": "ecommerce",
+   "sender": "header",
+   "text": "BUYUK KASIM INDIRIMI!!! Tum urunlerde %70'e varan indirim, son 2 gun! Magaza: bit.ly/butik-kasim RET: 4609",
+   "split": "hard"
+  },
+  {
+   "id": "ZM014",
+   "label": "legit",
+   "category": "ecommerce",
+   "sender": "header",
+   "text": "Yeni açılan şubemize özel ücretsiz kargo ve ilk siparişe 100 TL indirim. Sipariş: lezzetduragi-ankara.com",
+   "split": "hard"
+  },
+  {
+   "id": "ZM015",
+   "label": "legit",
+   "category": "personal",
+   "sender": "whatsapp",
+   "text": "Anne telefonum bozuldu servise verdim, akşama kadar babamın telefonundan ulaşırsın bana.",
+   "split": "hard"
+  },
+  {
+   "id": "ZM016",
+   "label": "legit",
+   "category": "personal",
+   "sender": "whatsapp",
+   "text": "Kanka acil 500 lira lazım akşama kadar, maaş yatınca hemen veririm. IBAN'ım sende var zaten.",
+   "split": "hard"
+  },
+  {
+   "id": "ZM017",
+   "label": "legit",
+   "category": "personal",
+   "sender": "whatsapp",
+   "text": "Sana yanlışlıkla 2.000 TL göndermişim az önce, baksana bir. Geri atabilir misin? Ekran görüntüsü atıyorum.",
+   "split": "hard"
+  },
+  {
+   "id": "ZM018",
+   "label": "legit",
+   "category": "job",
+   "sender": "whatsapp",
+   "text": "Merhaba, LinkedIn profilinizi gördüm. Ankara'daki ekibimiz için .NET geliştirici arıyoruz, uzaktan çalışma mümkün. Müsaitseniz yarın kısa bir görüşme yapalım mı?",
+   "split": "hard"
+  },
+  {
+   "id": "ZM019",
+   "label": "legit",
+   "category": "notary",
+   "sender": "whatsapp",
+   "text": "Arabayı beğendim, yarın 10'da noterde buluşalım. Parayı noterde güvenli ödeme sistemiyle yatıracağım, kapora olarak bugün 5.000 TL elden bırakabilirim.",
+   "split": "hard"
+  },
+  {
+   "id": "ZM020",
+   "label": "legit",
+   "category": "investment",
+   "sender": "header",
+   "text": "Yatirim hesabiniza 25.000 TL virman yapilmistir. Gunluk bulten ve hisse onerileri icin uygulamamizdaki Arastirma sekmesini ziyaret edin.",
+   "split": "hard"
+  },
+  {
+   "id": "KD001",
+   "label": "scam",
+   "category": "cargo",
+   "sender": "unknown",
+   "text": "Paketiniz dagitim merkezimizde. Kapi numarasi eksik oldugundan kuryemiz cikamiyor, bilgilerinizi tamamlayin: dagitim-merkezi.co/g",
+   "split": "blind1"
+  },
+  {
+   "id": "KD002",
+   "label": "scam",
+   "category": "fake-enforcement",
+   "sender": "mobile",
+   "text": "Borçlu sıfatıyla adınıza ihtarname düzenlenmiştir. 48 saat içinde dönüş yapmadığınız takdirde maaşınıza bloke konulacaktır. Av. Bürosu 0544 555 01 19",
+   "split": "blind1"
+  },
+  {
+   "id": "KD003",
+   "label": "scam",
+   "category": "bank",
+   "sender": "unknown",
+   "text": "Sayın müşterimiz, yıllık kart ücreti iadeniz hesabınıza geçmek üzere. İade için kartınızı tanımlayın: iade-merkezi.net/kart",
+   "split": "blind1"
+  },
+  {
+   "id": "KD004",
+   "label": "scam",
+   "category": "fake-bank-call",
+   "sender": "whatsapp",
+   "text": "İyi günler, bankanızın dolandırıcılık biriminden arıyoruz ama ulaşamadık. Adınıza kredi çekilmeye çalışılıyor, iptal için bu hattan bize yazın.",
+   "split": "blind1"
+  },
+  {
+   "id": "KD005",
+   "label": "scam",
+   "category": "edevlet",
+   "sender": "mobile",
+   "text": "Kimlik kartinizin gecerlilik suresi dolmak uzere. Yenileme randevusu ve harc odemesi icin: kimlik-yenileme.org",
+   "split": "blind1"
+  },
+  {
+   "id": "KD006",
+   "label": "scam",
+   "category": "toll-hgs",
+   "sender": "unknown",
+   "text": "Sayın sürücü, Osmangazi Köprüsü geçişinize ait 1.240 TL ödenmemiş görünmektedir. Cezasız ödeme için son 2 gün: gecis-sorgula.net",
+   "split": "blind1"
+  },
+  {
+   "id": "KD007",
+   "label": "scam",
+   "category": "sgk-pension",
+   "sender": "whatsapp",
+   "text": "Emekli maaşınıza ek 5.000 TL zam farkı yatacak, hangi bankadan alıyorsanız kart bilgilerinizle onay vermeniz gerekiyor. Link: zam-farki.net",
+   "split": "blind1"
+  },
+  {
+   "id": "KD008",
+   "label": "scam",
+   "category": "fake-job",
+   "sender": "whatsapp",
+   "text": "Günde 2 saat telefonla ürün puanlayarak ek gelir. Ödemeler günlük, başlangıç için küçük bir aktivasyon ücreti var. Yaz anlatayım.",
+   "split": "blind1"
+  },
+  {
+   "id": "KD009",
+   "label": "scam",
+   "category": "investment-crypto",
+   "sender": "whatsapp",
+   "text": "Abi bu hisseye pazartesi operasyon var, içeriden bilgi. Grubumuzda paylaşıyoruz, girmek için 2.000 TL üyelik.",
+   "split": "blind1"
+  },
+  {
+   "id": "KD010",
+   "label": "scam",
+   "category": "prize-discount",
+   "sender": "unknown",
+   "text": "Marketler zinciri 10. yılını kutluyor: 3 soruyu yanıtla, 2.500 TL'lik alışveriş kartını kap. marketkart-kutlama.co",
+   "split": "blind1"
+  },
+  {
+   "id": "KD011",
+   "label": "scam",
+   "category": "relative-impersonation",
+   "sender": "whatsapp",
+   "text": "Oğlum ben annen, komşunun telefonundan yazıyorum benimki kapandı. Pazardayım kartım geçmedi, esnafın hesabına 1.800 TL gönderir misin, numarayı atıyorum.",
+   "split": "blind1"
+  },
+  {
+   "id": "KD012",
+   "label": "scam",
+   "category": "code-request",
+   "sender": "mobile",
+   "text": "Merhaba, eski numaram sizdeymiş sanırım. Hesabımı kurtarmak için size bir onay kodu gelecek, onu bana yazabilir misiniz rica etsem?",
+   "split": "blind1"
+  },
+  {
+   "id": "KD013",
+   "label": "scam",
+   "category": "notary-deposit",
+   "sender": "whatsapp",
+   "text": "İlandaki koltuk duruyor mu? Kargo firması aracılığıyla ödeme yapacağım, firma sizden kart numaranızı isteyecek paranın yatması için. Linki atıyorum.",
+   "split": "blind1"
+  },
+  {
+   "id": "KD014",
+   "label": "scam",
+   "category": "traffic-license",
+   "sender": "mobile",
+   "text": "Plakaniza yazilan ceza tebligati adresinizde bulunamadiginizdan iade olmustur. Tebligati buradan indirin: ceza-tebligat.net/belge.apk",
+   "split": "blind1"
+  },
+  {
+   "id": "KD015",
+   "label": "scam",
+   "category": "subscription",
+   "sender": "unknown",
+   "text": "Dijital yayın üyeliğinizin yenilemesi başarısız oldu. Kesinti yaşamamak için kartınızı güncelleyin: uyelik-yenile.co",
+   "split": "blind1"
+  },
+  {
+   "id": "KM001",
+   "label": "legit",
+   "category": "bank",
+   "sender": "header",
+   "text": "Sayın müşterimiz, kredi kartınızın yıllık ücreti 1.150 TL bir sonraki ekstrenize yansıtılacaktır.",
+   "split": "blind1"
+  },
+  {
+   "id": "KM002",
+   "label": "legit",
+   "category": "bank",
+   "sender": "header",
+   "text": "Kartiniz ile yurt disi internet alisverisi denemesi reddedilmistir. Kartinizi internet alisverisine acmak icin mobil uygulamamizi kullanabilirsiniz.",
+   "split": "blind1"
+  },
+  {
+   "id": "KM003",
+   "label": "legit",
+   "category": "bank",
+   "sender": "header",
+   "text": "Ihtiyac kredisi teklifiniz hazir: 100.000 TL'ye kadar, masrafsiz. Basvuru icin mobil uygulamamiz veya subelerimiz. Bilgi almamak icin RET yazip 0000'a gonderin.",
+   "split": "blind1"
+  },
+  {
+   "id": "KM004",
+   "label": "legit",
+   "category": "cargo",
+   "sender": "header",
+   "text": "Gonderiniz icin teslimat adresinizde bulunamadiniz. Yeniden dagitim yarin yapilacaktir. Sorulariniz icin 444 0 000.",
+   "split": "blind1"
+  },
+  {
+   "id": "KM005",
+   "label": "legit",
+   "category": "cargo",
+   "sender": "whatsapp",
+   "text": "Merhaba, siparişinizi bugün kargoya verdik, takip numarası 1Z000000. Bir sorun olursa buradan yazabilirsiniz.",
+   "split": "blind1"
+  },
+  {
+   "id": "KM006",
+   "label": "legit",
+   "category": "edevlet",
+   "sender": "header",
+   "text": "Kimlik kartınız hazırlanmış olup PTT ile adresinize gönderilmiştir. Teslimatta kimlik ibrazı gereklidir.",
+   "split": "blind1"
+  },
+  {
+   "id": "KM007",
+   "label": "legit",
+   "category": "toll-hgs",
+   "sender": "header",
+   "text": "Sayin abonemiz, Osmangazi Koprusu gecisiniz icin HGS hesabinizdan 995,00 TL tahsil edilmistir.",
+   "split": "blind1"
+  },
+  {
+   "id": "KM008",
+   "label": "legit",
+   "category": "sgk-pension",
+   "sender": "header",
+   "text": "Emekli maaş farkınız 3.420 TL olarak hesabınıza yatırılmıştır.",
+   "split": "blind1"
+  },
+  {
+   "id": "KM009",
+   "label": "legit",
+   "category": "job",
+   "sender": "mobile",
+   "text": "Merhaba, ilanınıza başvuran adayım. Mülakat için hangi gün uygun olursunuz? Özgeçmişimi e-posta ile ilettim.",
+   "split": "blind1"
+  },
+  {
+   "id": "KM010",
+   "label": "legit",
+   "category": "investment",
+   "sender": "header",
+   "text": "Araci kurumunuz: Halka arz talebiniz alinmistir. Dagitim sonuclari persembe gunu hesabiniza yansiyacaktir.",
+   "split": "blind1"
+  },
+  {
+   "id": "KM011",
+   "label": "legit",
+   "category": "ecommerce",
+   "sender": "header",
+   "text": "Market kartınıza 150 TL hediye puan yüklendi! 30 Kasım'a kadar kasada kullanabilirsiniz.",
+   "split": "blind1"
+  },
+  {
+   "id": "KM012",
+   "label": "legit",
+   "category": "personal",
+   "sender": "whatsapp",
+   "text": "Oğlum pazardayım, eve gelirken ekmek alır mısın? Kartım yanımda yok da.",
+   "split": "blind1"
+  },
+  {
+   "id": "KM013",
+   "label": "legit",
+   "category": "personal",
+   "sender": "mobile",
+   "text": "Merhaba, eski kiracıyım. Size gelen kargom olursa haber verebilir misiniz, yeni adresimi yazıyorum.",
+   "split": "blind1"
+  },
+  {
+   "id": "KM014",
+   "label": "legit",
+   "category": "traffic-license",
+   "sender": "header",
+   "text": "Aracinizin 2026 yili MTV ikinci taksiti odenmistir. Makbuzunuzu Dijital Vergi Dairesinden alabilirsiniz.",
+   "split": "blind1"
+  },
+  {
+   "id": "KM015",
+   "label": "legit",
+   "category": "subscription",
+   "sender": "header",
+   "text": "Üyeliğiniz 01.12.2026 tarihinde 149,99 TL karşılığında yenilenecektir. İptal etmek için uygulama ayarlarını kullanabilirsiniz.",
+   "split": "blind1"
+  },
+  {
+   "id": "LD001",
+   "label": "scam",
+   "category": "cargo",
+   "sender": "mobile",
+   "text": "Sn. alıcı, gönderiniz hasarlı geldiği için teslim edilemiyor. Tazminat formunu doldurun, ücret hesabınıza yatsın: hasar-tazmin.co/form",
+   "split": "blind2"
+  },
+  {
+   "id": "LD002",
+   "label": "scam",
+   "category": "fake-enforcement",
+   "sender": "unknown",
+   "text": "Adınıza açılan soruşturma dosyasında ifadeniz bekleniyor. Gelmediğiniz takdirde zorla getirme kararı çıkarılacaktır. Dosyayı inceleyin: sorusturma-dosya.org",
+   "split": "blind2"
+  },
+  {
+   "id": "LD003",
+   "label": "scam",
+   "category": "bank",
+   "sender": "mobile",
+   "text": "Sayın müşterimiz kart şifreniz 3 kez hatalı girildi. Kartınızı tekrar açmak için müşteri numaranız ve şifrenizle giriş yapın: kart-acma.net",
+   "split": "blind2"
+  },
+  {
+   "id": "LD004",
+   "label": "scam",
+   "category": "bank",
+   "sender": "whatsapp",
+   "text": "Merhaba, POS cihazımızdan kartınızdan yanlışlıkla iki kez çekim yapılmış. İadeyi yapabilmem için kartın üzerindeki 16 haneyi ve arkasındaki 3 rakamı yazar mısınız?",
+   "split": "blind2"
+  },
+  {
+   "id": "LD005",
+   "label": "scam",
+   "category": "edevlet",
+   "sender": "unknown",
+   "text": "Deprem konutu hak sahipliği sonuçları açıklandı. Adınıza çıkan konutu görmek için T.C. ile sorgulayın: konut-sonuc.net",
+   "split": "blind2"
+  },
+  {
+   "id": "LD006",
+   "label": "scam",
+   "category": "tax-gib",
+   "sender": "mobile",
+   "text": "Değerli mükellef, e-fatura sisteminde adınıza kesilmiş şüpheli fatura var. İtiraz etmezseniz vergi cezası kesilecek. İtiraz: fatura-itiraz.co",
+   "split": "blind2"
+  },
+  {
+   "id": "LD007",
+   "label": "scam",
+   "category": "sgk-pension",
+   "sender": "unknown",
+   "text": "Çalışmadığınız dönemler için işsizlik ödeneği hakkınız birikmiş: 18.600 TL. Tahsil etmek için banka kartınızla doğrulama yapın: odenek-sorgu.net",
+   "split": "blind2"
+  },
+  {
+   "id": "LD008",
+   "label": "scam",
+   "category": "fake-job",
+   "sender": "whatsapp",
+   "text": "Merhaba, şirketimizin sosyal medya hesaplarını takip edip ekran görüntüsü atan herkese 150 TL veriyoruz. İlk 3 görev bedava, sonra paket alarak devam ediyorsunuz.",
+   "split": "blind2"
+  },
+  {
+   "id": "LD009",
+   "label": "scam",
+   "category": "iban-rental",
+   "sender": "mobile",
+   "text": "Yurt dışından para transferi için aracı arıyoruz. Hesabına gelen tutarın %8'i sende kalıyor, gerisini kriptoya çevirip gönderiyorsun. Günde 2-3 işlem.",
+   "split": "blind2"
+  },
+  {
+   "id": "LD010",
+   "label": "scam",
+   "category": "investment-crypto",
+   "sender": "whatsapp",
+   "text": "Devlet destekli yeni yatırım platformu açıldı, 3.000 TL ile başlayanlar ayda 45.000 TL alıyor. Bakan da açıkladı, videosu burada: yatirim-platformu.co",
+   "split": "blind2"
+  },
+  {
+   "id": "LD011",
+   "label": "scam",
+   "category": "prize-discount",
+   "sender": "mobile",
+   "text": "Sadakat programımız sona eriyor, birikmiş 4.860 puanınız bugün yanacak. Hediyenizi seçin: puan-hediye.co",
+   "split": "blind2"
+  },
+  {
+   "id": "LD012",
+   "label": "scam",
+   "category": "relative-impersonation",
+   "sender": "whatsapp",
+   "text": "Dayı ben yeğenin, başım dertte kimseye söyleme. Trafikte birine çarptım adam şikayetçi olmasın diye 15 bin istiyor, şu hesaba atarsan hemen kapanacak konu.",
+   "split": "blind2"
+  },
+  {
+   "id": "LD013",
+   "label": "scam",
+   "category": "code-request",
+   "sender": "whatsapp",
+   "text": "Selam, telefonumu yeniledim de WhatsApp'ı taşırken senin numaranı yedek olarak girmişim. Sana 6 rakam gelecek, ekran görüntüsünü atsana.",
+   "split": "blind2"
+  },
+  {
+   "id": "LD014",
+   "label": "scam",
+   "category": "notary-deposit",
+   "sender": "mobile",
+   "text": "Kiralık daire için çok talep var, yerinizi sıraya almam için 2.500 TL rezervasyon bedeli göndermeniz gerekiyor, görmeye gelince düşeceğim.",
+   "split": "blind2"
+  },
+  {
+   "id": "LD015",
+   "label": "scam",
+   "category": "operator",
+   "sender": "unknown",
+   "text": "Hattınıza tanımlı 12 aylık 20 GB hediye paketiniz var. Paketi aktif etmek için tek seferlik 5 TL ödeyin: hediye-paket.co",
+   "split": "blind2"
+  },
+  {
+   "id": "LM001",
+   "label": "legit",
+   "category": "bank",
+   "sender": "header",
+   "text": "Sifreniz 3 kez hatali girildigi icin kartiniz bloke olmustur. Sifre islemleri icin ATM veya mobil uygulamamizi kullanabilirsiniz.",
+   "split": "blind2"
+  },
+  {
+   "id": "LM002",
+   "label": "legit",
+   "category": "bank",
+   "sender": "header",
+   "text": "Sayın müşterimiz, POS işleminiz iptal edilmiş olup 1.249,00 TL iadeniz 3 iş günü içinde kartınıza yansıyacaktır.",
+   "split": "blind2"
+  },
+  {
+   "id": "LM003",
+   "label": "legit",
+   "category": "bank",
+   "sender": "header",
+   "text": "Sayin musterimiz, birikmis 4.860 bonusunuzun 1.200'u 31.12.2026 tarihinde silinecektir. Bonuslarinizi uye isyerlerinde kullanabilirsiniz.",
+   "split": "blind2"
+  },
+  {
+   "id": "LM004",
+   "label": "legit",
+   "category": "cargo",
+   "sender": "header",
+   "text": "Gönderiniz hasarlı olduğu için tutanak tutulmuştur. Tazmin talebiniz için şubemize kimliğinizle başvurabilirsiniz.",
+   "split": "blind2"
+  },
+  {
+   "id": "LM005",
+   "label": "legit",
+   "category": "edevlet",
+   "sender": "header",
+   "text": "TOKI: Kura cekilisi sonuclari aciklanmistir. Sonuclari e-Devlet uzerinden sorgulayabilirsiniz.",
+   "split": "blind2"
+  },
+  {
+   "id": "LM006",
+   "label": "legit",
+   "category": "tax-gib",
+   "sender": "header",
+   "text": "GIB: Adiniza e-Arsiv fatura duzenlenmistir. Faturalarinizi Dijital Vergi Dairesi veya e-Devlet uzerinden goruntuleyebilirsiniz.",
+   "split": "blind2"
+  },
+  {
+   "id": "LM007",
+   "label": "legit",
+   "category": "sgk-pension",
+   "sender": "header",
+   "text": "ISKUR: Issizlik odeneginiz 6.240,00 TL olarak 5 Aralik'ta PTT hesabiniza yatirilacaktir.",
+   "split": "blind2"
+  },
+  {
+   "id": "LM008",
+   "label": "legit",
+   "category": "job",
+   "sender": "whatsapp",
+   "text": "Merhaba, sosyal medya ajansımız için stajyer arıyoruz. Ofisimiz Kızılay'da, haftada 3 gün. İlgilenirseniz CV'nizi bekleriz.",
+   "split": "blind2"
+  },
+  {
+   "id": "LM009",
+   "label": "legit",
+   "category": "personal",
+   "sender": "whatsapp",
+   "text": "Dayı arabayı hafif sürttüm ama önemli bir şey yok, sigorta halledecek. Akşam anlatırım.",
+   "split": "blind2"
+  },
+  {
+   "id": "LM010",
+   "label": "legit",
+   "category": "personal",
+   "sender": "whatsapp",
+   "text": "Telefonumu yeniledim, WhatsApp yedeği geri gelmedi. Grup fotoğraflarını tekrar atar mısınız?",
+   "split": "blind2"
+  },
+  {
+   "id": "LM011",
+   "label": "legit",
+   "category": "personal",
+   "sender": "mobile",
+   "text": "Daireyi yarın 18:00'de gösterebilirim. Beğenirseniz depozito ve kirayı sözleşme günü konuşuruz.",
+   "split": "blind2"
+  },
+  {
+   "id": "LM012",
+   "label": "legit",
+   "category": "operator",
+   "sender": "header",
+   "text": "Turk Telekom: Hattiniza 12 ay boyunca her ay 5 GB hediye tanimlanmistir. Ek islem yapmaniza gerek yoktur.",
+   "split": "blind2"
+  },
+  {
+   "id": "LM013",
+   "label": "legit",
+   "category": "ecommerce",
+   "sender": "header",
+   "text": "Sadakat puanlarınızın 500'ü ay sonunda silinecektir. Puanlarınızı mağazalarımızda kullanabilirsiniz.",
+   "split": "blind2"
+  },
+  {
+   "id": "LM014",
+   "label": "legit",
+   "category": "investment",
+   "sender": "header",
+   "text": "BES: Devlet katkisi tutariniz 1.845,20 TL olarak sozlesmenize yansitilmistir.",
+   "split": "blind2"
+  },
+  {
+   "id": "LM015",
+   "label": "legit",
+   "category": "bill",
+   "sender": "header",
+   "text": "Elektrik faturanız 2 dönemdir ödenmemiştir. 5 gün içinde ödenmemesi halinde enerjiniz kesilecektir. Ödeme noktaları: PTT, bankalar, mobil uygulama.",
+   "split": "blind2"
+  }
+ ]
+}

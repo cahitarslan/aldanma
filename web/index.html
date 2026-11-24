@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aldanma: numara, IBAN, link ya da mesaj kontrolü</title>
+  <meta name="description" content="Şüphelendiğin telefon numarasını, IBAN'ı, linki ya da mesajı yapıştır. Topluluk ihbarları, USOM zararlı bağlantı listesi ve alan adı yaşıyla risk puanını gör.">
+  <meta name="theme-color" content="#f6f3ea">
+  <!-- Filled in at build time (tools/build-web.mjs). Empty values = message-only mode, no server calls. -->
+  <meta name="aldanma-api" content="">
+  <meta name="aldanma-turnstile" content="">
+  <meta property="og:title" content="Aldanma: tıklamadan önce bir bak">
+  <meta property="og:description" content="Numara, IBAN, link ya da mesajı yapıştır; dolandırıcılık riskini ve kaç kişinin ihbar ettiğini gör.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://aldanma.cahitarslan.com/">
+  <meta property="og:image" content="https://aldanma.cahitarslan.com/img/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="İçinde büyüteç olan sarı uyarı üçgeni, yanında bir telefon ve boş bir mesaj balonu.">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="fonts/atkinson-hyperlegible-next-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/atkinson-hyperlegible-next-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+  <script src="prefs.js"></script>
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#check">Kontrole geç</a>
+
+  <header class="topbar">
+    <div class="wrap">
+      <a class="brand" href="./" aria-label="Aldanma ana sayfa">
+        <svg viewBox="0 0 40 40" aria-hidden="true">
+          <path d="M20 3 37.5 34.5H2.5Z" fill="#f2b705" stroke="#17181a" stroke-width="3" stroke-linejoin="round"/>
+          <circle cx="18.5" cy="22" r="6" fill="none" stroke="#17181a" stroke-width="3"/>
+          <path d="m23 26.5 5 5" stroke="#17181a" stroke-width="3.4" stroke-linecap="round"/>
+        </svg>
+        Aldanma
+      </a>
+      <div class="controls" role="group" aria-label="Görünüm">
+        <button class="control" type="button" id="size-toggle" aria-describedby="size-help">Yazıyı büyüt</button>
+        <span id="size-help" class="visually-hidden">Her basışta yazı bir kademe büyür; üçüncü basışta eski boyuna döner.</span>
+        <button class="control" type="button" id="theme-toggle" aria-pressed="false">Koyu tema</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap" id="main">
+    <section class="intro">
+      <h1>Tıklamadan önce bir bak.</h1>
+      <p>Şüphelendiğin telefon numarasını, IBAN'ı, linki, ilanı ya da gelen mesajı aşağıya yapıştır. Kaç kişinin ihbar ettiğini ve nelere dikkat etmen gerektiğini söyleyelim.</p>
+      <div class="hero">
+        <img class="hero-img" src="img/hero-side-680.webp" srcset="img/hero-side-360.webp 360w, img/hero-side-680.webp 680w"
+          sizes="(min-width: 52rem) 9rem, 12rem" width="680" height="700" fetchpriority="high" decoding="async"
+          alt="Koltuğunda oturan yaşlı bir kadın telefonuna bakıyor; yanında büyüteç işaretli sarı bir trafik levhası duruyor.">
+      </div>
+    </section>
+
+    <form id="check" class="panel" novalidate>
+      <label class="big" for="input">Ne kontrol edilsin?</label>
+      <p class="hint" id="input-hint">Örnek: 0532 123 45 67 · TR12 0006 … · site-adi.com · ya da mesajın tamamı</p>
+      <textarea id="input" name="input" rows="4" maxlength="5000" aria-describedby="input-hint" autocomplete="off" spellcheck="false"
+        placeholder="Buraya yapıştır ya da yaz"></textarea>
+
+      <fieldset id="sender-set" hidden>
+        <legend>Bu mesaj nereden geldi?</legend>
+        <div class="choices" id="senders"></div>
+      </fieldset>
+
+      <div class="row">
+        <button class="btn btn-primary" type="submit" id="submit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg>
+          Kontrol et
+        </button>
+        <button class="btn btn-secondary" type="button" id="paste">Yapıştır</button>
+        <button class="btn btn-secondary" type="button" id="clear">Temizle</button>
+      </div>
+
+      <div class="examples" id="examples"><span>Denemek için:</span></div>
+      <div id="form-error" class="error" role="alert" hidden></div>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+    </form>
+
+    <div id="result" class="result" tabindex="-1" hidden></div>
+
+    <section id="report" class="section" hidden aria-labelledby="report-title">
+      <h2 id="report-title">Dolandırıcılığı ihbar et</h2>
+      <p>İhbarın, aynı numarayı ya da IBAN'ı soran bir sonraki kişiyi uyarır. Adın, telefonun ya da e-postan istenmez. Numaralar ve IBAN'lar veritabanında açık hâliyle durmaz.</p>
+      <form id="report-form" class="panel form-grid" novalidate>
+        <fieldset>
+          <legend>Hangilerini ihbar ediyorsun?</legend>
+          <div class="check-list" id="report-items"></div>
+          <label class="big spaced" for="report-extra">Listede olmayan bir numara, IBAN ya da adres ekle (isteğe bağlı)</label>
+          <input type="text" id="report-extra" autocomplete="off" spellcheck="false">
+        </fieldset>
+        <fieldset>
+          <legend>Ne oldu?</legend>
+          <div class="choices" id="report-categories"></div>
+        </fieldset>
+        <fieldset>
+          <legend>Seninle nereden iletişime geçtiler?</legend>
+          <div class="choices" id="report-channels"></div>
+        </fieldset>
+        <fieldset>
+          <legend>Para kaybettin mi?</legend>
+          <div class="choices" id="report-losses"></div>
+        </fieldset>
+        <div>
+          <label class="big" for="report-month">Ne zaman oldu? (isteğe bağlı)</label>
+          <input type="month" id="report-month">
+        </div>
+        <div id="report-turnstile"></div>
+        <div class="row flush">
+          <button class="btn btn-danger" type="submit" id="report-submit">İhbarı gönder</button>
+        </div>
+        <div id="report-error" class="error" role="alert" hidden></div>
+        <div id="report-done" class="success" role="status" hidden></div>
+        <p class="note">Yanlış ihbar başkasına haksızlık olur. Yalnızca kendi yaşadığın ya da kesin bildiğin bir dolandırıcılığı ihbar et. Para kaybettiysen ayrıca bankanı ara ve savcılığa başvur; bu site resmî bir ihbar kanalı değildir.</p>
+      </form>
+    </section>
+
+    <section class="section" aria-labelledby="how-title">
+      <h2 id="how-title">Nasıl çalışır?</h2>
+      <figure class="figure">
+        <img src="img/signs-704.webp" srcset="img/signs-704.webp 704w, img/signs-1408.webp 1376w"
+          sizes="(max-width: 44rem) 100vw, 42rem" width="1376" height="768" loading="lazy" decoding="async"
+          alt="Yan yana üç trafik levhası: ünlem işaretli kırmızı kenarlı üçgen, soru işaretli sarı baklava ve i harfli mavi daire.">
+        <figcaption>Sonucu üç trafik levhasıyla gösteririz: kırmızı üçgen <strong>Yüksek risk</strong>, sarı baklava <strong>Şüpheli</strong>, mavi daire <strong>Belirti yok</strong> demektir.</figcaption>
+      </figure>
+      <div class="how">
+        <div class="card">
+          <span class="stat" id="stat-reports">Topluluk</span>
+          <h3>İhbarlar</h3>
+          <p>Dolandırılan ya da dolandırılmaktan dönen insanların ihbarları. Aynı kişinin tekrar eden ihbarı sayılmaz.</p>
+        </div>
+        <div class="card">
+          <span class="stat" id="stat-blocklist">USOM</span>
+          <h3>Resmî liste</h3>
+          <p>Ulusal Siber Olaylara Müdahale Merkezi'nin yayımladığı zararlı bağlantılar listesi, günde iki kez güncellenir.</p>
+        </div>
+        <div class="card">
+          <span class="stat">Kayıt tarihi</span>
+          <h3>Site ne zaman açıldı?</h3>
+          <p>Sahte siteler genellikle birkaç gün önce açılır. Sitenin kayıt tarihine bakarız.</p>
+        </div>
+      </div>
+      <p class="note spaced">Hiçbir sonuç "güvenli" demek değildir. Araç yalnızca bildiklerini söyler; karar her zaman sende.</p>
+    </section>
+
+    <section id="dispute" class="section" aria-labelledby="dispute-title">
+      <h2 id="dispute-title">Numaran ya da IBAN'ın yanlışlıkla ihbar mı edildi?</h2>
+      <p>Bize yaz, inceleyelim. İtiraz kabul edilirse kayıt puanlamadan çıkarılır.</p>
+      <details>
+        <summary>İtiraz formunu aç</summary>
+        <form id="dispute-form" class="form-grid spaced" novalidate>
+          <div>
+            <label class="big" for="dispute-input">Numara, IBAN ya da adres</label>
+            <input type="text" id="dispute-input" autocomplete="off" spellcheck="false">
+          </div>
+          <div>
+            <label class="big" for="dispute-contact">Sana ulaşabileceğimiz e-posta</label>
+            <input type="email" id="dispute-contact" autocomplete="email">
+          </div>
+          <div>
+            <label class="big" for="dispute-reason">Neden yanlış olduğunu kısaca anlat</label>
+            <textarea id="dispute-reason" rows="4" maxlength="1000"></textarea>
+          </div>
+          <div id="dispute-turnstile"></div>
+          <div class="row flush"><button class="btn btn-secondary" type="submit" id="dispute-submit">İtirazı gönder</button></div>
+          <div id="dispute-error" class="error" role="alert" hidden></div>
+          <div id="dispute-done" class="success" role="status" hidden></div>
+        </form>
+      </details>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p><strong>Gizlilik:</strong> Yapıştırdığın mesaj, sen incelemeye göndermedikçe cihazından çıkmaz; yalnızca içindeki numara, IBAN ve adresler sorgulanır. Sorgular saklanmaz. İhbarlarda numara ve IBAN'lar şifreli özet olarak tutulur.</p>
+      <p>Açık kaynak: <a href="https://github.com/cahitarslan/aldanma">github.com/cahitarslan/aldanma</a> · Kural seti <span id="rules-version">…</span></p>
+      <p>Acil durumda 112'yi ara. Dolandırıldıysan bankanı hemen ara ve en yakın karakola ya da Cumhuriyet Başsavcılığına başvur.</p>
+    </div>
+  </footer>
+</body>
+</html>

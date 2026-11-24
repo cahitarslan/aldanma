@@ -1,0 +1,2521 @@
+{
+  "version": "0.5.0",
+  "updated": "2026-11-22",
+  "description": "Aldanma open rule set. Patterns run on text that is lower-cased and folded to ASCII (ç>c, ğ>g, ı>i, ö>o, ş>s, ü>u). Links are extracted and inspected separately. In pattern text the characters , ; : ! ? ( ) \" ' and sentence-final dots become spaces. User-facing strings (name, description, whatToDo, verification) are Turkish by design.",
+  "thresholds": {
+    "high": 55,
+    "suspicious": 25
+  },
+  "institutions": [
+    {
+      "id": "edevlet",
+      "name": "e-Devlet",
+      "keywords": [
+        "\\be[- ]?devlet",
+        "turkiye\\.gov"
+      ],
+      "domains": [
+        "turkiye.gov.tr"
+      ],
+      "tokens": [
+        "edevlet",
+        "e-devlet",
+        "turkiyegov",
+        "turkiye-gov",
+        "devlet"
+      ],
+      "verification": "e-Devlet'in tek adresi turkiye.gov.tr'dir. Adresi tarayıcıya kendin yaz ya da resmî e-Devlet uygulamasını kullan. Çağrı merkezi: 160."
+    },
+    {
+      "id": "uyap",
+      "name": "UYAP / Adalet Bakanlığı",
+      "keywords": [
+        "\\buyap\\b",
+        "adalet bakanligi",
+        "icra (dairesi|mudurlugu)",
+        "\\badliye",
+        "\\bsavcilig",
+        "\\bmahkeme"
+      ],
+      "domains": [
+        "uyap.gov.tr",
+        "adalet.gov.tr"
+      ],
+      "tokens": [
+        "uyap",
+        "icra",
+        "adalet",
+        "tebligat",
+        "adliye",
+        "dava"
+      ],
+      "verification": "Adına dava ya da icra dosyası olup olmadığını e-Devlet'teki \"Dava Dosyası Sorgulama\" hizmetinden veya UYAP Vatandaş Portal'dan (vatandas.uyap.gov.tr) kendin sorgula."
+    },
+    {
+      "id": "gib",
+      "name": "Gelir İdaresi Başkanlığı (GİB)",
+      "keywords": [
+        "\\bgib\\b",
+        "gelir idaresi",
+        "vergi dairesi",
+        "\\bmaliye"
+      ],
+      "domains": [
+        "gib.gov.tr"
+      ],
+      "tokens": [
+        "gib",
+        "vergi",
+        "ivd",
+        "maliye"
+      ],
+      "verification": "Vergi borcu ve iadelerini yalnızca gib.gov.tr altındaki Dijital Vergi Dairesi'nden (dijital.gib.gov.tr) ya da e-Devlet'ten sorgula. Vergi İletişim Merkezi: 189."
+    },
+    {
+      "id": "ptt",
+      "name": "PTT",
+      "keywords": [
+        "\\bptt\\b",
+        "ptt kargo",
+        "pttavm",
+        "posta ve telgraf"
+      ],
+      "domains": [
+        "ptt.gov.tr",
+        "pttavm.com"
+      ],
+      "tokens": [
+        "ptt",
+        "pttkargo",
+        "pttavm"
+      ],
+      "verification": "PTT gönderilerini yalnızca ptt.gov.tr üzerinden (gonderitakip.ptt.gov.tr) barkod numarasıyla sorgula. PTT çağrı merkezi: 444 1 788."
+    },
+    {
+      "id": "hgs",
+      "name": "HGS / OGS (PTT ve Karayolları)",
+      "keywords": [
+        "\\bhgs\\b",
+        "\\bogs\\b",
+        "karayollari",
+        "\\bkgm\\b",
+        "gecis ucret",
+        "ihlalli gecis",
+        "kopru ve otoyol",
+        "otoyol gecis"
+      ],
+      "domains": [
+        "ptt.gov.tr",
+        "pttavm.com",
+        "kgm.gov.tr"
+      ],
+      "tokens": [
+        "hgs",
+        "ogs",
+        "kgm",
+        "otoyol",
+        "gecis"
+      ],
+      "verification": "HGS bakiyeni ve ihlalli geçiş borcunu e-Devlet'ten (\"HGS\" ya da \"ihlalli geçiş\" diye arat), PTT'nin resmî sitesinden (ptt.gov.tr) veya PTT'nin resmî HGS uygulamasından sorgula."
+    },
+    {
+      "id": "sgk",
+      "name": "SGK",
+      "keywords": [
+        "\\bsgk\\b",
+        "sosyal guvenlik kurumu",
+        "\\bgss\\b",
+        "genel saglik sigortasi",
+        "\\bbag[- ]?kur\\b"
+      ],
+      "domains": [
+        "sgk.gov.tr"
+      ],
+      "tokens": [
+        "sgk",
+        "gss",
+        "emekli",
+        "ikramiye"
+      ],
+      "verification": "Prim borcu, GSS ve emeklilik bilgilerini e-Devlet'teki SGK hizmetlerinden ya da sgk.gov.tr'den sorgula. Çalışma ve sosyal güvenlik hattı: ALO 170."
+    },
+    {
+      "id": "health",
+      "name": "Sağlık Bakanlığı (e-Nabız / MHRS)",
+      "keywords": [
+        "e[- ]?nabiz",
+        "\\bmhrs\\b",
+        "saglik bakanligi"
+      ],
+      "domains": [
+        "enabiz.gov.tr",
+        "mhrs.gov.tr",
+        "saglik.gov.tr"
+      ],
+      "tokens": [
+        "enabiz",
+        "e-nabiz",
+        "mhrs",
+        "nabiz"
+      ],
+      "verification": "Sağlık kayıtlarına yalnızca enabiz.gov.tr ya da resmî e-Nabız uygulamasından, randevularına mhrs.gov.tr ya da 182'den bak."
+    },
+    {
+      "id": "police",
+      "name": "Emniyet / Trafik",
+      "keywords": [
+        "\\begm\\b",
+        "emniyet (genel )?mudurlugu",
+        "trafik cezas",
+        "\\behliyet",
+        "surucu belge",
+        "\\bpolis\\b",
+        "\\bjandarma",
+        "siber suclar"
+      ],
+      "domains": [
+        "egm.gov.tr",
+        "jandarma.gov.tr",
+        "icisleri.gov.tr"
+      ],
+      "tokens": [
+        "egm",
+        "emniyet",
+        "trafik",
+        "ehliyet",
+        "ceza",
+        "polis"
+      ],
+      "verification": "Trafik cezalarını e-Devlet'teki ceza sorgulama hizmetlerinden ya da GİB Dijital Vergi Dairesi'nden (dijital.gib.gov.tr) sorgula. Polis ya da savcı telefonda para, altın ya da şifre istemez."
+    },
+    {
+      "id": "notary",
+      "name": "Noter / Türkiye Noterler Birliği",
+      "keywords": [
+        "\\bnoter",
+        "guvenli odeme sistemi"
+      ],
+      "domains": [
+        "tnb.org.tr"
+      ],
+      "tokens": [
+        "noter",
+        "guvenliodeme",
+        "guvenli-odeme"
+      ],
+      "verification": "İkinci el araç satışında güvenli ödeme işlemi noterde, yüz yüze başlatılır. Noter sana WhatsApp ya da SMS ile ödeme linki göndermez. Şüphede en yakın notere git ya da Türkiye Noterler Birliği'ne (tnb.org.tr) danış."
+    },
+    {
+      "id": "iskur",
+      "name": "İŞKUR",
+      "keywords": [
+        "\\biskur\\b",
+        "turkiye is kurumu"
+      ],
+      "domains": [
+        "iskur.gov.tr"
+      ],
+      "tokens": [
+        "iskur"
+      ],
+      "verification": "İŞKUR ilanlarını yalnızca iskur.gov.tr ya da e-Devlet üzerinden doğrula. Gerçek işveren işe alırken senden para istemez."
+    },
+    {
+      "id": "bank",
+      "name": "Banka",
+      "keywords": [
+        "garanti (bbva|bankasi)",
+        "bankasi\\b",
+        "\\bziraat\\b",
+        "is bankasi",
+        "\\bakbank\\b",
+        "yapi ?kredi",
+        "halkbank",
+        "vakifbank",
+        "\\bqnb\\b",
+        "finansbank",
+        "denizbank",
+        "\\bteb\\b",
+        "kuveyt ?turk",
+        "enpara",
+        "\\bing\\b",
+        "albaraka",
+        "turkiye finans",
+        "sekerbank",
+        "\\bworld ?kart",
+        "\\baxess\\b",
+        "bankkart",
+        "\\bpapara\\b"
+      ],
+      "domains": [
+        "ziraatbank.com.tr",
+        "isbank.com.tr",
+        "garantibbva.com.tr",
+        "akbank.com",
+        "yapikredi.com.tr",
+        "halkbank.com.tr",
+        "vakifbank.com.tr",
+        "qnb.com.tr",
+        "denizbank.com",
+        "teb.com.tr",
+        "kuveytturk.com.tr",
+        "enpara.com",
+        "ing.com.tr",
+        "albaraka.com.tr",
+        "turkiyefinans.com.tr",
+        "sekerbank.com.tr",
+        "ziraatkatilim.com.tr",
+        "vakifkatilim.com.tr",
+        "hsbc.com.tr",
+        "odeabank.com.tr",
+        "fibabanka.com.tr",
+        "anadolubank.com.tr",
+        "papara.com"
+      ],
+      "tokens": [
+        "ziraat",
+        "isbank",
+        "isbankasi",
+        "garanti",
+        "akbank",
+        "yapikredi",
+        "halkbank",
+        "vakifbank",
+        "qnb",
+        "finansbank",
+        "denizbank",
+        "kuveytturk",
+        "enpara",
+        "albaraka",
+        "sekerbank",
+        "papara",
+        "banka",
+        "bank",
+        "internetsube",
+        "internet-sube",
+        "mobilsube",
+        "sube"
+      ],
+      "verification": "Bankanı mesajdaki numaradan değil, kartının arkasında yazan numaradan ara. Hesabına yalnızca bankanın kendi uygulamasından ya da adresini kendin yazdığın resmî sitesinden gir."
+    },
+    {
+      "id": "cargo",
+      "name": "Kargo firması",
+      "keywords": [
+        "yurtici kargo",
+        "aras kargo",
+        "mng kargo",
+        "surat kargo",
+        "ptt kargo",
+        "\\bups\\b",
+        "\\bdhl\\b",
+        "hepsijet",
+        "kolay gelsin"
+      ],
+      "domains": [
+        "yurticikargo.com",
+        "araskargo.com.tr",
+        "mngkargo.com.tr",
+        "suratkargo.com.tr",
+        "ups.com",
+        "ups.com.tr",
+        "dhl.com",
+        "hepsijet.com",
+        "kolaygelsin.com"
+      ],
+      "tokens": [
+        "kargo",
+        "yurtici",
+        "araskargo",
+        "mngkargo",
+        "suratkargo",
+        "hepsijet",
+        "kolaygelsin",
+        "teslimat",
+        "gonderi",
+        "paket"
+      ],
+      "verification": "Kargonu mesajdaki linkten değil, kargo firmasının adresini kendin yazdığın resmî sitesinden ya da alışveriş yaptığın uygulamanın \"Siparişlerim\" bölümünden takip et. Kargo firmaları teslimat için SMS linkiyle kart bilgisi istemez."
+    },
+    {
+      "id": "operator",
+      "name": "GSM operatörü",
+      "keywords": [
+        "turkcell",
+        "vodafone",
+        "turk telekom",
+        "turktelekom",
+        "\\bbimcell",
+        "\\bhattiniz",
+        "\\btarifeniz"
+      ],
+      "domains": [
+        "turkcell.com.tr",
+        "vodafone.com.tr",
+        "turktelekom.com.tr"
+      ],
+      "tokens": [
+        "turkcell",
+        "vodafone",
+        "turktelekom",
+        "telekom"
+      ],
+      "verification": "Fatura ve tarife bilgilerini operatörünün resmî uygulamasından ya da müşteri hizmetlerinden doğrula."
+    },
+    {
+      "id": "ecommerce",
+      "name": "Alışveriş sitesi / market",
+      "keywords": [
+        "trendyol",
+        "hepsiburada",
+        "\\bn11\\b",
+        "amazon",
+        "sahibinden",
+        "letgo",
+        "ciceksepeti",
+        "yemeksepeti",
+        "migros",
+        "\\ba101\\b",
+        "\\bbim\\b",
+        "\\bsok market",
+        "carrefour",
+        "lc ?waikiki",
+        "teknosa",
+        "media ?markt"
+      ],
+      "domains": [
+        "trendyol.com",
+        "hepsiburada.com",
+        "n11.com",
+        "amazon.com.tr",
+        "amazon.com",
+        "sahibinden.com",
+        "letgo.com",
+        "dolap.com",
+        "ciceksepeti.com",
+        "getir.com",
+        "yemeksepeti.com",
+        "migros.com.tr",
+        "a101.com.tr",
+        "bim.com.tr",
+        "sokmarket.com.tr",
+        "carrefoursa.com",
+        "lcwaikiki.com",
+        "lcw.com",
+        "teknosa.com",
+        "mediamarkt.com.tr"
+      ],
+      "tokens": [
+        "trendyol",
+        "hepsiburada",
+        "sahibinden",
+        "letgo",
+        "ciceksepeti",
+        "yemeksepeti",
+        "migros",
+        "a101",
+        "carrefour",
+        "lcwaikiki",
+        "teknosa",
+        "mediamarkt",
+        "amazon"
+      ],
+      "verification": "Kampanya ve siparişleri yalnızca markanın kendi uygulamasından ya da adresini kendin yazdığın resmî sitesinden kontrol et.",
+      "mismatch": false
+    },
+    {
+      "id": "platform",
+      "name": "Dijital platform",
+      "keywords": [
+        "netflix",
+        "spotify",
+        "whatsapp",
+        "instagram",
+        "facebook",
+        "\\bgoogle\\b",
+        "\\bapple\\b",
+        "icloud",
+        "telegram",
+        "youtube",
+        "tiktok"
+      ],
+      "domains": [
+        "netflix.com",
+        "spotify.com",
+        "whatsapp.com",
+        "instagram.com",
+        "facebook.com",
+        "google.com",
+        "apple.com",
+        "icloud.com",
+        "telegram.org",
+        "youtube.com",
+        "tiktok.com",
+        "microsoft.com",
+        "linkedin.com",
+        "x.com"
+      ],
+      "tokens": [
+        "netflix",
+        "spotify",
+        "whatsapp",
+        "instagram",
+        "facebook",
+        "icloud",
+        "appleid",
+        "apple-id"
+      ],
+      "verification": "Hesap ve ödeme durumunu yalnızca uygulamanın kendi içinden kontrol et. Sana gelen doğrulama kodunu kimseye verme.",
+      "mismatch": false
+    }
+  ],
+  "categories": [
+    {
+      "id": "fake-enforcement",
+      "name": "Sahte icra, dava ya da tebligat bildirimi",
+      "institutions": [
+        "uyap",
+        "edevlet"
+      ],
+      "weight": 35,
+      "strong": [
+        "icra (takibi|dosya|islem)\\w* .{0,60}(baslat|acil|kesinles|basla)",
+        "hakkinizda .{0,40}(icra|dava|sorusturma|haciz|sikayet|yakalama|suc duyurusu)",
+        "(uzlasma|arabuluculuk|uzlastirma) dosya",
+        "haciz (islem|karar)",
+        "(e[- ]?tebligat|tebligat)\\w* .{0,60}(goruntule|incele|ulasmis|gonderilmis|icin tikla|teblig edil)",
+        "dosya (no|numara)\\w*[: ]+\\S+ .{0,80}(icra|haciz|borc|odeme)",
+        "(icra|haciz|dava) .{0,60}dosya\\w* (kapat|kapan|sonlan)",
+        "yakalama karari",
+        "maas\\w* haciz|hesaplariniza (bloke|haciz)|e[- ]?haciz",
+        "alacakli vekili",
+        "mal varlig\\w* .{0,40}(el kon|haciz|bloke)",
+        "(odeme emri|teblig evrak)\\w* .{0,80}(gormek|goruntule|tikla|dokun|link|incele)",
+        "(ihtarname|ihtar)\\w* .{0,140}(bloke|haciz|icra|yasal|donus yap)",
+        "borclu sifatiyla",
+        "maasiniza (bloke|haciz|kesinti)"
+      ],
+      "weak": [
+        "\\bicra\\b",
+        "\\bhaciz",
+        "\\btebligat",
+        "\\bdava\\b",
+        "dosya (no|numara)",
+        "\\buyap\\b",
+        "avukatlik (burosu|ofisi)|hukuk burosu",
+        "yasal (takip|islem)",
+        "borcunuz (bulun|var)",
+        "odeme emri",
+        "\\bteblig",
+        "\\bevrak"
+      ],
+      "description": "Dolandırıcılar \"hakkınızda icra takibi başlatıldı\" ya da \"dava dosyanız var\" diyerek korku yaratır ve seni sahte bir ödeme sayfasına ya da telefon hattına yönlendirir.",
+      "whatToDo": [
+        "Mesajdaki linke tıklama, verilen numarayı arama.",
+        "e-Devlet'e kendin girip \"Dava Dosyası Sorgulama\" hizmetinden adına dosya olup olmadığına bak.",
+        "Dosya çıkmıyorsa mesaj sahtedir. Dosya çıkıyorsa ilgili icra dairesi ya da bir avukatla görüş."
+      ],
+      "verification": {
+        "text": "Gerçek icra ve dava bildirimleri tebligatla (PTT ya da e-Tebligat) yapılır. Resmî kurumlar SMS ile ödeme linki göndermez. Dosyanı e-Devlet ya da UYAP Vatandaş Portal üzerinden kendin sorgula.",
+        "links": [
+          {
+            "name": "e-Devlet",
+            "url": "https://www.turkiye.gov.tr"
+          },
+          {
+            "name": "UYAP Vatandaş Portal",
+            "url": "https://vatandas.uyap.gov.tr"
+          }
+        ]
+      },
+      "institutional": true
+    },
+    {
+      "id": "fake-police-prosecutor",
+      "name": "Kendini polis, savcı ya da müfettiş olarak tanıtma",
+      "institutions": [
+        "police",
+        "uyap"
+      ],
+      "weight": 55,
+      "strong": [
+        "(kimlik bilgileriniz|adiniz|hesabiniz|kimliginiz)\\w* .{0,50}(teror|kara para|sucta|suc orgut|dolandiricilik)\\w* .{0,40}(karis|kullanil|tespit)",
+        "(savci|komiser|polis memuru|bassavcilik|emniyet)\\w* .{0,80}(paranizi|birikim|altin|hesabinizdaki|hesaptaki) .{0,60}(guvenli|koruma|aktar|teslim)",
+        "guvenli hesaba (aktar|gonder|transfer)",
+        "(operasyon|sorusturma) gizli\\w* .{0,60}(kimseye|bilgi verme|soyleme)",
+        "ifadeniz(e)? (alinacak|basvurulacak) .{0,80}(telefon|goruntulu|whatsapp)"
+      ],
+      "weak": [
+        "\\bsavci",
+        "\\bkomiser",
+        "bassavcilig",
+        "kara para",
+        "\\bteror",
+        "gizlilik karari",
+        "sorusturma"
+      ],
+      "description": "Kendini polis, savcı ya da banka müfettişi olarak tanıtan kişi, adının bir suça karıştığını söyleyip paranı \"güvenli hesaba\" aktarmanı ister. Gerçek görevliler bunu asla yapmaz.",
+      "whatToDo": [
+        "Görüşmeyi hemen sonlandır, para ya da altın verme.",
+        "112'yi kendin arayıp durumu anlat.",
+        "Ailenden birine haber ver. Dolandırıcılar \"kimseye söyleme\" der, çünkü yalnız kalmanı ister."
+      ],
+      "verification": {
+        "text": "Polis, savcı ya da hâkim telefonla, WhatsApp'la ya da SMS'le para, altın, şifre istemez; \"güvenli hesap\" diye bir uygulama yoktur. Emin olmak için 112'yi kendin ara ya da en yakın karakola git.",
+        "links": [
+          {
+            "name": "EGM Siber Suçlarla Mücadele",
+            "url": "https://www.egm.gov.tr/siber"
+          }
+        ]
+      },
+      "institutional": true
+    },
+    {
+      "id": "edevlet",
+      "name": "Sahte e-Devlet bildirimi",
+      "institutions": [
+        "edevlet"
+      ],
+      "weight": 30,
+      "strong": [
+        "e[- ]?devlet .{0,60}(sifre\\w* (suresi|yenile|guncelle|dogrula|sifirla)|hesabiniz\\w* (askiya|kapat|dondur|bloke|kilit))",
+        "e[- ]?devlet .{0,80}(borc\\w* (bulun|var|tespit|gorun)|iade\\w* (hak|al|tanimlan|bulun))",
+        "e[- ]?devlet .{0,60}(giris yap(in|iniz|arak|ip|ma\\w*|ilmasi|abil\\w*|\\b)arak|uzerinden) .{0,60}(odeme|iade|basvuru)\\w* .{0,40}(tikla|link|adres)",
+        "(aidat|ucret|kesinti|prim|vergi|depozito) iade\\w* .{0,60}(hak kazan|tanimlan|alabilirsiniz|bekliyor|basvur)"
+      ],
+      "weak": [
+        "e[- ]?devlet",
+        "\\biade",
+        "giris yap(in|iniz|arak|ip|ma\\w*|ilmasi|abil\\w*|\\b)",
+        "kimlik dogrula",
+        "basvuru\\w* onay"
+      ],
+      "description": "e-Devlet adı kullanılarak sahte giriş sayfasına çekilirsin. Amaç e-Devlet şifreni, kimlik ve kart bilgilerini almaktır.",
+      "whatToDo": [
+        "Linke tıklama. e-Devlet'e yalnızca turkiye.gov.tr adresini kendin yazarak ya da resmî uygulamadan gir.",
+        "Linke tıklayıp şifre girdiysen e-Devlet şifreni hemen değiştir.",
+        "Kart bilgisi girdiysen bankanı kartın arkasındaki numaradan arayıp kartı kapattır."
+      ],
+      "verification": {
+        "text": "e-Devlet'in tek adresi turkiye.gov.tr'dir. Borç, iade ve başvurularını oradan kendin kontrol et. Çağrı merkezi: 160.",
+        "links": [
+          {
+            "name": "e-Devlet",
+            "url": "https://www.turkiye.gov.tr"
+          }
+        ]
+      },
+      "institutional": true
+    },
+    {
+      "id": "social-aid",
+      "name": "Sahte sosyal yardım, destek ya da burs başvurusu",
+      "institutions": [
+        "edevlet"
+      ],
+      "weight": 30,
+      "strong": [
+        "(sosyal yardim|nakdi yardim|aile destek|yakacak yardim|gida yardim|ramazan yardim|kira yardim|dogalgaz destek|elektrik destek)\\w* .{0,80}(basvuru|hak kazan|yatiril|tanimlan|onaylan)",
+        "\\d[\\d.]* ?tl\\w* .{0,40}(yardim|destek|burs|odenek)\\w* .{0,60}(basvur|hak kazan|tanimlan|almak icin|yatirilacak)",
+        "(devlet|bakanlik)\\w* .{0,30}(yardim|destek)\\w* .{0,60}(basvuru (icin|linki|formu)|almak icin)",
+        "(burs|ogrenci destegi) .{0,60}(basvuru\\w* (icin|linki)|hak kazan)",
+        "(vatandaslik maasi|temel gelir destegi|evlilik kredisi|faizsiz kredi|ihtiyac kredisi destegi)\\w* .{0,100}(basla|basvur|ogren|sorgula|tikla|link|hak kazan)"
+      ],
+      "weak": [
+        "\\byardim",
+        "\\bdestek odeme",
+        "\\bburs",
+        "hak kazandiniz",
+        "basvuru (icin|linki|formu)"
+      ],
+      "description": "\"Devlet yardımı çıktı, başvur\" diyen mesajlar kimlik ve kart bilgilerini toplamak için kullanılır.",
+      "whatToDo": [
+        "Linke tıklama, kimlik ya da kart bilgisi girme.",
+        "Sosyal yardım başvurularını yalnızca e-Devlet'ten ya da ilçendeki Sosyal Yardımlaşma ve Dayanışma Vakfı'ndan yap."
+      ],
+      "verification": {
+        "text": "Devlet yardımları SMS linkiyle dağıtılmaz. Başvurular e-Devlet'ten ya da Sosyal Yardımlaşma ve Dayanışma Vakıflarından yapılır. Aile ve sosyal hizmetler hattı: ALO 144.",
+        "links": [
+          {
+            "name": "e-Devlet",
+            "url": "https://www.turkiye.gov.tr"
+          }
+        ]
+      },
+      "institutional": true
+    },
+    {
+      "id": "cargo",
+      "name": "Sahte kargo ya da teslimat bildirimi",
+      "institutions": [
+        "cargo",
+        "ptt"
+      ],
+      "weight": 30,
+      "strong": [
+        "(kargo|gonderi|paket|teslimat)\\w* .{0,80}adres\\w* .{0,30}(eksik|hatali|yanlis|bulunama|dogrula|guncelle|teyit)",
+        "adres\\w* .{0,30}(eksik|hatali|yanlis|bulunama)\\w* .{0,80}(kargo|gonderi|paket|teslim)",
+        "(kargo|gonderi|paket)\\w* .{0,80}(teslim edileme|dagitima cikarilama|depoda bekl|subede bekl|iade edilecek|beklemede)",
+        "(kargo|gonderi|paket)\\w* .{0,80}(gumruk|teslimat|dagitim|depolama|yeniden gonderim) (ucret|vergi|bedel|masraf)\\w*",
+        "(gumruk|teslimat|dagitim) (ucret|vergi|bedel)\\w* .{0,40}(ode|yatir)",
+        "(kargo|gonderi|paket)\\w* .{0,60}\\d+[.,]?\\d* ?tl .{0,40}(ode|eksik)"
+      ],
+      "weak": [
+        "\\bkargo",
+        "\\bgonderi",
+        "\\bpaket",
+        "teslim",
+        "\\badres",
+        "takip (no|numara|kodu)",
+        "gumruk"
+      ],
+      "description": "\"Adresiniz eksik, kargonuz teslim edilemedi\" diyen mesajlar küçük bir ücret bahanesiyle kart bilgilerini ister.",
+      "whatToDo": [
+        "Linke tıklama, kart bilgisi girme.",
+        "Beklediğin bir kargo varsa alışveriş yaptığın uygulamadaki \"Siparişlerim\" bölümünden takip et.",
+        "Kart bilgisi girdiysen bankanı hemen arayıp kartı kapattır."
+      ],
+      "verification": {
+        "text": "Kargo firmaları teslimat için SMS linkiyle kart bilgisi ya da ek ücret istemez. Gönderini firmanın adresini kendin yazdığın resmî sitesinden takip numarasıyla sorgula.",
+        "links": [
+          {
+            "name": "PTT Gönderi Takip",
+            "url": "https://gonderitakip.ptt.gov.tr"
+          }
+        ]
+      },
+      "institutional": true
+    },
+    {
+      "id": "toll-hgs",
+      "name": "Sahte HGS / OGS ya da köprü-otoyol geçiş borcu",
+      "institutions": [
+        "hgs",
+        "ptt"
+      ],
+      "weight": 30,
+      "strong": [
+        "(hgs|ogs|gecis)\\w* .{0,60}(borc|ucret|bakiye)\\w* .{0,60}(odenme|yetersiz|bulun|ode|ceza|tahsil|gecik)",
+        "(ihlalli|kacak|odenmemis) gecis",
+        "(hgs|ogs)\\w* .{0,80}(ceza\\w* (uygulan|kesil|yansit)|iptal edil|kara listeye|askiya)",
+        "(hgs|ogs) (hesab|etiket|bakiye)\\w* .{0,60}(guncelle|dogrula|yukle|yenile)"
+      ],
+      "weak": [
+        "\\bhgs\\b",
+        "\\bogs\\b",
+        "gecis ucret",
+        "\\bbakiye",
+        "\\botoyol",
+        "\\bkopru"
+      ],
+      "description": "\"HGS geçiş ücretiniz ödenmedi, ceza uygulanacak\" diyen mesajlar sahte ödeme sayfasında kart bilgilerini çalar.",
+      "whatToDo": [
+        "Linke tıklama, kart bilgisi girme.",
+        "HGS bakiyeni ve ihlalli geçişlerini e-Devlet'ten ya da PTT'nin resmî kanallarından kendin sorgula."
+      ],
+      "verification": {
+        "text": "HGS ve ihlalli geçiş borçları yalnızca e-Devlet'ten ve PTT'nin resmî site ve uygulamalarından sorgulanır. PTT ve Karayolları SMS ile ödeme linki göndermez.",
+        "links": [
+          {
+            "name": "e-Devlet",
+            "url": "https://www.turkiye.gov.tr"
+          },
+          {
+            "name": "PTT",
+            "url": "https://www.ptt.gov.tr"
+          }
+        ]
+      },
+      "institutional": true
+    },
+    {
+      "id": "fake-bank-call",
+      "name": "Banka adına cep numarasından ya da WhatsApp'tan gelen \"işlem\" uyarısı",
+      "institutions": [
+        "bank"
+      ],
+      "weight": 35,
+      "institutional": true,
+      "senderCondition": [
+        "mobile",
+        "foreign",
+        "whatsapp"
+      ],
+      "strong": [
+        "(hesabiniz|kartiniz)\\w* .{0,80}(cikis|cekim|transfer|havale|harcama|islem)\\w* .{0,120}(siz yapmadiysaniz|size ait degilse|bilginiz disinda|onaylamiyorsaniz)",
+        "(banka|bankaniz)\\w* .{0,40}(guvenlik|dolandiricilik|fraud|risk) (birim|ekib|departman)",
+        "kartiniz\\w* .{0,30}(kopyalan|calin|ele gecir)"
+      ],
+      "weak": [],
+      "description": "Bankalar şüpheli işlem uyarısını kendi adlarıyla (başlıkla) gönderir. Aynı uyarı sıradan bir cep numarasından ya da WhatsApp'tan geliyorsa amaç seni sahte \"temsilciyle\" konuşturmaktır.",
+      "whatToDo": [
+        "Mesajdaki numarayı arama, gelen aramaya bilgi verme.",
+        "Bankanı kartının arkasındaki numaradan kendin ara ve hesabını sor.",
+        "Kart fotoğrafı, şifre ya da telefonuna gelen kodu kimseye verme."
+      ],
+      "verification": {
+        "text": "Gerçek banka uyarıları bankanın adıyla gelir ve senden şifre, kod ya da kart fotoğrafı istemez. Bankana kartın arkasındaki numaradan ulaş.",
+        "links": []
+      }
+    },
+    {
+      "id": "bank",
+      "name": "Sahte banka bildirimi",
+      "institutions": [
+        "bank"
+      ],
+      "weight": 30,
+      "strong": [
+        "(hesab|kart|internet bankacilig|mobil bankacilig)\\w* .{0,50}(bloke|askiya alin|donduruld|kisitlan|kapatilacak|kullanima kapat|gecici olarak kapat)",
+        "(supheli|yetkisiz|olagan disi) (islem|giris|harcama)\\w* .{0,100}(tikla|link|adres|iptal icin|siz degilseniz|onaylamiyorsaniz|arayin)",
+        "(kart|kredi karti|banka karti)\\w* .{0,40}(aidat|ucret)\\w* .{0,30}iade",
+        "(puan|bonus|mil|chip ?para)\\w* .{0,40}(silinecek|sona erecek|yanacak|kullanmak icin tikla)",
+        "(bilgileriniz|hesabiniz)\\w* .{0,30}(guncelle|dogrula)\\w* .{0,60}(aksi|yoksa|kapat|bloke|kisit)",
+        "(kredi|limit)\\w* .{0,40}(onaylan|tanimlan|hazir)\\w* .{0,80}(dosya masrafi|sigorta ucreti|on odeme|masraf|komisyon)",
+        "(musteri|kimlik) bilgi\\w* guncelleme\\w* .{0,60}(zorunlu|gerek|yapilmadi)"
+      ],
+      "weak": [
+        "\\bbloke",
+        "\\bhesabiniz",
+        "\\bkartiniz",
+        "\\bsifre",
+        "supheli islem",
+        "\\bguncelle",
+        "internet sube",
+        "mobil sube",
+        "\\blimit"
+      ],
+      "description": "\"Hesabınız bloke edildi\" ya da \"şüpheli işlem var\" diyerek seni bankanın sahte kopyası olan bir sayfaya ya da sahte müşteri temsilcisine yönlendirirler.",
+      "whatToDo": [
+        "Linke tıklama, mesajdaki numarayı arama.",
+        "Bankanı kartının arkasında yazan numaradan kendin ara ya da bankanın uygulamasını açıp kontrol et.",
+        "Şifre ya da kart bilgisi verdiysen bankayı hemen arayıp kartı ve internet bankacılığını kapattır."
+      ],
+      "verification": {
+        "text": "Bankalar SMS'le ya da telefonla şifreni, kartının arkasındaki güvenlik kodunu ya da telefonuna gelen onay kodunu istemez. Bankana kartın arkasındaki numaradan ulaş.",
+        "links": []
+      },
+      "institutional": true
+    },
+    {
+      "id": "tax-gib",
+      "name": "Sahte vergi borcu ya da vergi iadesi",
+      "institutions": [
+        "gib"
+      ],
+      "weight": 30,
+      "strong": [
+        "vergi iade\\w* .{0,80}(hak kazan|tanimlan|bekliyor|almak icin|basvur|onaylan|yatirilacak)",
+        "(vergi|mtv|motorlu tasitlar) borc\\w* .{0,80}(haciz|icra|faiz|ceza|tikla|link|odeme icin|son gun)",
+        "(gib|gelir idaresi|vergi dairesi)\\w* .{0,80}(iade|borc|odeme)\\w* .{0,60}(tikla|link|adres|basvur|giris)"
+      ],
+      "weak": [
+        "\\bvergi",
+        "\\bmtv\\b",
+        "\\biade",
+        "\\bgib\\b",
+        "\\bborc"
+      ],
+      "description": "\"Vergi iadeniz var\" ya da \"vergi borcunuz icraya verilecek\" diyen mesajlar kart ve kimlik bilgilerini hedefler.",
+      "whatToDo": [
+        "Linke tıklama.",
+        "Vergi borcu ve iadelerini GİB Dijital Vergi Dairesi'nden ya da e-Devlet'ten kendin sorgula."
+      ],
+      "verification": {
+        "text": "Gelir İdaresi vergi iadesi için SMS linkiyle kart bilgisi istemez. Borç ve iadelerini dijital.gib.gov.tr ya da e-Devlet üzerinden sorgula. Vergi İletişim Merkezi: 189.",
+        "links": [
+          {
+            "name": "GİB Dijital Vergi Dairesi",
+            "url": "https://dijital.gib.gov.tr"
+          },
+          {
+            "name": "e-Devlet",
+            "url": "https://www.turkiye.gov.tr"
+          }
+        ]
+      },
+      "institutional": true
+    },
+    {
+      "id": "sgk-pension",
+      "name": "Sahte SGK / GSS borcu, emekli ikramiyesi ya da promosyon",
+      "institutions": [
+        "sgk"
+      ],
+      "weight": 30,
+      "strong": [
+        "(gss|genel saglik sigortasi|prim|sgk) borc\\w* .{0,80}(haciz|icra|faiz|silin|yapilandir|tikla|link|odeme icin|son gun|ode)",
+        "(emekli|bayram) (ikramiye|promosyon)\\w* .{0,80}(basvur|tanimlan|hak kazan|almak icin|yatirilacak|onay|tikla|link)",
+        "(emekli|emeklilik)\\w* .{0,60}(\\d[\\d.]* ?tl|ek odeme|zam farki|fark odeme)\\w* .{0,60}(basvur|hak kazan|almak icin|tanimlan|tikla)",
+        "(sgk|sosyal guvenlik)\\w* .{0,60}(iade|odeme|ikramiye)\\w* .{0,60}(tikla|link|basvur|giris yap(in|iniz|arak|ip|ma\\w*|ilmasi|abil\\w*|\\b))"
+      ],
+      "weak": [
+        "\\bsgk\\b",
+        "\\bgss\\b",
+        "\\bemekli",
+        "\\bikramiye",
+        "\\bpromosyon",
+        "prim borc"
+      ],
+      "description": "GSS prim borcu, emekli ikramiyesi ya da promosyon bahanesiyle sahte başvuru sayfasına yönlendirilirsin.",
+      "whatToDo": [
+        "Linke tıklama, kimlik ve kart bilgisi girme.",
+        "SGK borç ve ödemelerini e-Devlet'ten kendin kontrol et ya da ALO 170'i ara."
+      ],
+      "verification": {
+        "text": "SGK ikramiye ya da prim iadesi için SMS linkiyle başvuru almaz. Bilgilerini e-Devlet'teki SGK hizmetlerinden sorgula ya da ALO 170'i ara.",
+        "links": [
+          {
+            "name": "e-Devlet",
+            "url": "https://www.turkiye.gov.tr"
+          },
+          {
+            "name": "SGK",
+            "url": "https://www.sgk.gov.tr"
+          }
+        ]
+      },
+      "institutional": true
+    },
+    {
+      "id": "health",
+      "name": "Sahte e-Nabız / sağlık bildirimi",
+      "institutions": [
+        "health"
+      ],
+      "weight": 28,
+      "strong": [
+        "(e[- ]?nabiz|mhrs|saglik bakanligi)\\w* .{0,80}(tikla|link|giris yap(in|iniz|arak|ip|ma\\w*|ilmasi|abil\\w*|\\b)|guncelle|dogrula|indir|goruntule)",
+        "(tahlil|test|rapor|recete|asi)\\w* (sonuc|kayd|bilgi)\\w* .{0,60}(goruntulemek icin|icin tikla|linkten|adresinden)",
+        "(muayene|ilac|katilim pay)\\w* (borc|ucret)\\w* .{0,60}(ode|tikla|link)"
+      ],
+      "weak": [
+        "e[- ]?nabiz",
+        "\\bmhrs\\b",
+        "\\btahlil",
+        "\\brecete",
+        "\\brapor",
+        "\\basi\\b"
+      ],
+      "description": "e-Nabız ya da sağlık kayıtların bahane edilerek kimlik bilgilerin ve e-Devlet şifren istenir.",
+      "whatToDo": [
+        "Linke tıklama.",
+        "Sağlık kayıtlarına yalnızca resmî e-Nabız uygulamasından ya da enabiz.gov.tr adresini kendin yazarak bak."
+      ],
+      "verification": {
+        "text": "e-Nabız'ın resmî adresi enabiz.gov.tr, randevu sisteminin adresi mhrs.gov.tr'dir (telefon: 182).",
+        "links": [
+          {
+            "name": "e-Nabız",
+            "url": "https://enabiz.gov.tr"
+          }
+        ]
+      },
+      "institutional": true
+    },
+    {
+      "id": "traffic-license",
+      "name": "Sahte trafik cezası ya da ehliyet bildirimi",
+      "institutions": [
+        "police",
+        "gib"
+      ],
+      "weight": 30,
+      "strong": [
+        "trafik (para )?ceza\\w* .{0,100}(indirimli|tikla|link|odeme icin|son gun|icra|haciz|faiz|ode)",
+        "(ehliyet|surucu belge)\\w* .{0,60}(askiya|iptal|el konul|gecersiz|ceza puan)",
+        "(arac|plaka)\\w* .{0,60}(ceza|ihlal|radar)\\w* .{0,80}(tikla|link|odeme icin|goruntule|fotograf)",
+        "(radar|hiz ihlal|kirmizi isik)\\w* .{0,80}(ceza|tutanak)\\w* .{0,60}(tikla|link|ode|goruntule)"
+      ],
+      "weak": [
+        "trafik ceza",
+        "\\behliyet",
+        "\\bplaka",
+        "\\bradar",
+        "ceza puan",
+        "indirimli ode"
+      ],
+      "description": "\"Trafik cezanız var\" ya da \"ehliyetiniz askıya alınacak\" diyen mesajlar panik yaratıp sahte ödeme sayfasına götürür.",
+      "whatToDo": [
+        "Linke tıklama, kart bilgisi girme.",
+        "Trafik cezalarını e-Devlet'ten ya da GİB Dijital Vergi Dairesi'nden kendin sorgula."
+      ],
+      "verification": {
+        "text": "Trafik cezaları SMS linkiyle ödenmez. Cezan olup olmadığını e-Devlet'teki ceza sorgulama hizmetlerinden ya da dijital.gib.gov.tr'den kontrol et.",
+        "links": [
+          {
+            "name": "e-Devlet",
+            "url": "https://www.turkiye.gov.tr"
+          },
+          {
+            "name": "GİB Dijital Vergi Dairesi",
+            "url": "https://dijital.gib.gov.tr"
+          }
+        ]
+      },
+      "institutional": true
+    },
+    {
+      "id": "notary-deposit",
+      "name": "Sahte ilan, kapora ya da \"noter güvenli ödeme\" tuzağı",
+      "institutions": [
+        "notary",
+        "ecommerce"
+      ],
+      "weight": 35,
+      "strong": [
+        "kapora\\w* .{0,80}(gonder|yatir|at|iban|havale|eft|fast|birak|alayim|tutayim|ayirt)",
+        "(iban|havale|eft|fast)\\w* .{0,60}kapora",
+        "(noter|guvenli odeme)\\w* .{0,80}(link|tikla|onayla|formu doldur|sistemi uzerinden .{0,40}(gonder|yatir))",
+        "(noter|guvenli odeme) (masraf|ucret|harc|bedel)\\w* .{0,60}(gonder|yatir|iban|pesin|once)",
+        "(ev|daire|arac|araba|urun|ilan)\\w* .{0,80}(baskasi|baska (alici|kiraci|musteri)|cok talep|cok arayan)\\w* .{0,80}(kapora|on odeme|ayirt)",
+        "(gormeden|gostermeden|yurt disinda|sehir disinda)\\w* .{0,100}(kapora|on odeme|depozito|anahtar\\w* kargo)",
+        "(guvenli odeme|param guvende|kargo ile odeme)\\w* .{0,80}(link|kart bilgi|onay)"
+      ],
+      "weak": [
+        "\\bkapora",
+        "\\bnoter",
+        "guvenli odeme",
+        "\\bilan",
+        "\\bdepozito",
+        "\\biban",
+        "on odeme"
+      ],
+      "description": "Sahte ilan sahipleri evi ya da aracı göstermeden kapora ister; ya da kendini noter gibi tanıtıp \"güvenli ödeme\" linki gönderir.",
+      "whatToDo": [
+        "Evi, aracı ya da ürünü yüz yüze görmeden kapora ya da ön ödeme gönderme.",
+        "Araç alım satımında güvenli ödemeyi noterde, yüz yüze başlat. Sana gönderilen \"güvenli ödeme\" linkine kart bilgisi girme.",
+        "İlan sitesinin kendi mesajlaşma ve ödeme sisteminin dışına çıkma."
+      ],
+      "verification": {
+        "text": "Noterler WhatsApp ya da SMS ile ödeme linki göndermez; güvenli ödeme işlemi noterde başlatılır. Tapu ve araç kaydını satıcıyla birlikte resmî kanaldan görmeden para gönderme.",
+        "links": [
+          {
+            "name": "Türkiye Noterler Birliği",
+            "url": "https://www.tnb.org.tr"
+          }
+        ]
+      },
+      "institutional": false
+    },
+    {
+      "id": "fake-job",
+      "name": "Sahte iş ilanı ya da \"evden ek gelir\" teklifi",
+      "institutions": [
+        "iskur"
+      ],
+      "weight": 40,
+      "strong": [
+        "(gunluk|haftalik|saatlik) .{0,30}\\d[\\d.]* ?(tl|lira|usd|dolar|\\$) .{0,60}(kazan|gelir|odeme|maas)",
+        "(gunluk|haftalik) (kazanc|gelir|odeme)\\w* .{0,40}\\d[\\d.]* ?(tl|lira|usd|dolar)",
+        "(evden|evde|ek is|part[- ]?time|yari zamanli|online is)\\w* .{0,80}(kazan|gelir)\\w* .{0,80}(whatsapp|telegram|yazin|ulasin|iletisim|ekle|tikla|link|basvur)",
+        "evde? (paketleme|boncuk|tukenmez|montaj)",
+        "(begeni|like|yorum|gorev|siparis)\\w* (yaparak|yapip|basarak|tamamlayarak|basina) .{0,60}(kazan|odeme|komisyon|tl)",
+        "(ik|insan kaynaklari)\\w* .{0,60}(ozgecmis|cv|profil)\\w* .{0,60}(onaylan|secildi|begen)\\w* .{0,100}(whatsapp|telegram|gunluk|kazan)",
+        "(uyelik|kayit|egitim|malzeme|kargo|aktivasyon) (ucret|bedel)\\w* .{0,60}(yatir|gonder|ode)\\w* .{0,80}(ise basla|is|kazan)",
+        "tecrube (sart|gerek)\\w* (degil|yok|mez) .{0,100}(kazan|gelir|gunluk)",
+        "(yorum|degerlendirme|anket|puanlama)\\w* (yazip|yazarak|yaparak|doldurup|doldurarak) .{0,40}(para|kazan|odeme)",
+        "yurt disinda .{0,60}(is\\b|calis|garson|bakici|sofor|isci)\\w* .{0,160}(dosya|vize|basvuru|kayit|danismanlik) (parasi|ucreti|masrafi|bedeli)",
+        "(ilk|gunluk) odeme\\w* .{0,30}(bugun|hemen|aninda|ayni gun) (al|yat)",
+        "ek gelir\\w* .{0,140}(ucret|odemeler gunluk|gunluk odeme|yaz anlatayim|whatsapp|telegram)",
+        "(urun|video|otel|restoran|uygulama)\\w* (puanlayarak|degerlendirerek|begenerek|izleyerek|yorumlayarak) .{0,60}(gelir|kazan|para|odeme)",
+        "(aktivasyon|baslangic|kayit|uyelik|egitim) (ucreti|bedeli|parasi)\\w* .{0,80}(var|gerek|yatir|ode|gonder)"
+      ],
+      "weak": [
+        "ek gelir",
+        "evden (calis|is)",
+        "\\bpart[- ]?time",
+        "is (firsati|ilani|teklifi)",
+        "\\bkomisyon",
+        "\\bgunluk",
+        "\\bwhatsapp",
+        "\\btelegram",
+        "kazanc"
+      ],
+      "description": "Kolay ve yüksek kazanç vaat eden \"evden iş\" teklifleri önce küçük ödemelerle güven kazanır, sonra senden para ya da hesap bilgisi ister.",
+      "whatToDo": [
+        "İşe başlamak için senden para isteyen ilana güvenme; gerçek işveren para istemez.",
+        "Kimlik fotoğrafını, banka hesabını ya da şifreni paylaşma.",
+        "İlanı İŞKUR ya da bilinen iş sitelerinin kendi sayfasından doğrula."
+      ],
+      "verification": {
+        "text": "Gerçek işverenler işe alım için üyelik, eğitim ya da malzeme ücreti istemez. İlanları iskur.gov.tr ya da şirketin resmî sitesinden doğrula.",
+        "links": [
+          {
+            "name": "İŞKUR",
+            "url": "https://www.iskur.gov.tr"
+          }
+        ]
+      },
+      "institutional": false
+    },
+    {
+      "id": "iban-rental",
+      "name": "Hesap ya da IBAN kiralama teklifi",
+      "institutions": [
+        "bank"
+      ],
+      "weight": 55,
+      "strong": [
+        "(hesab|iban|kart)\\w* .{0,40}(kirala|kiraya ver|kiralik|kullandir)",
+        "(hesabina|ibanina|hesabiniza) .{0,60}(para (gelecek|yatacak|gonderecegiz)|gelen para)\\w* .{0,100}(aktar|gonder|cek|komisyon)",
+        "(banka hesab|iban)\\w* (lazim|araniyor|ihtiyac) .{0,100}(komisyon|kazan|odeme|gunluk)",
+        "(hesap|iban) (basina|kullanim)\\w* .{0,40}(\\d[\\d.]* ?(tl|lira)|komisyon|odeme)"
+      ],
+      "weak": [
+        "\\biban",
+        "\\bkomisyon",
+        "hesap bilgi",
+        "\\baktar",
+        "\\bkirala"
+      ],
+      "description": "Hesabını ya da IBAN'ını başkasına kullandırman istenir. Bu hesaplardan dolandırıcılık parası geçer ve hesap sahibi olarak sen de hakkında soruşturma açılması riskiyle karşılaşırsın.",
+      "whatToDo": [
+        "Banka hesabını, kartını ya da IBAN'ını kimseye kullandırma.",
+        "Hesabına tanımadığın birinden para geldiyse başka hesaba aktarma; bankana bildir.",
+        "Hesabını kullandırdıysan bankana haber ver ve bir avukata danış."
+      ],
+      "verification": {
+        "text": "Hesabını başkasına kullandıran kişi de hukuken sorumlu tutulabilir. Böyle bir teklifi kabul etme; şüpheli para hareketini bankana ve 112'ye bildir.",
+        "links": []
+      },
+      "institutional": false
+    },
+    {
+      "id": "investment-crypto",
+      "name": "Sahte yatırım, kripto ya da bahis teklifi",
+      "institutions": [],
+      "weight": 40,
+      "strong": [
+        "(garanti|garantili|risksiz|kesin) (kazanc|getiri|kar)\\b",
+        "(gunluk|haftalik|aylik) %? ?\\d+ ?%? .{0,20}(kazanc|getiri|kar)\\b",
+        "%? ?\\d+ ?%? (kazanc|getiri|kar) garanti",
+        "\\d[\\d.]* ?(tl|lira|usd|usdt|dolar) (yatir|ile basla)\\w* .{0,80}\\d[\\d.]* ?(tl|lira|usd|usdt|dolar) (kazan|al|cek)",
+        "(borsa|hisse|kripto|coin|forex|altin|yatirim)\\w* .{0,60}(grubu|kanali|sinyal|tavsiye|uzman|danisman)\\w* .{0,100}(katil|ucretsiz|whatsapp|telegram|tikla|link)",
+        "(kripto|coin|bitcoin|usdt|forex)\\w* .{0,80}(kat kazan|ikiye katla|katlay|firsat|kacirma)",
+        "(deneme bonusu|yatirimsiz bonus|freespin|free spin|cevrimsiz|kayip bonusu|bahis|casino|slot)",
+        "(paranizi|yatiriminizi|birikiminizi) .{0,40}(katla|buyut|degerlendir)\\w* .{0,80}(whatsapp|telegram|yazin|tikla|link)",
+        "(\\d+|iki|uc|dort|bes|on) kat\\w* (cikti|cikar|kazan|yapti|yapar)",
+        "(coin|token|kripto|proje)\\w* .{0,120}(cuzdan adres|minimum giris|listelenmeden|on satis)",
+        "(iceriden bilgi|tavan yapacak|ucacak hisse|operasyon var|operasyon yapilacak)",
+        "(hisse|borsa|coin|kripto)\\w* .{0,140}(grub|kanal)\\w* .{0,100}(uyelik|ucret|\\btl\\b|katil|gir)"
+      ],
+      "weak": [
+        "\\byatirim",
+        "\\bkripto",
+        "\\bborsa",
+        "\\bhisse",
+        "\\bkazanc",
+        "\\bbonus",
+        "\\btelegram",
+        "\\busdt\\b",
+        "\\bbitcoin",
+        "\\bforex"
+      ],
+      "description": "\"Garantili kazanç\" vaat eden yatırım, kripto ve bahis teklifleri paranı almak için kurulur. Garantili getiri diye bir şey yoktur.",
+      "whatToDo": [
+        "Tanımadığın kişi ya da grupların yatırım tavsiyesiyle para gönderme.",
+        "Aracı kurumun SPK'dan yetkili olup olmadığını SPK'nın sitesinden kontrol et.",
+        "Yasa dışı bahis sitelerine para yatırma; hesabın da soruşturma konusu olabilir."
+      ],
+      "verification": {
+        "text": "Yatırım hizmeti verebilecek kurumlar Sermaye Piyasası Kurulu'ndan (SPK) yetki alır. Kurumun yetkili olup olmadığını spk.gov.tr'den kontrol et.",
+        "links": [
+          {
+            "name": "SPK",
+            "url": "https://www.spk.gov.tr"
+          }
+        ]
+      },
+      "institutional": false
+    },
+    {
+      "id": "prize-discount",
+      "name": "Sahte çekiliş, hediye ya da büyük indirim",
+      "institutions": [
+        "ecommerce"
+      ],
+      "weight": 28,
+      "strong": [
+        "tebrikler\\W.{0,100}(kazandiniz|secildiniz|hak kazandiniz|talihli)",
+        "(cekilis|kampanya|yildonumu|anket)\\w* .{0,80}(kazandiniz|secildiniz|talihli|hak kazandiniz)",
+        "(hediye ceki|alisveris ceki|iphone|telefon|tablet|araba|altin|\\d[\\d.]* ?tl)\\w* .{0,40}(kazandiniz|hediye ediyor|hediyeniz hazir|sizin oldu)",
+        "(odul|hediye|ikramiye)\\w* .{0,60}(teslim|almak|kargo|gonderim)\\w* .{0,60}(ucret|bedel|masraf|vergi|kart bilgi)",
+        "%(8|9)\\d .{0,10}(indirim|firsat)",
+        "(yildonumu|\\d+\\.? ?yil)\\w* .{0,60}(hediye|ucretsiz|bedava)\\w* .{0,60}(tikla|link|katil|anket)",
+        "(ucretsiz|bedava) (\\d+ ?gb|internet|iphone|telefon|hediye)\\w* .{0,80}(tikla|link|almak icin|paylas)",
+        "(\\d+) (kisiye|arkadasina|gruba) (gonder|paylas|ilet)"
+      ],
+      "weak": [
+        "\\bcekilis",
+        "\\bhediye",
+        "\\bkazandiniz",
+        "\\bodul",
+        "\\bindirim",
+        "\\bkampanya",
+        "\\btalihli",
+        "\\bucretsiz",
+        "\\bbedava",
+        "stoklarla sinirli|son \\d+ (urun|adet)"
+      ],
+      "description": "Katılmadığın bir çekilişi kazandığını ya da inanılmaz bir indirim olduğunu söyleyen mesajlar kart bilgisi ya da \"kargo ücreti\" ister.",
+      "whatToDo": [
+        "Katılmadığın bir çekilişi kazanamazsın. Linke tıklama.",
+        "Hediye için kargo ücreti, vergi ya da kart bilgisi isteniyorsa dolandırıcılıktır.",
+        "Kampanyayı markanın kendi uygulamasından ya da resmî sitesinden kontrol et."
+      ],
+      "verification": {
+        "text": "Gerçek kampanyalar markanın kendi sitesinde ve uygulamasında da görünür. Orada yoksa kampanya sahtedir.",
+        "links": []
+      },
+      "institutional": false,
+      "requiresAction": true
+    },
+    {
+      "id": "relative-impersonation",
+      "name": "Yakınınız gibi yazıp para isteme",
+      "institutions": [],
+      "weight": 45,
+      "strong": [
+        "(anne|baba|abi|abla|kardesim|teyze|hala|dayi|amca|canim)\\w*\\W.{0,60}(telefonum|hattim|numaram)\\w* .{0,40}(bozuldu|kirildi|calindi|kayboldu|suya dustu)",
+        "(yeni|gecici) numaram\\w* .{0,160}(para|iban|havale|gonder|odeme|\\btl\\b|lira)",
+        "(acil|hemen) .{0,40}(para|\\d[\\d.]* ?tl|lira) .{0,40}(lazim|gonder|atar misin|atabilir misin|yollar misin)\\w* .{0,100}(aksam|yarin|hemen) .{0,30}(geri|iade|veririm|gonderirim|yollarim)",
+        "(su|bu) (iban|hesab)\\w* .{0,40}(\\d[\\d.]* ?(tl|lira|bin))?.{0,30}(atar misin|atabilir misin|gonderir misin|yollar misin|gonderebilir misin)",
+        "(hastanedeyim|kaza yaptim|karakoldayim|gozaltindayim) .{0,100}(para|tl|iban|gonder)",
+        "(eski|onceki) (hatti|hattimi|numarayi|numarami|telefonu)\\w* .{0,30}(kapat|iptal|kullanmi)\\w* .{0,200}(borc|ode|para|gonder|hallede|iban|hesab)",
+        "(limitim|bankam|hesabim|kartim|uygulama)\\w* .{0,30}(doldu|kilitlendi|bloke|calismiyor|acilmiyor)\\w* .{0,120}\\b(sen|siz)\\b .{0,40}(gonder|at|hallede|odeye|yatir|yolla)",
+        "ben (annen|baban|oglun|kizin|abin|ablan|kardesin|dayin|amcan|teyzen|halan)\\w*\\W.{0,120}(telefonundan yaziyorum|benimki (kapandi|bozuldu|kirildi)|sarjim bitti|numaram degisti)",
+        "(komsunun|arkadasimin|arkadasin|baskasinin|bir yabancinin) telefonundan .{0,200}(gonder|para|tl\\b|lira|iban|hesab)"
+      ],
+      "weak": [
+        "yeni numara",
+        "telefonum bozuldu",
+        "\\bacil\\b",
+        "atar misin",
+        "gonderir misin",
+        "\\biban",
+        "sonra anlatirim|sonra aciklarim"
+      ],
+      "description": "Dolandırıcı, tanıdığın biri gibi yazar (\"anne, telefonum bozuldu, bu yeni numaram\") ve acil para ister.",
+      "whatToDo": [
+        "Para göndermeden önce o kişiyi bildiğin eski numarasından ara.",
+        "Ulaşamıyorsan yalnızca gerçek yakınının bilebileceği bir soru sor.",
+        "Sesli ya da görüntülü konuşmayı reddediyorsa şüphelen."
+      ],
+      "verification": {
+        "text": "Yakınını bildiğin numarasından kendin ara. Yeni numaradan gelen para isteğini sesini duymadan yerine getirme.",
+        "links": []
+      },
+      "institutional": false
+    },
+    {
+      "id": "code-request",
+      "name": "Doğrulama kodunu isteyerek hesap ele geçirme",
+      "institutions": [
+        "platform"
+      ],
+      "weight": 60,
+      "strong": [
+        "(yanlislikla|yanlis numaraya|kazara) .{0,80}(kod|sms)\\w* .{0,60}(gonder|ilet|soyle|yazar|atar|yollar)",
+        "(sana|size|telefonuna|telefonunuza|numarana) .{0,30}(gelen|gelecek|gonderilen) .{0,20}(\\d haneli )?(kod|sifre|sms)\\w* .{0,40}(gonder|ilet|soyle|yaz|at|yolla|paylas|bildir)",
+        "(\\d|alti|dort) haneli (kod|sifre)\\w* .{0,40}(gonderir misin|soyler misin|iletir misin|atar misin|yazar misin|paylasin|iletin|soyleyin|bildirin)",
+        "(whatsapp|instagram|telegram|hesab)\\w* .{0,60}(dogrula|aktif|ac)\\w* .{0,60}kod\\w* .{0,40}(gonder|ilet|soyle|yaz|paylas)",
+        "(mesaj|sms)\\w* .{0,60}(icindeki|gelen|yazan) .{0,20}(rakam|kod|sifre|numara)\\w* .{0,40}(yaz|soyle|at\\b|gonder|ilet|oku)",
+        "(kod|sifre)\\w* (gelecek|gelicek|dusecek|gelmis|geldi|gelmistir)\\w* .{0,60}(yaz|soyle|ilet|gonder|at\\b|oku|bildir)"
+      ],
+      "weak": [
+        "\\bkod",
+        "yanlislikla",
+        "dogrulama kodu",
+        "\\bwhatsapp"
+      ],
+      "description": "Telefonuna gelen doğrulama kodunu isteyen kişi WhatsApp, banka ya da e-Devlet hesabını ele geçirmeye çalışıyor olabilir. Yazan kişi tanıdığın biri görünse bile onun hesabı çalınmış olabilir.",
+      "whatToDo": [
+        "Telefonuna gelen kodu kimseye söyleme, iletme.",
+        "Kodu verdiysen ilgili uygulamada hemen yeniden giriş yapıp iki adımlı doğrulamayı aç.",
+        "Kodu isteyen tanıdığını başka bir yoldan arayıp hesabının çalınmış olabileceğini haber ver."
+      ],
+      "verification": {
+        "text": "Doğrulama kodu yalnızca senin içindir. Hiçbir kurum, hiçbir tanıdığın bu kodu senden istemez.",
+        "links": []
+      },
+      "institutional": false
+    },
+    {
+      "id": "operator",
+      "name": "Sahte operatör faturası, iade ya da hediye internet",
+      "institutions": [
+        "operator"
+      ],
+      "weight": 28,
+      "strong": [
+        "(fatura|tarife|hat)\\w* .{0,60}(iade|fazla (odeme|tahsilat)|cifte tahsilat)\\w* .{0,80}(tikla|link|basvur|kart bilgi|almak icin)",
+        "(hattiniz|numaraniz)\\w* .{0,50}(kapatilacak|iptal edilecek|askiya alinacak|kisitlan)\\w* .{0,80}(tikla|link|guncelle|dogrula|kimlik)",
+        "(turkcell|vodafone|turk telekom|turktelekom)\\w* .{0,60}(hediye|ucretsiz|bedava)\\w* .{0,60}(tikla|link|almak icin|aktif etmek icin)",
+        "(e[- ]?sim|sim kart)\\w* .{0,60}(guncelle|yenile|degisim|aktivasyon)\\w* .{0,60}(kod|tikla|link|onay)"
+      ],
+      "weak": [
+        "\\bfatura",
+        "\\bhattiniz",
+        "\\btarife",
+        "\\biade",
+        "\\bturkcell",
+        "\\bvodafone",
+        "turk ?telekom"
+      ],
+      "description": "Operatör adına \"fatura iadeniz var\" ya da \"hattınız kapatılacak\" diyen mesajlar kart bilgilerini ya da hattını ele geçirmeyi amaçlar.",
+      "whatToDo": [
+        "Linke tıklama.",
+        "Fatura ve hat durumunu operatörünün resmî uygulamasından ya da müşteri hizmetlerinden kontrol et."
+      ],
+      "verification": {
+        "text": "Operatörler iade için SMS linkiyle kart bilgisi istemez. Durumunu operatörün resmî uygulamasından ya da müşteri hizmetlerini kendin arayarak doğrula.",
+        "links": []
+      },
+      "institutional": true
+    },
+    {
+      "id": "subscription",
+      "name": "Sahte abonelik ya da hesap ödeme uyarısı",
+      "institutions": [
+        "platform"
+      ],
+      "weight": 28,
+      "strong": [
+        "(netflix|spotify|youtube|disney|exxen|blutv|amazon prime|icloud|apple)\\w* .{0,80}(odeme\\w* (alinamadi|basarisiz|reddedildi|yapilamadi)|uyelig\\w* (askiya|iptal|durdur|sona er)|hesab\\w* (askiya|kilit|kapat|durdur))",
+        "(uyelig|abonelig|hesab)\\w* .{0,40}(askiya alin|iptal edil|durdurul|kilitlen)\\w* .{0,80}(odeme bilgi|kart bilgi|guncelle|tikla|link)",
+        "odeme (bilgi|yontem)\\w* .{0,30}guncelle\\w* .{0,60}(tikla|link|aksi|yoksa|\\d+ saat)",
+        "(instagram|facebook|tiktok)\\w* .{0,80}(telif|ihlal|mavi tik|dogrulanmis rozet)\\w* .{0,80}(tikla|link|form|itiraz|\\d+ saat)"
+      ],
+      "weak": [
+        "\\buyelig",
+        "\\babonelig",
+        "odeme (bilgi|yontem)",
+        "\\bguncelle",
+        "\\bnetflix",
+        "\\bhesabiniz"
+      ],
+      "description": "\"Ödemeniz alınamadı, üyeliğiniz iptal edilecek\" diyen mesajlar kart bilgilerini sahte bir sayfada toplar.",
+      "whatToDo": [
+        "Linke tıklama.",
+        "Üyeliğinin durumunu uygulamanın kendi içinden kontrol et."
+      ],
+      "verification": {
+        "text": "Ödeme ve üyelik durumunu yalnızca uygulamanın kendi içinden ya da adresini kendin yazdığın resmî siteden kontrol et.",
+        "links": []
+      },
+      "institutional": true
+    }
+  ],
+  "languageSignals": [
+    {
+      "id": "urgency",
+      "name": "Acele ettirme",
+      "weight": 8,
+      "patterns": [
+        "\\b(hemen|derhal|acilen|ivedi)\\b",
+        "\\bacil\\b",
+        "son (gun|saat|\\d+ (saat|gun|dakika))",
+        "\\b(12|24|48|72) saat (icinde|icerisinde)",
+        "bugun (icinde|icerisinde|son|saat)",
+        "sureniz dol",
+        "gec kalmadan|vakit kaybetmeden|gecikmeden",
+        "\\d+ (saat|dakika) icinde"
+      ],
+      "description": "Mesaj seni acele ettiriyor. Dolandırıcılar düşünmeye ve birine danışmaya vakit bırakmak istemez."
+    },
+    {
+      "id": "threat",
+      "name": "Korkutma ya da tehdit",
+      "weight": 15,
+      "patterns": [
+        "yasal (islem|takip|surec)",
+        "icra (takibi|islemi)",
+        "\\bhaciz",
+        "cezai (islem|yaptirim)",
+        "\\bhapis",
+        "\\bgozalti",
+        "\\btutukla",
+        "yakalama karari",
+        "aksi (takdirde|halde|durumda)",
+        "(hesab|kart|hat|uyelik|ehliyet)\\w* .{0,30}(bloke|kapatilacak|iptal edilecek|askiya alinacak|dondurulacak|silinecek)",
+        "iade edilecek(tir)?\\b",
+        "ceza (uygulan|kesil|yansit)",
+        "faiz(i|iyle)? (isle|uygulan|birlikte)",
+        "kara listeye",
+        "(maas|hesab)\\w* (bloke|haciz) kon",
+        "\\bihtarname"
+      ],
+      "description": "Mesaj ceza, icra, hesap kapatma gibi bir sonuçla korkutuyor. Korku, dolandırıcıların en çok kullandığı araçtır."
+    },
+    {
+      "id": "sensitive-info",
+      "name": "Şifre, kart ya da kimlik bilgisi isteme",
+      "weight": 30,
+      "patterns": [
+        "(kart|kredi karti|banka karti) (bilgi|numara)\\w* .{0,40}(girin|giriniz|girerek|yazin|yaziniz|gonderin|iletin|paylasin|dogrulayin|guncelleyin|tamamlayin|gir\\b|yaz\\b|gonder\\b|at\\b)",
+        "(sifre|parola)(nizi|ni|nizi|yi)? .{0,30}(girin|giriniz|girerek|yazin|gonderin|iletin|paylasin|soyleyin|soyle\\b|gonder\\b|yaz\\b|bildirin)",
+        "(tc|t\\.c\\.?|tckn) ?(kimlik)? ?(no|numara)?\\w* .{0,30}(girin|giriniz|girerek|yazin|gonderin|iletin|paylasin|gonder\\b|yaz\\b|bildirin|ile giris)",
+        "(dogrulama|onay|guvenlik|sms) kodu\\w* .{0,40}(iletin|iletiniz|gonderin|soyleyin|paylasin|bildirin|yazin|girin|soyle\\b|gonder\\b|ilet\\b)",
+        "\\bcvv\\b|\\bcvc\\b|son kullanma tarih|kartin arkasindaki",
+        "kimli(k|gin|ginizin) .{0,20}(fotograf|foto|on yuz|arka yuz|resm)\\w* .{0,40}(gonder|at|ilet|yukle|paylas|cek)",
+        "(internet|mobil) (bankacilik|sube) (sifre|bilgi)\\w* .{0,40}(gir|yaz|gonder|ilet|paylas|guncelle|dogrula)",
+        "(e[- ]?devlet) sifre\\w* .{0,40}(gir(in|iniz|erek|ip|\\b)|giris yap(in|iniz|arak|ip|ma\\w*|ilmasi|abil\\w*|\\b)|yaz|gonder|ilet|paylas|soyle)",
+        "kart\\w* .{0,30}(on|arka|iki) .{0,12}(yuz|taraf)\\w* .{0,40}(foto|resim|resm|goruntu)",
+        "(icindeki|gelen|yazan) (rakam|kod|sifre)\\w* .{0,30}(yaz|soyle|at\\b|gonder|ilet|oku)",
+        "kart (bilgi|numara)\\w* .{0,40}(onay ver|isteyecek|istenecek|tanimla|ile onay)",
+        "kartinizi (tanimlayin|dogrulayin|guncelleyin|girin)"
+      ],
+      "description": "Mesaj şifre, kart, kimlik ya da doğrulama kodu istiyor. Hiçbir kurum bu bilgileri mesajla ya da linkle istemez."
+    },
+    {
+      "id": "money-request",
+      "name": "Para gönderme isteği",
+      "weight": 15,
+      "patterns": [
+        "\\biban\\b",
+        "tr\\d{2} ?\\d{4}",
+        "\\b(havale|eft|fast)\\w* .{0,20}(yap|gonder|at\\b|ile\\b)",
+        "\\bkapora",
+        "\\bon odeme",
+        "(dosya|islem|kargo|gumruk|teslimat|aktivasyon|uyelik|kayit) (masraf|ucret|bedel)\\w* .{0,40}(ode|yatir|gonder)",
+        "(para|tutar|ucret|odeme)\\w* .{0,20}(yatirin|yatiriniz|gonderin|gonderiniz|gonder\\b|yatir\\b)",
+        "\\bpapara\\b .{0,40}(gonder|at|numara)",
+        "(kripto|usdt|bitcoin) .{0,30}(gonder|yatir|ile ode)",
+        "\\d[\\d.]* ?(bin )?(tl|lira)\\w* .{0,25}(yatir\\b|yatirin|yatiriniz|yatirmaniz|gonder\\b|gonderin|gonderiniz|gondermeniz|atar misin|atabilir misin|yollar misin)",
+        "(hesabina|hesaba|ibana|numaraya|hesabima) .{0,40}(gonderir misin|atar misin|gonderebilir misin|yollar misin|atabilir misin|yatirir misin|gonder\\b)"
+      ],
+      "description": "Mesaj senden para göndermeni ya da ödeme yapmanı istiyor. Tanımadığın bir hesaba giden parayı geri almak çok zordur."
+    },
+    {
+      "id": "payment-language",
+      "name": "Ücret ya da borç ödetme",
+      "weight": 5,
+      "patterns": [
+        "\\b(ucret|ucreti|ucretini|ucretin|masraf\\w*|bedel\\w*|borc\\w*|vergisi|vergisini|tutar\\w*)\\b .{0,60}\\b(ode\\w*|kapat\\w*|tamamla\\w*|yatir\\w*|karsila\\w*)",
+        "\\b(ode|yatir)\\w* .{0,40}\\b(ucret|masraf|bedel|borc)",
+        "\\d[\\d.,]* ?(tl|lira|euro|dolar)\\w* .{0,12}(karsiliginda|eksik|odeyerek|odeyip|aliyoruz|kapatin)",
+        "(dosya|kayit|uyelik|vize|sigorta|kargo|gonderim|posta) (parasi|ucreti|masrafi|bedeli)",
+        "(harc|ceza|vergi|fatura|borc|ucret) odeme\\w*",
+        "\\d[\\d.,]* ?(tl|lira)\\w* (uyelik|kayit|giris|aidat)"
+      ],
+      "description": "Mesaj küçük de olsa bir ücret, borç ya da masraf ödetmeye çalışıyor. Küçük tutar çoğu zaman kart bilgisini almak için bahanedir."
+    },
+    {
+      "id": "info-request",
+      "name": "Bilgi tamamlama ya da güncelleme isteği",
+      "weight": 5,
+      "patterns": [
+        "(bilgi|adres|kart|kimlik|hesab|uyelig|profil)\\w* .{0,30}(tamamlayin|tamamla\\b|guncelleyin|guncelle\\b|tanimlayin|dogrulayin|dogrula\\b|onaylayin|onayla\\b|teyit ed)",
+        "(yenileme|guncelleme|dogrulama|aktivasyon) (randevu|islem|form|link)"
+      ],
+      "description": "Mesaj bilgilerini tamamlamanı ya da güncellemeni istiyor. Sahte sayfalar bilgileri bu bahaneyle toplar."
+    },
+    {
+      "id": "reward",
+      "name": "Ödül, hediye ya da kolay kazanç vaadi",
+      "weight": 10,
+      "patterns": [
+        "\\bkazandiniz",
+        "hak kazandiniz",
+        "\\btebrikler",
+        "\\bcekilis",
+        "\\btalihli",
+        "hediye (cek|kazan|ediyor)",
+        "(ucretsiz|bedava) .{0,30}(kazan|al|sahip ol)",
+        "kolay (para|kazanc)",
+        "(yuksek|ek) (kazanc|gelir)",
+        "alisveris (karti|ceki)\\w* .{0,30}(kap|kazan|hediye|senin)",
+        "(soru|anket)\\w* .{0,20}(yanitla|cevapla|katil)\\w* .{0,60}(kap|kazan|hediye)",
+        "zam farki .{0,40}(yatacak|almak icin)"
+      ],
+      "description": "Mesaj ödül, hediye ya da kolay para vaat ediyor. Beklemediğin bir kazanç çoğu zaman yemdir."
+    },
+    {
+      "id": "secrecy-pressure",
+      "name": "\"Kimseye söyleme\" baskısı",
+      "weight": 20,
+      "patterns": [
+        "kimseye (soyleme|bahsetme|haber verme|bilgi verme|anlatma)",
+        "kimseyle (paylasmadan|konusmadan|gorusmeden)",
+        "(aramizda|gizli) kalsin",
+        "telefonu kapatmayin",
+        "(ailenize|yakinlariniza|banka gorevlisine) (soyleme|bilgi verme)"
+      ],
+      "description": "Mesaj bunu kimseye söylememeni istiyor. Gerçek kurumlar seni yakınlarından uzak tutmaya çalışmaz."
+    },
+    {
+      "id": "remote-access",
+      "name": "Uygulama kurdurma ya da uzaktan erişim",
+      "weight": 30,
+      "patterns": [
+        "anydesk|any desk|teamviewer|team viewer|alpemix|rustdesk|quicksupport",
+        "uzaktan (erisim|baglanti|destek)",
+        "ekran(inizi)? paylas",
+        "\\bapk\\b",
+        "(guvenlik|koruma|destek|guncelleme) uygulamas\\w* .{0,40}(indir|yukle|kur)",
+        "uygulamayi .{0,30}(linkten|adresinden|buradan) (indir|yukle|kur)"
+      ],
+      "description": "Mesaj bir uygulama kurmanı ya da ekranını paylaşmanı istiyor. Bu, telefonunun ve banka uygulamanın kontrolünü ele geçirmenin yoludur."
+    },
+    {
+      "id": "channel-switch",
+      "name": "Sizi WhatsApp ya da Telegram'a çekme",
+      "weight": 8,
+      "patterns": [
+        "(whatsapp|telegram|wp)\\w* .{0,30}(yazin|yaziniz|ulasin|ekleyin|katilin|gecelim|devam edelim|iletisime gec|hatti|numaras|grub|kanal)",
+        "wa\\.me|t\\.me"
+      ],
+      "description": "Mesaj görüşmeyi WhatsApp ya da Telegram'a taşımak istiyor. Kurumlar resmî işlemleri bu yolla yürütmez."
+    }
+  ],
+  "writing": {
+    "digitLetters": {
+      "name": "Harf yerine rakam kullanımı",
+      "weight": 12,
+      "pattern": "\\b[a-z]{2,}[0135][a-z]{2,}\\b",
+      "description": "Kelimelerin içinde harf yerine rakam kullanılmış. Bu, filtrelerden kaçmak için yapılan bir oyundur."
+    },
+    "mixedAlphabet": {
+      "name": "Yabancı alfabe harfleri",
+      "weight": 20,
+      "description": "Metinde Latin harflerine benzeyen yabancı alfabe harfleri var. Gerçek kurumlar böyle yazmaz."
+    },
+    "foreignAccents": {
+      "name": "Türkçede olmayan harfler",
+      "weight": 10,
+      "description": "Metinde Türkçede bulunmayan aksanlı harfler var. Bu, filtrelerden kaçmak için yapılır."
+    },
+    "shouting": {
+      "name": "Abartılı büyük harf ya da ünlem",
+      "weight": 5,
+      "description": "Mesaj büyük harflerle ya da art arda ünlemlerle yazılmış. Resmî mesajlar genellikle sakin bir dille yazılır."
+    }
+  },
+  "domains": {
+    "secondLevelSuffixes": [
+      "com.tr",
+      "gov.tr",
+      "org.tr",
+      "net.tr",
+      "edu.tr",
+      "bel.tr",
+      "pol.tr",
+      "tsk.tr",
+      "k12.tr",
+      "av.tr",
+      "gen.tr",
+      "web.tr",
+      "info.tr",
+      "biz.tr",
+      "bbs.tr",
+      "name.tr",
+      "tv.tr",
+      "dr.tr",
+      "co.uk",
+      "com.au",
+      "co.jp",
+      "com.br"
+    ],
+    "publicSuffixes": [
+      "gov.tr",
+      "edu.tr",
+      "bel.tr",
+      "pol.tr",
+      "tsk.tr",
+      "k12.tr"
+    ],
+    "knownDomains": [
+      "tcmb.gov.tr",
+      "bddk.org.tr",
+      "tbb.org.tr",
+      "ihbarweb.org.tr",
+      "iys.org.tr",
+      "kariyer.net",
+      "turkishairlines.com",
+      "thy.com",
+      "flypgs.com",
+      "obilet.com",
+      "enuygun.com",
+      "btcturk.com",
+      "paribu.com",
+      "boyner.com.tr",
+      "vatanbilgisayar.com",
+      "enerjisa.com.tr",
+      "wikipedia.org",
+      "github.com",
+      "zoom.us",
+      "booking.com",
+      "airbnb.com",
+      "paypal.com",
+      "samsung.com",
+      "mi.com",
+      "huawei.com"
+    ],
+    "shorteners": [
+      "bit.ly",
+      "tinyurl.com",
+      "t.co",
+      "is.gd",
+      "cutt.ly",
+      "rb.gy",
+      "goo.gl",
+      "ow.ly",
+      "shorturl.at",
+      "t.ly",
+      "s.id",
+      "tiny.cc",
+      "buff.ly",
+      "rebrand.ly",
+      "bl.ink",
+      "v.gd",
+      "tr.im",
+      "lnkd.in",
+      "kisa.link",
+      "tek.link",
+      "bit.do",
+      "shorte.st",
+      "adf.ly",
+      "qr.ae",
+      "urlz.fr",
+      "clck.ru",
+      "t.me",
+      "wa.me"
+    ],
+    "channelDomains": [
+      "t.me",
+      "wa.me"
+    ],
+    "suspiciousTlds": [
+      "xyz",
+      "top",
+      "club",
+      "online",
+      "site",
+      "shop",
+      "click",
+      "link",
+      "live",
+      "icu",
+      "buzz",
+      "cfd",
+      "sbs",
+      "vip",
+      "work",
+      "store",
+      "pw",
+      "tk",
+      "ml",
+      "ga",
+      "cf",
+      "gq",
+      "cc",
+      "win",
+      "bid",
+      "loan",
+      "monster",
+      "rest",
+      "quest",
+      "cyou",
+      "lol",
+      "fun",
+      "life",
+      "today",
+      "world",
+      "website",
+      "space",
+      "press",
+      "pro",
+      "info",
+      "biz",
+      "app",
+      "ru",
+      "cn",
+      "su",
+      "mobi",
+      "asia",
+      "skin",
+      "bond",
+      "lat",
+      "homes",
+      "one",
+      "help",
+      "support",
+      "finance",
+      "cash",
+      "money",
+      "center",
+      "digital",
+      "agency",
+      "services",
+      "page",
+      "run",
+      "tech",
+      "cloud",
+      "me"
+    ],
+    "knownTlds": [
+      "com",
+      "net",
+      "org",
+      "tr",
+      "gov",
+      "edu",
+      "io",
+      "co",
+      "de",
+      "uk",
+      "us",
+      "eu",
+      "fr",
+      "nl",
+      "az",
+      "ly",
+      "gd",
+      "gy",
+      "at",
+      "id",
+      "do",
+      "st",
+      "ae",
+      "im",
+      "to",
+      "tv",
+      "ws",
+      "dev",
+      "ai",
+      "in",
+      "es",
+      "it",
+      "be",
+      "ch",
+      "se",
+      "pl",
+      "ir",
+      "kz",
+      "ua",
+      "by",
+      "bg",
+      "gr",
+      "ro"
+    ],
+    "signals": {
+      "impersonating-domain": {
+        "name": "Kurum adını kullanan ama resmî olmayan adres",
+        "weight": 35,
+        "description": "Adres \"{token}\" içeriyor ama {institution} resmî adresi değil. Sahte siteler güven vermek için kurum adını adrese ekler."
+      },
+      "lookalike-spelling": {
+        "name": "Resmî adrese benzetilmiş yazım",
+        "weight": 40,
+        "description": "Adres, resmî \"{official}\" adresine çok benziyor ama aynısı değil. Bir harf farkı bile seni sahte siteye götürür."
+      },
+      "url-shortener": {
+        "name": "Kısaltılmış link",
+        "weight": 15,
+        "description": "Link kısaltılmış; nereye gittiği görünmüyor. Kurumlar önemli işlemlerde genellikle kendi açık adreslerini kullanır."
+      },
+      "ip-address": {
+        "name": "Site adı yerine IP adresi",
+        "weight": 35,
+        "description": "Link bir site adı yerine sayılardan oluşan bir IP adresine gidiyor. Gerçek kurumlar böyle link göndermez."
+      },
+      "suspicious-tld": {
+        "name": "Alışılmadık alan adı uzantısı",
+        "weight": 18,
+        "description": "Adresin uzantısı (.{tld}) Türkiye'deki kurumların kullandığı uzantılardan değil ve sahte sitelerde sık görülüyor."
+      },
+      "special-characters": {
+        "name": "Adreste Türkçe ya da özel karakter",
+        "weight": 25,
+        "description": "Adreste Türkçe ya da özel karakter (ya da \"xn--\" kodlaması) var. Bu yöntem, gerçek adrese benzeyen sahte adres üretmek için kullanılır."
+      },
+      "apk-file": {
+        "name": "Uygulama dosyası indirme linki",
+        "weight": 35,
+        "description": "Link doğrudan bir uygulama dosyası (.apk) indirtiyor. Mağaza dışından kurulan uygulamalar telefonunu ele geçirebilir."
+      },
+      "unencrypted": {
+        "name": "Şifresiz bağlantı (http)",
+        "weight": 5,
+        "description": "Link \"https\" yerine \"http\" ile başlıyor. Kurumların ödeme ve giriş sayfaları şifreli bağlantı kullanır."
+      },
+      "unknown-domain": {
+        "name": "Tanınmayan adres",
+        "weight": 6,
+        "description": "Linkteki adres ({host}) bilinen resmî adresler listemizde yok. Bu tek başına sahte olduğunu göstermez; yine de linke tıklamak yerine kurumun adresini kendin yaz."
+      },
+      "institution-link-mismatch": {
+        "name": "Mesaj bir kurum adına yazılmış ama link o kuruma ait değil",
+        "weight": 25,
+        "description": "Mesaj {institution} adına yazılmış görünüyor ama içindeki link ({host}) bu kurumun resmî adresi değil."
+      },
+      "complex-address": {
+        "name": "Karmaşık adres",
+        "weight": 8,
+        "description": "Adres çok sayıda tire, rakam ya da alt alan adı içeriyor. Sahte siteler gerçek adresi andırmak için böyle uzun adresler kurar."
+      },
+      "link-and-payment": {
+        "name": "Tanınmayan link ile ödeme ya da bilgi isteği bir arada",
+        "weight": 22,
+        "description": "Mesaj hem tanınmayan bir adrese ({host}) yönlendiriyor hem de ödeme ya da kişisel bilgi istiyor. Bu ikisi birlikte sahte ödeme sayfalarının tipik işaretidir."
+      },
+      "link-and-reward": {
+        "name": "Tanınmayan link ile ödül vaadi bir arada",
+        "weight": 15,
+        "description": "Mesaj hem ödül ya da kazanç vaat ediyor hem de tanınmayan bir adrese ({host}) yönlendiriyor. Sahte çekiliş ve hediye sayfaları böyle çalışır."
+      },
+      "official-domain": {
+        "name": "Link bilinen bir resmî adrese gidiyor",
+        "weight": -12,
+        "description": "Mesajdaki link ({host}) bilinen bir resmî adres. Yine de en güvenlisi adresi tarayıcıya kendin yazmaktır."
+      }
+    }
+  },
+  "sender": {
+    "options": [
+      {
+        "id": "unknown",
+        "name": "Bilmiyorum"
+      },
+      {
+        "id": "header",
+        "name": "Kurum adı ya da kısa numara"
+      },
+      {
+        "id": "mobile",
+        "name": "05xx cep numarası"
+      },
+      {
+        "id": "foreign",
+        "name": "Yabancı numara (+90 dışı)"
+      },
+      {
+        "id": "whatsapp",
+        "name": "WhatsApp"
+      }
+    ],
+    "signals": {
+      "mobile-institution": {
+        "name": "Kurum mesajı cep numarasından gelmiş",
+        "weight": 20,
+        "description": "Mesaj bir kurum adına yazılmış ama sıradan bir cep numarasından gelmiş. Kurumlar bilgilendirme mesajlarını kendi adlarıyla (başlıkla) ya da kısa numaradan gönderir."
+      },
+      "foreign-number": {
+        "name": "Yabancı numaradan gelmiş",
+        "weight": 15,
+        "description": "Mesaj yurt dışı numarasından gelmiş. Türkiye'deki kurumlar sana yabancı numaradan yazmaz."
+      },
+      "foreign-institution": {
+        "name": "Kurum mesajı yabancı numaradan gelmiş",
+        "weight": 30,
+        "description": "Mesaj bir Türkiye kurumu adına yazılmış ama yurt dışı numarasından gelmiş. Bu güçlü bir sahtecilik belirtisidir."
+      },
+      "whatsapp-institution": {
+        "name": "Kurum mesajı WhatsApp'tan gelmiş",
+        "weight": 18,
+        "description": "Devlet kurumları, bankalar ve kargo firmaları borç, ceza ya da ödeme bildirimi için sana kişisel WhatsApp hesabından yazmaz."
+      },
+      "mobile-in-text": {
+        "name": "Kurum adına verilen cep numarası",
+        "weight": 12,
+        "description": "Mesaj bir kurum adına yazılmış ama geri dönüş için cep numarası veriyor. Kurumların çağrı merkezleri cep numarası kullanmaz."
+      }
+    }
+  },
+  "general": {
+    "notConclusive": "Bu sonuç kesin hüküm değildir. Kurallara dayalı otomatik bir ön kontroldür; yanılabilir.",
+    "noSignsWarning": "Bilinen bir kalıba rastlamadım. Bu, mesajın güvenli olduğu anlamına gelmez; yeni ya da farklı yazılmış dolandırıcılık mesajlarını tanımıyor olabilirim.",
+    "basicRules": [
+      "Mesajdaki linke tıklamak yerine kurumun adresini tarayıcıya kendin yaz ya da resmî uygulamasını aç.",
+      "Şifreni, kart bilgilerini ve telefonuna gelen kodu kimseyle paylaşma.",
+      "Emin değilsen kurumu, bildiğin resmî numarasından kendin ara."
+    ],
+    "ifClicked": [
+      "Kart bilgisi girdiysen bankanı kartın arkasındaki numaradan hemen ara, kartı kapattır.",
+      "Şifre girdiysen o şifreyi (e-Devlet, banka, e-posta) hemen değiştir.",
+      "Bir uygulama kurduysan telefonu internetten kes, uygulamayı sil ve bankanı ara.",
+      "Para gönderdiysen vakit kaybetmeden bankanı arayıp işlemi bildir, ardından 112'yi ara ya da en yakın karakola veya Cumhuriyet Başsavcılığına başvur."
+    ],
+    "emergencyLines": [
+      {
+        "name": "Acil çağrı (polis, jandarma)",
+        "number": "112"
+      },
+      {
+        "name": "e-Devlet çağrı merkezi",
+        "number": "160"
+      },
+      {
+        "name": "Vergi İletişim Merkezi",
+        "number": "189"
+      },
+      {
+        "name": "Çalışma ve sosyal güvenlik",
+        "number": "170"
+      }
+    ]
+  },
+  "intent": {
+    "description": "Intent layer. Instead of individual phrases it looks for broad meaning classes (action request, sensitive data request, money flow, institution topic, pressure, job offer) and for their co-occurrence. The engine also adds derived features: link-risky, link-official, link-none, channel-personal, channel-header and lang:<id> for every language signal. A combination fires when every feature in 'all' is present, at least one feature in 'any' is present (if 'any' is non-empty) and no feature in 'none' is present. Intent score = highest combination score + 4 per extra combination (max +12). Final score = max(template layer, intent layer).",
+    "classes": [
+      {
+        "id": "action",
+        "patterns": [
+          "\\b(tikla(yin|yiniz|yarak|yip)?\\b|dokun|giris yap(in|iniz|arak|ip|ma\\w*|ilmasi|abil\\w*|\\b)|gir(in|iniz|erek|ip)\\b|doldur|sorgula|ara(yin|yiniz)\\b|donus yap|yaz(in|iniz)\\b|onayla|onay ver|guncelle|dogrulay|dogrulama yap|dogrulamak|tamamla|duzelt|incele|goruntule|gormek icin|indir(in|mek)?\\b|yukle\\w*|basvur|katil\\b|katilin|sec(in|iniz)\\b|ogren(in|mek)|tanimla|ulas(in|iniz)\\b|\\bkap\\b|almak icin|tahsil et|aktif et|yenile|kapatin|kurtar)"
+        ]
+      },
+      {
+        "id": "sensitive-request",
+        "patterns": [
+          "(sifre|parola|\\bkod|rakam|\\bhane|\\bkart|cvv|cvc|kimlig|kimlik|\\btc\\b|t\\.c|tckn|musteri numara|ekran goruntu|son kullanma)\\w* .{0,60}\\b(yaz(in|iniz|ar misin|ar misiniz|sana|abilir misin|abilir misiniz)?\\b|gonder(in|iniz|ir misin|sene)?\\b|ilet(in|iniz|ir misin)?\\b|at(ar misin|sana|in|abilir misin)?\\b|soyle(yin|r misin)?\\b|gir(in|iniz|erek|ip)?\\b|giris yap(in|iniz|arak|ip|ma\\w*|ilmasi|abil\\w*|\\b)|ver(in|iniz|ir misin|meniz)\\b|paylas(in|iniz|ir misin)\\b|bildir(in|iniz)?\\b|oku\\b|yolla\\w*|cek(ip|in)\\b|tanimla(yin)?\\b|dogrula(yin|ma yap)|onay ver|sorgula(yin)?\\b)",
+          "\\b(yaz(in|iniz|ar misin|ar misiniz|sana|abilir misin|abilir misiniz)?\\b|gonder(in|iniz|ir misin|sene)?\\b|ilet(in|iniz|ir misin)?\\b|at(ar misin|sana|in|abilir misin)?\\b|soyle(yin|r misin)?\\b|gir(in|iniz|erek|ip)?\\b|giris yap(in|iniz|arak|ip|ma\\w*|ilmasi|abil\\w*|\\b)|ver(in|iniz|ir misin|meniz)\\b|paylas(in|iniz|ir misin)\\b|bildir(in|iniz)?\\b|oku\\b|yolla\\w*|cek(ip|in)\\b|tanimla(yin)?\\b|dogrula(yin|ma yap)|onay ver|sorgula(yin)?\\b) .{0,25}(sifre|parola|\\bkod|rakam|\\bhane|\\bkart|cvv|cvc|kimlig|kimlik|\\btc\\b|t\\.c|tckn|musteri numara|son kullanma)"
+        ]
+      },
+      {
+        "id": "protective",
+        "patterns": [
+          "paylasmay|vermey|soylemey|iletmey|istemez|itibar etmey|tiklamay|(yalnizca|sadece) (kurye|teslimat gorevlisi)"
+        ]
+      },
+      {
+        "id": "money-ask",
+        "patterns": [
+          "(\\d[\\d.,]* ?(tl|lira|bin|euro|dolar)|ucret|bedel|kapora|rezervasyon|depozito|masraf|komisyon|aidat|\\bharc|vergi|borc|para)\\w* .{0,60}\\b(gonder(in|iniz|meniz|irsen|ir misin)?\\b|yatir\\w*|ode(yin|yiniz|yerek|yip|meniz|menizi|rseniz)\\b|at(ar misin|arsan|abilir misin|in)\\b|karsila\\w*|tamamla\\w*|kapat(in|iniz)\\b|aliyoruz|yolla\\w*|cikiyor|istiyor|hallede\\w*)"
+        ]
+      },
+      {
+        "id": "money-promise",
+        "patterns": [
+          "kazandiniz|hak kazan|hakkiniz\\w* .{0,20}(birik|bulun|var)|birikmis|herkese|garanti|gunluk (kazanc|odeme|gelir)|ikramiye|odenek|odeneg|veriyoruz|kat(ina|i)? (cik|kazan)|ayda \\d|\\d ?(tl|lira|usd|euro|dolar)\\w* (kazan|al(iyor|irsin)|veriyoruz)|kazanmak icin|sende kal"
+        ]
+      },
+      {
+        "id": "institution-topic",
+        "patterns": [
+          "\\b(icra|dava|sorusturma|savci\\w*|mahkeme|ifade(niz|ye)|teblig\\w*|haciz|ihtar\\w*|vergi|mukellef|e-?fatura|sgk|gss|odeneg\\w*|odenek|sosyal yardim|konut\\w*|hak sahipligi|kargo\\w*|gonderi(niz)?|teslimat\\w*|paketiniz|siparisiniz|banka\\w*|kartiniz\\w*|hesabiniz\\w*|pos\\b|hattiniz\\w*|faturaniz\\w*|e-?devlet|kimlik kart\\w*|ehliyet\\w*|trafik|plaka\\w*|araciniz\\w*|hgs|ogs|gecis\\w*|otoyol|kopru|emekli\\w*|maasiniz\\w*|uyeliginiz\\w*|aboneliginiz\\w*|depolama|ptt|noter\\w*|musterimiz|sayin|bakanlig\\w*|belediye|polis|emniyet|gumruk)"
+        ]
+      },
+      {
+        "id": "pressure",
+        "patterns": [
+          "zorla getirme|kesilecek|silinecek|yanacak|durdu\\b|durduruldu|calismayacak|iptal ed(il|ecek)|kilitlen|kapanacak|kapatilacak|bloke|ceza\\w* (kes|uygula|yaz)|islem yapilmadan|sikayetci|cekilmistir"
+        ]
+      },
+      {
+        "id": "job-offer",
+        "patterns": [
+          "\\bevden\\b|ek gelir|ek is\\b|gorev\\w*|takip ed(ip|erek|en)|begen(erek|ip|i yap)|araci ari|eleman ari|personel al|part.?time|calisarak|is firsati|is ilani|hesabina gelen|komisyon|yuzde \\d|%\\d+ ?.{0,8}(sende|senin|komisyon)|puanla\\w*|yorum yaz\\w*|paket alarak|vize bizden"
+        ]
+      },
+      {
+        "id": "upfront-fee",
+        "patterns": [
+          "(kapora|rezervasyon|depozito|on odeme|dosya parasi|\\w+ (bedeli|masrafi|ucreti|parasi))\\w* .{0,60}(gonder|yatir|ode|at\\b|atar|karsila|sizden|senden|pesin|aliyoruz)"
+        ]
+      },
+      {
+        "id": "callback",
+        "patterns": [
+          "donus yap|bana (yazin|ulasin|donun)|bu (numara|hat)\\w* .{0,20}(ara|yaz)"
+        ]
+      }
+    ],
+    "combinations": [
+      {
+        "id": "institution-link-pressure",
+        "name": "Kurum konusu, tanınmayan link ve baskı ya da bilgi isteği bir arada",
+        "score": 56,
+        "all": [
+          "institution-topic",
+          "link-risky"
+        ],
+        "any": [
+          "lang:threat",
+          "pressure",
+          "sensitive-request",
+          "money-ask",
+          "lang:payment-language",
+          "lang:sensitive-info"
+        ],
+        "none": [],
+        "description": "Mesaj resmî bir konudan (borç, dosya, kargo, hesap gibi) söz ediyor, tanınmayan bir adrese yönlendiriyor ve aynı anda korkutuyor ya da ödeme, bilgi istiyor. Sahte kurum mesajlarının temel yapısı budur."
+      },
+      {
+        "id": "institution-link-action",
+        "name": "Kurum konusu, tanınmayan link ve senden bir işlem isteği",
+        "score": 42,
+        "all": [
+          "institution-topic",
+          "link-risky",
+          "action"
+        ],
+        "any": [],
+        "none": [],
+        "description": "Mesaj resmî bir konudan söz ediyor ve bir işlem yapman için tanınmayan bir adrese yönlendiriyor. Gerçek kurumlar bunun için kendi bilinen adreslerini kullanır."
+      },
+      {
+        "id": "sensitive-institution",
+        "name": "Kurum bağlamında şifre, kod, kart ya da kimlik isteği",
+        "score": 58,
+        "all": [
+          "sensitive-request"
+        ],
+        "any": [
+          "institution-topic",
+          "link-risky"
+        ],
+        "none": [
+          "protective"
+        ],
+        "description": "Mesaj bir kurum ya da link üzerinden şifre, kod, kart ya da kimlik bilgini istiyor. Hiçbir kurum bu bilgileri mesajla istemez."
+      },
+      {
+        "id": "sensitive-request-alone",
+        "name": "Şifre, kod, kart ya da kimlik bilgisi isteniyor",
+        "score": 40,
+        "all": [
+          "sensitive-request"
+        ],
+        "any": [],
+        "none": [
+          "protective"
+        ],
+        "description": "Mesaj senden şifre, kod, kart numarası ya da kimlik bilgisi istiyor. İsteyen tanıdığın biri gibi görünse bile hesabı çalınmış olabilir."
+      },
+      {
+        "id": "promise-link-request",
+        "name": "Kazanç vaadi, tanınmayan link ve ödeme ya da bilgi isteği",
+        "score": 58,
+        "all": [
+          "money-promise",
+          "link-risky"
+        ],
+        "any": [
+          "sensitive-request",
+          "money-ask",
+          "lang:payment-language",
+          "lang:sensitive-info"
+        ],
+        "none": [],
+        "description": "Mesaj para ya da hak vaat ediyor, tanınmayan bir adrese yönlendiriyor ve karşılığında ödeme ya da bilgi istiyor."
+      },
+      {
+        "id": "promise-link",
+        "name": "Kazanç ya da hak vaadi ile tanınmayan link",
+        "score": 40,
+        "all": [
+          "money-promise",
+          "link-risky"
+        ],
+        "any": [],
+        "none": [],
+        "description": "Mesaj beklemediğin bir para ya da hak vaat ediyor ve tanınmayan bir adrese yönlendiriyor."
+      },
+      {
+        "id": "job-money",
+        "name": "İş ya da görev teklifi karşılığında senden para isteniyor",
+        "score": 55,
+        "all": [
+          "job-offer",
+          "money-ask"
+        ],
+        "any": [],
+        "none": [],
+        "description": "Mesaj bir iş, görev ya da aracılık teklif ediyor ve senden para istiyor. Gerçek iş için para ödenmez."
+      },
+      {
+        "id": "job-promise",
+        "name": "Kolay kazançlı iş, görev ya da aracılık teklifi",
+        "score": 40,
+        "all": [
+          "job-offer",
+          "money-promise"
+        ],
+        "any": [],
+        "none": [],
+        "description": "Mesaj az emekle para kazandıran bir iş, görev ya da para aktarma aracılığı teklif ediyor. Bu teklifler çoğu zaman para ya da banka hesabını ele geçirmek içindir."
+      },
+      {
+        "id": "personal-channel-institution-money",
+        "name": "Kişisel numaradan gelen kurum mesajı para istiyor",
+        "score": 55,
+        "all": [
+          "institution-topic",
+          "channel-personal",
+          "money-ask"
+        ],
+        "any": [],
+        "none": [
+          "link-official"
+        ],
+        "description": "Mesaj bir kurum konusundan söz ediyor, kişisel bir numaradan gelmiş ve para istiyor. Kurumlar ödemeyi kişisel numaradan istemez."
+      },
+      {
+        "id": "personal-channel-institution",
+        "name": "Kişisel numaradan gelen kurum mesajı işlem istiyor ya da korkutuyor",
+        "score": 40,
+        "all": [
+          "institution-topic",
+          "channel-personal"
+        ],
+        "any": [
+          "action",
+          "lang:threat",
+          "pressure"
+        ],
+        "none": [
+          "link-official"
+        ],
+        "description": "Mesaj bir kurum konusundan söz ediyor ama cep numarasından, yabancı numaradan ya da WhatsApp'tan gelmiş. Kurumlar bildirimlerini kendi adlarıyla gönderir."
+      },
+      {
+        "id": "upfront-fee-request",
+        "name": "Bir şeyi almadan ya da görmeden önce para isteniyor",
+        "score": 40,
+        "all": [
+          "upfront-fee",
+          "money-ask"
+        ],
+        "any": [],
+        "none": [
+          "link-official"
+        ],
+        "description": "Mesaj kapora, rezervasyon bedeli, masraf gibi bir ön ödeme istiyor. Ürünü, evi ya da hizmeti görmeden gönderilen para çoğu zaman geri gelmez."
+      },
+      {
+        "id": "money-pressure",
+        "name": "Para isteği ile acele ettirme ya da korkutma bir arada",
+        "score": 40,
+        "all": [
+          "money-ask"
+        ],
+        "any": [
+          "lang:urgency",
+          "lang:threat",
+          "pressure"
+        ],
+        "none": [],
+        "description": "Mesaj hem para istiyor hem de acele ettiriyor ya da korkutuyor. Düşünmeye vakit bırakmayan para isteği dolandırıcılığın en sık görülen biçimidir."
+      },
+      {
+        "id": "threat-link",
+        "name": "Korkutma ile tanınmayan link bir arada",
+        "score": 38,
+        "all": [
+          "link-risky"
+        ],
+        "any": [
+          "lang:threat",
+          "pressure"
+        ],
+        "none": [],
+        "description": "Mesaj olumsuz bir sonuçla korkutuyor ve çözüm olarak tanınmayan bir adresi gösteriyor."
+      }
+    ]
+  },
+  "identifiers": {
+    "description": "Identifier layer (phone numbers, IBANs, domains). Signals here are combined with community reports and public block lists on the server. Weights add up; the score is clamped to 0-100 and uses the same thresholds as messages. Bank codes and country codes are display data only.",
+    "signals": {
+      "phone-foreign": {
+        "name": "Yurt dışı numarası",
+        "weight": 20,
+        "description": "Bu numara Türkiye'ye ait değil ({country}). Türkiye'deki bankalar, kargo firmaları ve devlet kurumları seni yurt dışı numarasından aramaz, yazmaz."
+      },
+      "phone-premium": {
+        "name": "Ücretli hat (0900)",
+        "weight": 30,
+        "description": "0900 ile başlayan hatlar dakika başına yüksek ücretlidir. Seni bu numarayı aramaya yönlendiren mesajlara güvenme."
+      },
+      "phone-nongeographic": {
+        "name": "0850 hattı",
+        "weight": 0,
+        "description": "0850 numaralarını şirketler kullanır ama herkes kiralayabilir. Numarayı kurumun resmî sitesindeki numarayla karşılaştır."
+      },
+      "phone-toll-free": {
+        "name": "Ücretsiz hat (0800)",
+        "weight": 0,
+        "description": "0800 ücretsiz müşteri hattıdır. Yine de numarayı kurumun resmî sitesinden kontrol et."
+      },
+      "phone-business-short": {
+        "name": "444 ile başlayan kurumsal hat",
+        "weight": 0,
+        "description": "444 numaraları şirketlerin çağrı merkezleridir. Ekranda görünen numara taklit edilebilir; şüphelenirsen kapatıp numarayı kendin ara."
+      },
+      "phone-mobile": {
+        "name": "Cep telefonu numarası",
+        "weight": 0,
+        "description": "Bu bir cep telefonu numarası. Bankalar ve devlet kurumları sana cep numarasından yazmaz."
+      },
+      "phone-landline": {
+        "name": "Sabit hat",
+        "weight": 0,
+        "description": "Bu bir sabit hat numarası ({area} alan kodu)."
+      },
+      "phone-short-code": {
+        "name": "Kısa numara",
+        "weight": 0,
+        "description": "Bu bir kısa numara. Kurumlar SMS'leri kısa numaradan ya da kendi adlarıyla gönderir."
+      },
+      "phone-emergency": {
+        "name": "Resmî hat",
+        "weight": 0,
+        "description": "Bu, {name} numarası. Arayan numara ekranda böyle görünse bile taklit edilmiş olabilir; şüphelenirsen kapatıp numarayı kendin ara."
+      },
+      "iban-invalid": {
+        "name": "IBAN geçersiz",
+        "weight": 0,
+        "description": "Bu IBAN'ın kontrol hanesi tutmuyor. Yanlış yazılmış olabilir; para göndermeden önce tekrar kontrol et."
+      },
+      "iban-bank": {
+        "name": "Banka",
+        "weight": 0,
+        "description": "Bu IBAN {bank} hesabına ait. Hesabın kime ait olduğunu bu araç bilemez."
+      },
+      "iban-personal-payment": {
+        "name": "Kişisel hesaba ödeme uyarısı",
+        "weight": 0,
+        "description": "Devlet kurumları, kargo firmaları ve büyük şirketler senden kişisel bir IBAN'a para istemez. Kapora ya da ön ödeme isteniyorsa önce satıcıyı ve ilanı doğrula."
+      },
+      "iban-foreign": {
+        "name": "Yurt dışı IBAN",
+        "weight": 15,
+        "description": "Bu IBAN Türkiye'deki bir bankaya ait değil ({country}). Yurt dışına gönderilen parayı geri almak çok zordur."
+      },
+      "domain-new": {
+        "name": "Alan adı çok yeni",
+        "weight": 35,
+        "description": "Bu alan adı {days} gün önce alınmış. Dolandırıcılık siteleri genellikle birkaç gün ya da hafta içinde açılıp kapanır."
+      },
+      "domain-young": {
+        "name": "Alan adı yeni",
+        "weight": 15,
+        "description": "Bu alan adı {days} gün önce alınmış. Yeni siteler her zaman sahte değildir ama alışveriş ve ödeme için dikkatli ol."
+      },
+      "domain-established": {
+        "name": "Alan adı eski",
+        "weight": 0,
+        "description": "Bu alan adı {years} yıldır kayıtlı. Bu tek başına güvenli olduğu anlamına gelmez; ele geçirilmiş eski siteler de kullanılır."
+      },
+      "blocklist-usom": {
+        "name": "USOM zararlı bağlantı listesinde",
+        "weight": 80,
+        "description": "Bu adres, Ulusal Siber Olaylara Müdahale Merkezi'nin (USOM) zararlı bağlantılar listesinde. Kesinlikle açma."
+      },
+      "reported": {
+        "name": "Topluluk ihbarı",
+        "weight": 0,
+        "description": "{count} kişi bunu dolandırıcılık olarak ihbar etti. Son ihbar: {last}."
+      },
+      "reported-recently": {
+        "name": "Yakın zamanda ihbar edildi",
+        "weight": 5,
+        "description": "Son 30 gün içinde ihbar var."
+      },
+      "co-reported": {
+        "name": "Birlikte ihbar edilenler",
+        "weight": 0,
+        "description": "Aynı ihbarlarda bununla birlikte {count} başka numara, IBAN ya da adres geçiyor."
+      },
+      "disputed": {
+        "name": "İtiraz var",
+        "weight": 0,
+        "description": "Bu kaydın sahibi olduğunu söyleyen biri itiraz etti; inceleniyor."
+      },
+      "official": {
+        "name": "Resmî adres",
+        "weight": -12,
+        "description": "{host} tanınan resmî bir adres. Yine de en güvenlisi adresi tarayıcıya kendin yazmaktır."
+      }
+    },
+    "reportWeights": [
+      {
+        "min": 1,
+        "weight": 25
+      },
+      {
+        "min": 2,
+        "weight": 40
+      },
+      {
+        "min": 3,
+        "weight": 55
+      },
+      {
+        "min": 5,
+        "weight": 70
+      },
+      {
+        "min": 10,
+        "weight": 85
+      }
+    ],
+    "domainAge": {
+      "newDays": 30,
+      "youngDays": 180,
+      "establishedYears": 3
+    },
+    "hostingSuffixes": [
+      "netlify.app",
+      "vercel.app",
+      "pages.dev",
+      "workers.dev",
+      "github.io",
+      "gitlab.io",
+      "blogspot.com",
+      "web.app",
+      "firebaseapp.com",
+      "herokuapp.com",
+      "onrender.com",
+      "glitch.me",
+      "wixsite.com",
+      "weebly.com",
+      "square.site",
+      "ngrok-free.app",
+      "ngrok.io",
+      "trycloudflare.com",
+      "000webhostapp.com",
+      "azurewebsites.net",
+      "cloudfront.net",
+      "appspot.com",
+      "myshopify.com",
+      "r2.dev",
+      "replit.app",
+      "surge.sh"
+    ],
+    "pathHosts": [
+      "sites.google.com",
+      "docs.google.com",
+      "drive.google.com",
+      "forms.gle",
+      "linktr.ee"
+    ],
+    "banks": {
+      "00010": "Ziraat Bankası",
+      "00012": "Halkbank",
+      "00015": "VakıfBank",
+      "00032": "TEB",
+      "00046": "Akbank",
+      "00059": "Şekerbank",
+      "00062": "Garanti BBVA",
+      "00064": "İş Bankası",
+      "00067": "Yapı Kredi",
+      "00099": "ING",
+      "00103": "Fibabanka",
+      "00111": "QNB",
+      "00123": "HSBC",
+      "00124": "Alternatif Bank",
+      "00125": "Burgan Bank",
+      "00134": "DenizBank",
+      "00135": "Anadolubank",
+      "00146": "Odeabank",
+      "00203": "Albaraka Türk",
+      "00205": "Kuveyt Türk",
+      "00206": "Türkiye Finans",
+      "00209": "Ziraat Katılım",
+      "00210": "Vakıf Katılım",
+      "00211": "Emlak Katılım"
+    },
+    "ibanLengths": {
+      "AD": 24,
+      "AE": 23,
+      "AL": 28,
+      "AT": 20,
+      "AZ": 28,
+      "BA": 20,
+      "BE": 16,
+      "BG": 22,
+      "BH": 22,
+      "CH": 21,
+      "CY": 28,
+      "CZ": 24,
+      "DE": 22,
+      "DK": 18,
+      "EE": 20,
+      "ES": 24,
+      "FI": 18,
+      "FR": 27,
+      "GB": 22,
+      "GE": 22,
+      "GR": 27,
+      "HR": 21,
+      "HU": 28,
+      "IE": 22,
+      "IL": 23,
+      "IQ": 23,
+      "IT": 27,
+      "JO": 30,
+      "KW": 30,
+      "KZ": 20,
+      "LB": 28,
+      "LT": 20,
+      "LU": 20,
+      "LV": 21,
+      "MD": 24,
+      "ME": 22,
+      "MK": 19,
+      "MT": 31,
+      "NL": 18,
+      "NO": 15,
+      "PL": 28,
+      "PS": 29,
+      "PT": 25,
+      "QA": 29,
+      "RO": 24,
+      "RS": 22,
+      "SA": 24,
+      "SE": 24,
+      "SI": 19,
+      "SK": 24,
+      "TN": 24,
+      "TR": 26,
+      "UA": 29,
+      "XK": 20
+    },
+    "countries": {
+      "1": "ABD/Kanada",
+      "7": "Rusya/Kazakistan",
+      "20": "Mısır",
+      "27": "Güney Afrika",
+      "31": "Hollanda",
+      "33": "Fransa",
+      "34": "İspanya",
+      "39": "İtalya",
+      "40": "Romanya",
+      "44": "Birleşik Krallık",
+      "49": "Almanya",
+      "62": "Endonezya",
+      "63": "Filipinler",
+      "84": "Vietnam",
+      "86": "Çin",
+      "91": "Hindistan",
+      "92": "Pakistan",
+      "212": "Fas",
+      "216": "Tunus",
+      "225": "Fildişi Sahili",
+      "229": "Benin",
+      "233": "Gana",
+      "234": "Nijerya",
+      "237": "Kamerun",
+      "254": "Kenya",
+      "355": "Arnavutluk",
+      "370": "Litvanya",
+      "371": "Letonya",
+      "372": "Estonya",
+      "380": "Ukrayna",
+      "880": "Bangladeş",
+      "964": "Irak",
+      "966": "Suudi Arabistan",
+      "971": "BAE",
+      "994": "Azerbaycan",
+      "995": "Gürcistan",
+      "998": "Özbekistan"
+    },
+    "ibanCountries": {
+      "DE": "Almanya",
+      "GB": "Birleşik Krallık",
+      "NL": "Hollanda",
+      "FR": "Fransa",
+      "LT": "Litvanya",
+      "LV": "Letonya",
+      "EE": "Estonya",
+      "BG": "Bulgaristan",
+      "CY": "Kıbrıs",
+      "GE": "Gürcistan",
+      "AZ": "Azerbaycan",
+      "UA": "Ukrayna",
+      "AE": "BAE"
+    },
+    "reportCategories": [
+      {
+        "id": "fake-seller",
+        "name": "Sahte satıcı ya da ilan"
+      },
+      {
+        "id": "deposit",
+        "name": "Kapora ya da ön ödeme istendi"
+      },
+      {
+        "id": "impersonation",
+        "name": "Kurum taklidi (banka, e-Devlet, kargo, polis)"
+      },
+      {
+        "id": "phishing",
+        "name": "Şifre, kod ya da kart bilgisi istendi"
+      },
+      {
+        "id": "investment",
+        "name": "Yatırım, kripto ya da bahis"
+      },
+      {
+        "id": "job",
+        "name": "Sahte iş teklifi"
+      },
+      {
+        "id": "relative",
+        "name": "Yakın taklidi (\"anne, telefonum bozuldu\")"
+      },
+      {
+        "id": "romance",
+        "name": "Sanal ilişki ya da arkadaşlık"
+      },
+      {
+        "id": "other",
+        "name": "Diğer"
+      }
+    ],
+    "reportChannels": [
+      {
+        "id": "call",
+        "name": "Telefon araması"
+      },
+      {
+        "id": "sms",
+        "name": "SMS"
+      },
+      {
+        "id": "whatsapp",
+        "name": "WhatsApp"
+      },
+      {
+        "id": "social",
+        "name": "Sosyal medya"
+      },
+      {
+        "id": "listing",
+        "name": "İlan sitesi"
+      },
+      {
+        "id": "email",
+        "name": "E-posta"
+      },
+      {
+        "id": "other",
+        "name": "Diğer"
+      }
+    ],
+    "lossBands": [
+      {
+        "id": "none",
+        "name": "Para kaybetmedim"
+      },
+      {
+        "id": "lt1k",
+        "name": "1.000 TL'den az"
+      },
+      {
+        "id": "1k-10k",
+        "name": "1.000 - 10.000 TL"
+      },
+      {
+        "id": "10k-100k",
+        "name": "10.000 - 100.000 TL"
+      },
+      {
+        "id": "gt100k",
+        "name": "100.000 TL'den fazla"
+      }
+    ]
+  }
+}

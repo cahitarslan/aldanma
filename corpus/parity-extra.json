@@ -1,0 +1,130 @@
+{
+ "description": "Extra edge-case inputs used only for the JS/C# parity check. Labels are not meaningful for accuracy.",
+ "messages": [
+  {
+   "id": "E001",
+   "sender": "unknown",
+   "text": ""
+  },
+  {
+   "id": "E002",
+   "sender": "unknown",
+   "text": "   \n\t  "
+  },
+  {
+   "id": "E003",
+   "sender": "mobile",
+   "text": "Detay:https://www.turkiye.gov.tr/giris adresinde."
+  },
+  {
+   "id": "E004",
+   "sender": "header",
+   "text": "turkiye.gov.tr'den bakın, T.C. kimlik 12.50 TL A.Ş. bilgi@firma.com"
+  },
+  {
+   "id": "E005",
+   "sender": "foreign",
+   "text": "(bit.ly/abc)."
+  },
+  {
+   "id": "E006",
+   "sender": "whatsapp",
+   "text": "Güncelleme: http://192.168.1.5/x.apk hemen kur"
+  },
+  {
+   "id": "E007",
+   "sender": "mobile",
+   "text": "Giriş: ziraatbank.com.tr.guvenli.net"
+  },
+  {
+   "id": "E008",
+   "sender": "unknown",
+   "text": "isbank.com ve yap1kredi.com.tr"
+  },
+  {
+   "id": "E009",
+   "sender": "unknown",
+   "text": "e-Devlet: türkiye.gov.tr adresinden şifrenizi girin"
+  },
+  {
+   "id": "E010",
+   "sender": "unknown",
+   "text": "İSTANBUL ŞİŞLİ IĞDIR ÇÖĞÜŞ İİİ ııı"
+  },
+  {
+   "id": "E011",
+   "sender": "mobile",
+   "text": "Sayın müşterimiz, hеsabınız blоke edilmiştir. Kаrt bilgilerinizi girin: xn--zraat-q4a.com"
+  },
+  {
+   "id": "E012",
+   "sender": "unknown",
+   "text": "TEBRİKLER!!! KAZANDINIZ!!! HEMEN TIKLAYIN: HTTPS://ODUL-MERKEZI.TOP/AL"
+  },
+  {
+   "id": "E013",
+   "sender": "header",
+   "text": "Kargonuz yola çıktı. Takip:yurticikargo.com/tr?no=123#x"
+  },
+  {
+   "id": "E014",
+   "sender": "whatsapp",
+   "text": "wa.me/905550000000 üzerinden yazın, günlük 3.000 TL kazanç"
+  },
+  {
+   "id": "E015",
+   "sender": "unknown",
+   "text": "https://kullanici:sifre@banka-giris.com:8080/yol?a=1"
+  },
+  {
+   "id": "E016",
+   "sender": "unknown",
+   "text": "a.b c.d e..f .com com. x.y.z.w.q.com 1.2.3 1.2.3.4 999.1.1.1"
+  },
+  {
+   "id": "E017",
+   "sender": "mobile",
+   "text": "Z1raat bankas1 hesab1n1z kapat1lacak, sifren1zi g1rin\nikinci satır\r\nüçüncü"
+  },
+  {
+   "id": "E018",
+   "sender": "foreign",
+   "text": "Résumé onaylandı — günlük 500₺ kazanç… “hemen” yazın ‘şimdi’"
+  },
+  {
+   "id": "E019",
+   "sender": "unknown",
+   "text": "link1.xyz link2.top link3.club link4.shop link5.site link6.icu link7.vip link8.cfd link9.sbs link10.lol link11.fun link12.pw"
+  },
+  {
+   "id": "E020",
+   "sender": "mobile",
+   "text": "PTT: gönderiniz için 0 532 000 00 00'ı arayın. hgs.pttavm.com HGSMUSTERI.PTT.GOV.TR"
+  },
+  {
+   "id": "E021",
+   "sender": "header",
+   "text": "Sayin musterimiz sifrenizi kimseyle paylasmayin. Dogrulama kodunuz 123456"
+  },
+  {
+   "id": "E022",
+   "sender": "whatsapp",
+   "text": "🙂 Anne, telefonum bozuldu 📱 bu yeni numaram. Acil 5.000 TL lazım, IBAN: TR12 3456 atar mısın? Akşam geri veririm 🙏"
+  },
+  {
+   "id": "E023",
+   "sender": "unknown",
+   "text": "www.GARANTİBBVA.com.tr WWW.garantibbva.com.tr.evil.co garantibbva.com.tr"
+  },
+  {
+   "id": "E024",
+   "sender": "unknown",
+   "text": "e-devlet-giris.com, edevlet.co; (turkiye-gov.tr) [uyap.gov.tr.dosya.net]"
+  },
+  {
+   "id": "E025",
+   "sender": "mobile",
+   "text": "Hakkınızda icra takibi başlatılmıştır.Ödeme için:tinyurl.com/x!Aksi halde haciz."
+  }
+ ]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "aldanma",
+  "version": "0.5.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "evaluate": "node tools/evaluate.mjs corpus/corpus.json",
+    "parity": "node tools/parity.mjs",
+    "build:web": "node tools/build-web.mjs",
+    "suggest-rules": "node tools/suggest-rules.mjs"
+  },
+  "devDependencies": {
+    "@anthropic-ai/sdk": "^1.12.0"
+  }
+}
