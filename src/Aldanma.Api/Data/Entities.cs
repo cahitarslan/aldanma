@@ -81,6 +81,19 @@ public sealed class BlocklistImportRun
     public DateTimeOffset UpdatedAt { get; set; }
 }
 
+/// <summary>
+/// How far the moderation e-mails have reported, kept in the database so a restart or redeploy loses nothing:
+/// every report, dispute and submission created after <see cref="LastNotifiedAt"/> is still to be mentioned.
+/// </summary>
+public sealed class NotificationState
+{
+    public required string Key { get; set; }
+    /// <summary>Everything created up to this moment has been in a mail (or predates the feature).</summary>
+    public DateTimeOffset LastNotifiedAt { get; set; }
+    /// <summary>When the last mail went out; the throttle counts from here. Null before the first mail.</summary>
+    public DateTimeOffset? LastSentAt { get; set; }
+}
+
 /// <summary>Cached RDAP answer for a domain.</summary>
 public sealed class DomainRegistrationCache
 {

@@ -14,7 +14,7 @@ public class NotificationComposeTests
     [Fact]
     public void A_mail_names_what_arrived_and_what_waits()
     {
-        var news = new Dictionary<ModerationEvent, int> { [ModerationEvent.Dispute] = 1, [ModerationEvent.Report] = 2 };
+        var news = new ModerationMailService.News(Reports: 2, Disputes: 1, Submissions: 0);
         var mail = ModerationMailService.Compose(news, new ModerationMailService.Pending(OpenDisputes: 3, OpenSubmissions: 0, ReportsLastDay: 5));
 
         Assert.Equal("Aldanma: 1 yeni itiraz, 2 yeni ihbar", mail.Subject);
@@ -105,5 +105,85 @@ public class NotificationTests(ApiFactory factory) : IClassFixture<ApiFactory>
         var r = await From(app, "198.18.81.1").PostAsJsonAsync("/api/reports", new { inputs = new[] { "0532 888 11 22" }, category = "job", channel = "sms" });
         Assert.Equal(HttpStatusCode.Created, r.StatusCode);
         Assert.False(app.Services.GetRequiredService<ModerationNotifier>().Enabled);
+    }
+}
+
+/// <summary>
+/// A redeploy while a mail waits for the throttle used to lose it, because the counts lived in memory.
+/// Its own class, so it has its own database and its own notification state.
+/// </summary>
+public class NotificationRestartTests(ApiFactory factory) : IClassFixture<ApiFactory>
+{
+    private sealed class RecordingSender : IEmailSender
+    {
+        public ConcurrentQueue<Email> Sent { get; } = new();
+        public Task<bool> SendAsync(Email email, CancellationToken ct)
+        {
+            Sent.Enqueue(email);
+            return Task.FromResult(true);
+        }
+    }
+
+    private WebApplicationFactory<Program> WithMail(RecordingSender sender, int minIntervalSeconds) =>
+        factory.WithWebHostBuilder(b => b
+            .UseSetting("Aldanma:Notify:ResendApiKey", "re_test")
+            .UseSetting("Aldanma:Notify:From", "Aldanma <aldanma@mail.example.com>")
+            .UseSetting("Aldanma:Notify:To", "owner@example.com")
+            .UseSetting("Aldanma:Notify:BatchDelaySeconds", "1")
+            .UseSetting("Aldanma:Notify:MinIntervalSeconds", minIntervalSeconds.ToString())
+            .ConfigureServices(s =>
+            {
+                s.RemoveAll<IEmailSender>();
+                s.AddSingleton<IEmailSender>(sender);
+                s.AddHostedService<ModerationMailService>();
+            }));
+
+    private static HttpClient From(WebApplicationFactory<Program> app, string ip)
+    {
+        var c = app.CreateClient();
+        c.DefaultRequestHeaders.Add("CF-Connecting-IP", ip);
+        return c;
+    }
+
+    private static async Task<bool> WaitFor(Func<bool> condition, int seconds = 15)
+    {
+        for (var i = 0; i < seconds * 10; i++)
+        {
+            if (condition()) return true;
+            await Task.Delay(100);
+        }
+        return condition();
+    }
+
+    [DatabaseFact]
+    public async Task A_mail_waiting_for_its_turn_survives_a_restart_and_nothing_new_sends_nothing()
+    {
+        const string phone = "0532 777 12 34";
+        var before = new RecordingSender();
+        await using (var app = WithMail(before, minIntervalSeconds: 3600))
+        {
+            Assert.Equal(HttpStatusCode.Created, (await From(app, "198.18.90.1").PostAsJsonAsync("/api/reports", new { inputs = new[] { phone }, category = "job", channel = "sms" })).StatusCode);
+            Assert.True(await WaitFor(() => !before.Sent.IsEmpty), "the first report is mailed");
+            Assert.Equal("Aldanma: 1 yeni ihbar", Assert.Single(before.Sent).Subject);
+
+            // Inside the hour-long throttle: this dispute's mail waits... and the app is then redeployed.
+            var dispute = await From(app, "198.18.90.2").PostAsJsonAsync("/api/disputes", new
+            {
+                input = phone, contact = "owner@example.com", reason = "Bu numara benim iş hattım, yanlışlıkla ihbar edilmiş olmalı.",
+            });
+            Assert.Equal(HttpStatusCode.Accepted, dispute.StatusCode);
+            await Task.Delay(1500);
+            Assert.Single(before.Sent);
+        }
+
+        // After the restart (the throttle has passed by now), the waiting dispute is mailed, and only it.
+        var after = new RecordingSender();
+        await using (var app = WithMail(after, minIntervalSeconds: 0))
+        {
+            _ = app.Services; // starts the host and its mail worker
+            Assert.True(await WaitFor(() => !after.Sent.IsEmpty), "the waiting dispute is mailed after the restart");
+            await Task.Delay(2500);
+            Assert.Equal("Aldanma: 1 yeni itiraz", Assert.Single(after.Sent).Subject);
+        }
     }
 }

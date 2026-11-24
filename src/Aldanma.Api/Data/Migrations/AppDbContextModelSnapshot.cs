@@ -240,6 +240,23 @@ namespace Aldanma.Api.Data.Migrations
                     b.ToTable("identifiers", (string)null);
                 });
 
+            modelBuilder.Entity("Aldanma.Api.Data.NotificationState", b =>
+                {
+                    b.Property<string>("Key")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<DateTimeOffset>("LastNotifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("LastSentAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Key");
+
+                    b.ToTable("notification_state", (string)null);
+                });
+
             modelBuilder.Entity("Aldanma.Api.Data.Report", b =>
                 {
                     b.Property<Guid>("Id")

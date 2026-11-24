@@ -9,6 +9,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
     public DbSet<ReportIdentifier> ReportIdentifiers => Set<ReportIdentifier>();
     public DbSet<BlocklistEntry> BlocklistEntries => Set<BlocklistEntry>();
     public DbSet<BlocklistImportRun> BlocklistImportRuns => Set<BlocklistImportRun>();
+    public DbSet<NotificationState> NotificationStates => Set<NotificationState>();
     public DbSet<DomainRegistrationCache> DomainRegistrations => Set<DomainRegistrationCache>();
     public DbSet<Dispute> Disputes => Set<Dispute>();
     public DbSet<FeedbackEntry> Feedback => Set<FeedbackEntry>();
@@ -57,6 +58,12 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
             e.HasKey(x => x.Source);
             e.Property(x => x.Source).HasMaxLength(32);
             e.Property(x => x.Mode).HasMaxLength(16);
+        });
+        b.Entity<NotificationState>(e =>
+        {
+            e.ToTable("notification_state");
+            e.HasKey(x => x.Key);
+            e.Property(x => x.Key).HasMaxLength(32);
         });
         b.Entity<DomainRegistrationCache>(e =>
         {
