@@ -21,6 +21,12 @@ public sealed class BlocklistImporter(AppDbContext db, InputParser parser, TimeP
     public static readonly TimeSpan RefreshOverlap = TimeSpan.FromDays(2);
 
     /// <summary>
+    /// A full list is a few hundred thousand rows. The connection string keeps a short command timeout to protect
+    /// requests (10 s in production), which a full merge exceeds, so the import's own commands get a longer one.
+    /// </summary>
+    public static readonly TimeSpan ImportCommandTimeout = TimeSpan.FromMinutes(5);
+
+    /// <summary>
     /// Decides from the stored list alone, so a restart or redeploy never downloads the whole list again.
     /// Every import stamps the entries it saw with LastSeenAt, so the newest stamp is the last import and,
     /// because a refresh only touches new entries, the oldest stamp among active entries is the last full import.
@@ -84,6 +90,7 @@ public sealed class BlocklistImporter(AppDbContext db, InputParser parser, TimeP
 
             await using (var writer = await conn.BeginBinaryImportAsync("COPY incoming (kind, value) FROM STDIN (FORMAT BINARY)", ct))
             {
+                writer.Timeout = ImportCommandTimeout;
                 foreach (var (kind, value) in wanted)
                 {
                     await writer.StartRowAsync(ct);
@@ -99,7 +106,7 @@ public sealed class BlocklistImporter(AppDbContext db, InputParser parser, TimeP
                 SELECT @source, kind, value, @now, @now, NULL FROM incoming
                 ON CONFLICT ("Source", "Kind", "Value") DO UPDATE SET "LastSeenAt" = @now, "RemovedAt" = NULL
                 RETURNING (xmax = 0)
-                """, conn, tx))
+                """, conn, tx) { CommandTimeout = (int)ImportCommandTimeout.TotalSeconds })
             {
                 insert.Parameters.AddWithValue("source", source);
                 insert.Parameters.AddWithValue("now", now);
@@ -113,7 +120,7 @@ public sealed class BlocklistImporter(AppDbContext db, InputParser parser, TimeP
                 await using var remove = new NpgsqlCommand("""
                     UPDATE blocklist_entries SET "RemovedAt" = @now
                     WHERE "Source" = @source AND "RemovedAt" IS NULL AND "LastSeenAt" < @now
-                    """, conn, tx);
+                    """, conn, tx) { CommandTimeout = (int)ImportCommandTimeout.TotalSeconds };
                 remove.Parameters.AddWithValue("source", source);
                 remove.Parameters.AddWithValue("now", now);
                 removed = await remove.ExecuteNonQueryAsync(ct);
