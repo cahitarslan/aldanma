@@ -8,6 +8,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
     public DbSet<Report> Reports => Set<Report>();
     public DbSet<ReportIdentifier> ReportIdentifiers => Set<ReportIdentifier>();
     public DbSet<BlocklistEntry> BlocklistEntries => Set<BlocklistEntry>();
+    public DbSet<BlocklistImportRun> BlocklistImportRuns => Set<BlocklistImportRun>();
     public DbSet<DomainRegistrationCache> DomainRegistrations => Set<DomainRegistrationCache>();
     public DbSet<Dispute> Disputes => Set<Dispute>();
     public DbSet<FeedbackEntry> Feedback => Set<FeedbackEntry>();
@@ -49,6 +50,13 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
             e.Property(x => x.Value).HasMaxLength(300);
             e.HasIndex(x => new { x.Source, x.Kind, x.Value }).IsUnique();
             e.HasIndex(x => new { x.Kind, x.Value });
+        });
+        b.Entity<BlocklistImportRun>(e =>
+        {
+            e.ToTable("blocklist_import_runs");
+            e.HasKey(x => x.Source);
+            e.Property(x => x.Source).HasMaxLength(32);
+            e.Property(x => x.Mode).HasMaxLength(16);
         });
         b.Entity<DomainRegistrationCache>(e =>
         {

@@ -61,6 +61,26 @@ public sealed class BlocklistEntry
     public DateTimeOffset? RemovedAt { get; set; }
 }
 
+/// <summary>
+/// Where an unfinished block list import stopped, so a restart or redeploy resumes it instead of starting over.
+/// One row per source while a run is going; deleted when the run completes.
+/// </summary>
+public sealed class BlocklistImportRun
+{
+    public required string Source { get; set; }
+    /// <summary>"full" or "incremental".</summary>
+    public required string Mode { get; set; }
+    /// <summary>Stamp written to LastSeenAt of every entry this run sees; a full run removes what is older.</summary>
+    public DateTimeOffset StartedAt { get; set; }
+    /// <summary>For an incremental run: only entries added since this day.</summary>
+    public DateOnly? Since { get; set; }
+    /// <summary>Index into the configured list types of the type being read.</summary>
+    public int TypeIndex { get; set; }
+    /// <summary>Next page to read, 1-based like the USOM API.</summary>
+    public int NextPage { get; set; } = 1;
+    public DateTimeOffset UpdatedAt { get; set; }
+}
+
 /// <summary>Cached RDAP answer for a domain.</summary>
 public sealed class DomainRegistrationCache
 {

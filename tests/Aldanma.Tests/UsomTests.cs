@@ -2,10 +2,12 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
+using Aldanma.Api.Data;
 using Aldanma.Api.Features.Blocklist;
 using Aldanma.Api.Infrastructure;
 
@@ -51,35 +53,44 @@ public class UsomClientTests
 
     private static BlocklistImportStatus Status() => new(TimeProvider.System);
 
+    /// <summary>Reads everything into one list, as a caller that saves page by page would see it.</summary>
+    private static async Task<List<string>> ReadAll(UsomClient client, DateOnly? since, BlocklistImportStatus status)
+    {
+        var all = new List<string>();
+        await client.ReadAsync(since, UsomPosition.Start, status, (page, _) => { all.AddRange(page); return Task.CompletedTask; }, CancellationToken.None);
+        return all;
+    }
+
     [Fact]
     public async Task Reads_every_page_of_every_type_once_from_page_1()
     {
         var handler = new FakeUsom();
         var status = Status();
         status.Start(BlocklistImportStatus.Full);
-        var entries = await Client(handler).FetchAsync(since: null, status, CancellationToken.None);
+        var entries = await ReadAll(Client(handler), since: null, status);
 
-        Assert.Equal(["kargo-takip-ptt.xyz", "odeme-iade.top", "e-devlet-iade.click", "https://banka-giris.example.top/login"], entries);
+        // odeme-iade.top was pushed onto the next page mid-download: seen twice, saved once by the upsert.
+        Assert.Equal(["kargo-takip-ptt.xyz", "odeme-iade.top", "e-devlet-iade.click", "https://banka-giris.example.top/login"], entries.Distinct());
         Assert.Equal(3, handler.Requests.Count);
         Assert.Contains("page=1&", handler.Requests[0]);
         Assert.All(handler.Requests, r => Assert.DoesNotContain("page=0", r));
         Assert.All(handler.Requests, r => Assert.DoesNotContain("date_gte", r));
         var s = status.Snapshot();
-        Assert.Equal((3, 3, 4), (s.PagesDone, s.PagesTotal, s.ItemsSoFar));
+        Assert.Equal((3, 3, 5), (s.PagesDone, s.PagesTotal, s.ItemsSoFar));
     }
 
     [Fact]
     public async Task A_refresh_asks_only_for_entries_since_a_day()
     {
         var handler = new FakeUsom();
-        await Client(handler).FetchAsync(new DateOnly(2026, 11, 22), Status(), CancellationToken.None);
+        await ReadAll(Client(handler), new DateOnly(2026, 11, 22), Status());
         Assert.All(handler.Requests, r => Assert.Contains("date_gte=2026-11-22", r));
     }
 
     [Fact]
     public async Task An_html_page_instead_of_the_api_is_an_error()
     {
-        var e = await Assert.ThrowsAsync<UsomFeedException>(() => Client(new FakeUsom(html: true)).FetchAsync(null, Status(), CancellationToken.None));
+        var e = await Assert.ThrowsAsync<UsomFeedException>(() => ReadAll(Client(new FakeUsom(html: true)), null, Status()));
         Assert.Contains("instead of JSON", e.Message);
     }
 
@@ -107,7 +118,7 @@ public class UsomClientTests
     public async Task A_passing_server_error_is_retried_instead_of_failing_the_run()
     {
         var handler = new FlakyUsom(failures: 3, HttpStatusCode.InternalServerError);
-        Assert.Equal(["odgiris.com"], await Flaky(handler).FetchAsync(null, Status(), CancellationToken.None));
+        Assert.Equal(["odgiris.com"], await ReadAll(Flaky(handler), null, Status()));
         Assert.Equal(4, handler.Calls);
     }
 
@@ -115,7 +126,7 @@ public class UsomClientTests
     public async Task A_page_that_keeps_failing_fails_the_run_after_the_last_retry()
     {
         var handler = new FlakyUsom(failures: 100, HttpStatusCode.ServiceUnavailable);
-        var e = await Assert.ThrowsAsync<UsomFeedException>(() => Flaky(handler).FetchAsync(null, Status(), CancellationToken.None));
+        var e = await Assert.ThrowsAsync<UsomFeedException>(() => ReadAll(Flaky(handler), null, Status()));
         Assert.Contains("after 5 tries", e.Message);
         Assert.Equal(5, handler.Calls);
     }
@@ -124,7 +135,7 @@ public class UsomClientTests
     public async Task A_client_error_is_not_retried()
     {
         var handler = new FlakyUsom(failures: 100, HttpStatusCode.NotFound);
-        await Assert.ThrowsAsync<UsomFeedException>(() => Flaky(handler).FetchAsync(null, Status(), CancellationToken.None));
+        await Assert.ThrowsAsync<UsomFeedException>(() => ReadAll(Flaky(handler), null, Status()));
         Assert.Equal(1, handler.Calls);
     }
 
@@ -209,5 +220,69 @@ public class UsomOptionsBindingTests(ApiFactory factory) : IClassFixture<ApiFact
         var usom = factory.Services.GetRequiredService<IOptions<AldanmaOptions>>().Value.Usom;
         Assert.Equal(["domain", "url"], usom.TypesOrDefault);
         Assert.Equal([2, 5, 15, 30], usom.RetryDelaysOrDefault);
+    }
+}
+
+/// <summary>A full run that stops halfway keeps its pages, resumes from the next one, and removes nothing until it completes.</summary>
+public class UsomResumeTests(ApiFactory factory) : IClassFixture<ApiFactory>
+{
+    /// <summary>Domains on three pages, URLs on one. Page 3 of the domains fails (404, not retried) until <see cref="Healthy"/>.</summary>
+    private sealed class PagedUsom : HttpMessageHandler
+    {
+        public bool Healthy;
+        public List<string> Requests { get; } = [];
+
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken ct)
+        {
+            var url = request.RequestUri!.ToString();
+            lock (Requests) Requests.Add(url);
+            var page = int.Parse(System.Web.HttpUtility.ParseQueryString(request.RequestUri.Query)["page"]!);
+            if (url.Contains("type=domain") && page == 3 && !Healthy) return Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
+            var json = url.Contains("type=domain")
+                ? $$"""{"totalCount":3,"count":1,"models":[{"id":{{page}},"url":"sayfa{{page}}-zararli.top"}],"page":{{page - 1}},"pageCount":3}"""
+                : """{"totalCount":1,"count":1,"models":[{"id":9,"url":"https://banka-giris.example.top/login"}],"page":0,"pageCount":1}""";
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(json, Encoding.UTF8, "application/json") });
+        }
+    }
+
+    [DatabaseFact]
+    public async Task A_stopped_full_run_resumes_from_the_next_page_and_removes_only_when_complete()
+    {
+        var handler = new PagedUsom();
+        await using var app = factory.WithWebHostBuilder(b => b
+            .UseSetting("Aldanma:Usom:PageDelayMilliseconds", "0")
+            .ConfigureServices(s => s.AddHttpClient<UsomClient>().ConfigurePrimaryHttpMessageHandler(() => handler)));
+        // An entry from a full run ten days ago: due for a full resync, and USOM no longer lists it.
+        await using (var seed = app.Services.CreateAsyncScope())
+        {
+            var db = seed.ServiceProvider.GetRequiredService<AppDbContext>();
+            var old = DateTimeOffset.UtcNow.AddDays(-10);
+            db.BlocklistEntries.Add(new BlocklistEntry { Source = UsomFeedService.Source, Kind = "domain", Value = "eski-liste.top", FirstSeenAt = old, LastSeenAt = old });
+            await db.SaveChangesAsync();
+        }
+        var feed = ActivatorUtilities.CreateInstance<UsomFeedService>(app.Services);
+        async Task<List<string>> Active() => await factory.WithDb(db => db.BlocklistEntries
+            .Where(b => b.Source == UsomFeedService.Source && b.RemovedAt == null).Select(b => b.Value).ToListAsync()).ContinueWith(t => t.Result.Order(StringComparer.Ordinal).ToList());
+
+        // Run 1 stops at domain page 3: pages 1 and 2 are saved, the old entry is not removed yet.
+        Assert.False(await feed.RunOnceAsync(CancellationToken.None));
+        Assert.Equal(["eski-liste.top", "sayfa1-zararli.top", "sayfa2-zararli.top"], await Active());
+        var open = await factory.WithDb(db => db.BlocklistImportRuns.SingleAsync());
+        Assert.Equal(("full", 0, 3), (open.Mode, open.TypeIndex, open.NextPage));
+
+        // Run 2 starts at domain page 3, not page 1, then completes and drops what USOM no longer lists.
+        handler.Healthy = true;
+        var before = handler.Requests.Count;
+        Assert.True(await feed.RunOnceAsync(CancellationToken.None));
+        Assert.Contains("type=domain", handler.Requests[before]);
+        Assert.Contains("page=3&", handler.Requests[before]);
+        Assert.DoesNotContain(handler.Requests.Skip(before), r => r.Contains("type=domain") && r.Contains("page=1&"));
+        // The URL is stored the way the parser keys it (its registrable domain), like every other lookup.
+        Assert.Equal(["example.top", "sayfa1-zararli.top", "sayfa2-zararli.top", "sayfa3-zararli.top"], await Active());
+        Assert.Equal(0, await factory.WithDb(db => db.BlocklistImportRuns.CountAsync()));
+
+        // The list is fresh now: the next run is a short refresh, not another full read.
+        Assert.True(await feed.RunOnceAsync(CancellationToken.None));
+        Assert.Equal("incremental", app.Services.GetRequiredService<BlocklistImportStatus>().Snapshot().Mode);
     }
 }

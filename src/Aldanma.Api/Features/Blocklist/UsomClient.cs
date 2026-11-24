@@ -9,6 +9,12 @@ namespace Aldanma.Api.Features.Blocklist;
 /// <summary>The feed answered with something other than the expected JSON, or broke off mid-download.</summary>
 public sealed class UsomFeedException(string message, Exception? inner = null) : Exception(message, inner);
 
+/// <summary>Where to start reading: an index into the configured list types and a 1-based page.</summary>
+public readonly record struct UsomPosition(int TypeIndex, int Page)
+{
+    public static readonly UsomPosition Start = new(0, 1);
+}
+
 /// <summary>
 /// Reads the malicious address list from the USOM API (T.C. Siber Güvenlik Başkanlığı, siberguvenlik.gov.tr/api).
 /// The old plain-text file (usom.gov.tr/url-list.txt) now redirects to an HTML page, so it must not be used.
@@ -18,7 +24,8 @@ public sealed class UsomFeedException(string message, Exception? inner = null) :
 /// first, so entries added during a download push older ones onto the next page (seen twice, never missed).
 /// <c>date_gte</c> limits the list to entries added since a date, which makes a refresh a page or two.
 /// </para>
-/// Any error aborts the whole download: a partial list is never imported.
+/// Pages are handed to the caller one by one as they arrive, so the caller can save each page and a stopped
+/// download can resume from where it stopped. A page that still fails after its retries ends the read.
 /// </summary>
 public sealed class UsomClient(HttpClient http, IOptions<AldanmaOptions> options, ILogger<UsomClient> log)
 {
@@ -34,29 +41,38 @@ public sealed class UsomClient(HttpClient http, IOptions<AldanmaOptions> options
         [property: JsonPropertyName("id")] long Id,
         [property: JsonPropertyName("url")] string? Url);
 
-    /// <param name="since">Only entries added on or after this day; null downloads the whole list.</param>
-    public async Task<IReadOnlyList<string>> FetchAsync(DateOnly? since, BlocklistImportStatus status, CancellationToken ct)
+    /// <summary>Reads every page from <paramref name="from"/> on and hands each to <paramref name="onPage"/>.</summary>
+    /// <param name="since">Only entries added on or after this day; null reads the whole list.</param>
+    /// <param name="onPage">Gets the page's addresses and the position to resume from after it.</param>
+    public async Task ReadAsync(DateOnly? since, UsomPosition from, BlocklistImportStatus status,
+        Func<IReadOnlyList<string>, UsomPosition, Task> onPage, CancellationToken ct)
     {
         var o = options.Value.Usom;
-        var seen = new HashSet<long>();
-        var entries = new List<string>();
+        var types = o.TypesOrDefault;
         var clock = Stopwatch.StartNew();
-        foreach (var type in o.TypesOrDefault)
+        for (var t = from.TypeIndex; t < types.Count; t++)
         {
-            var first = await GetPageAsync(o, type, since, 1, ct);
-            var pageCount = first.PageCount;
+            var type = types[t];
+            var firstPage = t == from.TypeIndex ? Math.Max(1, from.Page) : 1;
+            var first = await GetPageAsync(o, type, since, firstPage, ct);
+            var pageCount = Math.Max(first.PageCount, 1);
             if (pageCount > o.MaxPages) throw new UsomFeedException($"USOM '{type}' list has {pageCount} pages, more than Aldanma:Usom:MaxPages ({o.MaxPages}).");
-            status.AddPages(Math.Max(pageCount, 1));
+            status.AddPages(pageCount, alreadyDone: firstPage - 1);
 
-            for (var page = 1; page <= Math.Max(pageCount, 1); page++)
+            for (var page = firstPage; page <= pageCount; page++)
             {
-                var p = page == 1 ? first : await GetPageAsync(o, type, since, page, ct);
+                var p = page == firstPage ? first : await GetPageAsync(o, type, since, page, ct);
+                var next = page < pageCount ? new UsomPosition(t, page + 1) : new UsomPosition(t + 1, 1);
                 // The list shrank during the download and the API repeated its last page: everything is read.
-                if (p.Index != page - 1) { status.PageDone(0); break; }
-                var added = 0;
-                foreach (var m in p.Models!)
-                    if (m.Url is { Length: > 0 } url && seen.Add(m.Id)) { entries.Add(url); added++; }
-                status.PageDone(added);
+                if (p.Index != page - 1)
+                {
+                    status.PageDone(0);
+                    await onPage([], new UsomPosition(t + 1, 1));
+                    break;
+                }
+                var urls = p.Models!.Select(m => m.Url).OfType<string>().Where(u => u.Length > 0).ToList();
+                await onPage(urls, next);
+                status.PageDone(urls.Count);
 
                 if (page % ProgressEveryPages == 0)
                 {
@@ -67,9 +83,9 @@ public sealed class UsomClient(HttpClient http, IOptions<AldanmaOptions> options
                 if (page < pageCount && o.PageDelayMilliseconds > 0) await Task.Delay(o.PageDelayMilliseconds, ct);
             }
         }
+        var done = status.Snapshot();
         log.LogInformation("USOM download finished: {Count} entries in {Pages} pages, {Elapsed:F0} s{Since}",
-            entries.Count, status.Snapshot().PagesDone, clock.Elapsed.TotalSeconds, since is { } d ? $", since {d:yyyy-MM-dd}" : "");
-        return entries;
+            done.ItemsSoFar, done.PagesDone, clock.Elapsed.TotalSeconds, since is { } d ? $", since {d:yyyy-MM-dd}" : "");
     }
 
     /// <summary>A failure worth another try: the service was busy or the network blinked, not a changed API.</summary>
