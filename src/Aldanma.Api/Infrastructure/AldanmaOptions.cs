@@ -109,20 +109,30 @@ public sealed class UsomOptions
     /// <summary>The paged address API. The old url-list.txt now redirects to an HTML page.</summary>
     public string Url { get; set; } = "https://siberguvenlik.gov.tr/api/address/index";
     /// <summary>Address types to import; the scorer uses domains and URLs only.</summary>
-    public string[] Types { get; set; } = ["domain", "url"];
+    /// <remarks>
+    /// Array settings are nullable on purpose: the configuration binder appends to an array that already has
+    /// items, so a default written here plus the same list in appsettings.json became four types and every list
+    /// was downloaded twice. Null means "use the default"; read the effective value through the *OrDefault members.
+    /// </remarks>
+    public string[]? Types { get; set; }
+    public IReadOnlyList<string> TypesOrDefault => Types is { Length: > 0 } t ? t : ["domain", "url"];
     /// <summary>Entries per request; the API allows at most 9999.</summary>
     public int PageSize { get; set; } = 9999;
     /// <summary>Safety stop: a list longer than this is treated as an error instead of being downloaded forever.</summary>
     public int MaxPages { get; set; } = 200;
     /// <summary>Pause between page requests, to stay polite to a public service.</summary>
     public int PageDelayMilliseconds { get; set; } = 500;
+    /// <summary>Waits before each new try of a page after a 5xx, 429 or network error; its length is the number of retries.</summary>
+    public int[]? RetryDelaysSeconds { get; set; }
+    public IReadOnlyList<int> RetryDelaysOrDefault => RetryDelaysSeconds is { Length: > 0 } r ? r : [2, 5, 15, 30];
     /// <summary>How often to ask for new entries; a refresh is usually one page.</summary>
     public int IntervalHours { get; set; } = 6;
     /// <summary>How often to read the whole list again, which also catches entries USOM removed.</summary>
     public int FullSyncDays { get; set; } = 7;
 
     public bool IsValid() =>
-        Uri.TryCreate(Url, UriKind.Absolute, out var u) && u.Scheme == Uri.UriSchemeHttps && Types.Length > 0
+        Uri.TryCreate(Url, UriKind.Absolute, out var u) && u.Scheme == Uri.UriSchemeHttps && TypesOrDefault.All(t => t.Length > 0)
         && PageSize is >= 1 and <= 9999 && MaxPages is >= 1 and <= 10_000 && PageDelayMilliseconds is >= 0 and <= 10_000
-        && IntervalHours is >= 1 and <= 168 && FullSyncDays is >= 1 and <= 90;
+        && IntervalHours is >= 1 and <= 168 && FullSyncDays is >= 1 and <= 90
+        && RetryDelaysOrDefault.Count <= 10 && RetryDelaysOrDefault.All(s => s is >= 0 and <= 300);
 }

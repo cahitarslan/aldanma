@@ -83,6 +83,51 @@ public class UsomClientTests
         Assert.Contains("instead of JSON", e.Message);
     }
 
+    /// <summary>One page that fails <paramref name="failures"/> times with <paramref name="status"/>, then answers.</summary>
+    private sealed class FlakyUsom(int failures, HttpStatusCode status) : HttpMessageHandler
+    {
+        public int Calls;
+
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken ct)
+        {
+            if (Interlocked.Increment(ref Calls) <= failures) return Task.FromResult(new HttpResponseMessage(status));
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent("""{"totalCount":1,"count":1,"models":[{"id":1,"url":"odgiris.com"}],"page":0,"pageCount":1}""", Encoding.UTF8, "application/json"),
+            });
+        }
+    }
+
+    private static UsomClient Flaky(FlakyUsom handler) => new(
+        new HttpClient(handler),
+        Options.Create(new AldanmaOptions { Usom = new UsomOptions { Types = ["domain"], PageDelayMilliseconds = 0, RetryDelaysSeconds = [0, 0, 0, 0] } }),
+        NullLogger<UsomClient>.Instance);
+
+    [Fact]
+    public async Task A_passing_server_error_is_retried_instead_of_failing_the_run()
+    {
+        var handler = new FlakyUsom(failures: 3, HttpStatusCode.InternalServerError);
+        Assert.Equal(["odgiris.com"], await Flaky(handler).FetchAsync(null, Status(), CancellationToken.None));
+        Assert.Equal(4, handler.Calls);
+    }
+
+    [Fact]
+    public async Task A_page_that_keeps_failing_fails_the_run_after_the_last_retry()
+    {
+        var handler = new FlakyUsom(failures: 100, HttpStatusCode.ServiceUnavailable);
+        var e = await Assert.ThrowsAsync<UsomFeedException>(() => Flaky(handler).FetchAsync(null, Status(), CancellationToken.None));
+        Assert.Contains("after 5 tries", e.Message);
+        Assert.Equal(5, handler.Calls);
+    }
+
+    [Fact]
+    public async Task A_client_error_is_not_retried()
+    {
+        var handler = new FlakyUsom(failures: 100, HttpStatusCode.NotFound);
+        await Assert.ThrowsAsync<UsomFeedException>(() => Flaky(handler).FetchAsync(null, Status(), CancellationToken.None));
+        Assert.Equal(1, handler.Calls);
+    }
+
     [Fact]
     public void The_moved_plain_text_list_is_no_longer_the_default() =>
         Assert.DoesNotContain("url-list.txt", new UsomOptions().Url);
@@ -149,5 +194,20 @@ public class BlocklistImportTests(ApiFactory factory) : IClassFixture<ApiFactory
         var import = meta.GetProperty("blocklistImport");
         Assert.Equal("running", import.GetProperty("state").GetString());
         Assert.Equal("incremental", import.GetProperty("mode").GetString());
+    }
+}
+
+public class UsomOptionsBindingTests(ApiFactory factory) : IClassFixture<ApiFactory>
+{
+    /// <summary>
+    /// The configuration binder appends to array defaults instead of replacing them, which once made every
+    /// list type download twice. Bound options must hold each type and retry delay exactly once.
+    /// </summary>
+    [DatabaseFact]
+    public void Array_settings_are_not_doubled_by_binding()
+    {
+        var usom = factory.Services.GetRequiredService<IOptions<AldanmaOptions>>().Value.Usom;
+        Assert.Equal(["domain", "url"], usom.TypesOrDefault);
+        Assert.Equal([2, 5, 15, 30], usom.RetryDelaysOrDefault);
     }
 }

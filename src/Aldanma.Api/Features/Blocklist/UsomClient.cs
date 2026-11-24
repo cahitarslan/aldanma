@@ -41,7 +41,7 @@ public sealed class UsomClient(HttpClient http, IOptions<AldanmaOptions> options
         var seen = new HashSet<long>();
         var entries = new List<string>();
         var clock = Stopwatch.StartNew();
-        foreach (var type in o.Types)
+        foreach (var type in o.TypesOrDefault)
         {
             var first = await GetPageAsync(o, type, since, 1, ct);
             var pageCount = first.PageCount;
@@ -72,13 +72,61 @@ public sealed class UsomClient(HttpClient http, IOptions<AldanmaOptions> options
         return entries;
     }
 
+    /// <summary>A failure worth another try: the service was busy or the network blinked, not a changed API.</summary>
+    private sealed class TransientException(string message, TimeSpan? retryAfter = null, Exception? inner = null) : Exception(message, inner)
+    {
+        public TimeSpan? RetryAfter { get; } = retryAfter;
+    }
+
+    /// <summary>Upper bound for a Retry-After the service asks for, so one answer cannot stall the run for long.</summary>
+    private static readonly TimeSpan MaxRetryAfter = TimeSpan.FromSeconds(60);
+
+    /// <summary>
+    /// One page, tried again after a server error (5xx), 429 or a network failure or timeout, waiting
+    /// <see cref="UsomOptions.RetryDelaysOrDefault"/> between tries (or the Retry-After the service sends).
+    /// A full download is about 100 pages, so one passing 500 must not throw the whole run away.
+    /// </summary>
     private async Task<Page> GetPageAsync(UsomOptions o, string type, DateOnly? since, int page, CancellationToken ct)
     {
         var url = $"{o.Url}?type={Uri.EscapeDataString(type)}&page={page}&per-page={o.PageSize}"
             + (since is { } d ? "&date_gte=" + d.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) : "");
-        using var response = await http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, ct);
+        for (var attempt = 0; ; attempt++)
+        {
+            try
+            {
+                return await TryGetPageAsync(url, type, page, ct);
+            }
+            catch (TransientException e) when (attempt < o.RetryDelaysOrDefault.Count)
+            {
+                var wait = e.RetryAfter is { } ra ? (ra > MaxRetryAfter ? MaxRetryAfter : ra) : TimeSpan.FromSeconds(o.RetryDelaysOrDefault[attempt]);
+                log.LogWarning("USOM '{Type}' page {Page}: {Problem}; try {Next} of {Max} in {Wait:F0} s",
+                    type, page, e.Message, attempt + 2, o.RetryDelaysOrDefault.Count + 1, wait.TotalSeconds);
+                await Task.Delay(wait, ct);
+            }
+            catch (TransientException e)
+            {
+                throw new UsomFeedException($"USOM '{type}' page {page} failed after {attempt + 1} tries: {e.Message}", e.InnerException);
+            }
+        }
+    }
+
+    private async Task<Page> TryGetPageAsync(string url, string type, int page, CancellationToken ct)
+    {
+        HttpResponseMessage response;
+        try
+        {
+            response = await http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, ct);
+        }
+        catch (Exception e) when (e is HttpRequestException || (e is TaskCanceledException && !ct.IsCancellationRequested))
+        {
+            throw new TransientException(e is TaskCanceledException ? "timed out" : "network error", inner: e);
+        }
+        using var _ = response;
+        var status = (int)response.StatusCode;
+        if (status >= 500 || status == 429)
+            throw new TransientException($"answered {status}", response.Headers.RetryAfter?.Delta);
         if (!response.IsSuccessStatusCode)
-            throw new UsomFeedException($"USOM answered {(int)response.StatusCode} for '{type}' page {page}.");
+            throw new UsomFeedException($"USOM answered {status} for '{type}' page {page}.");
         var mediaType = response.Content.Headers.ContentType?.MediaType;
         if (mediaType is null || !mediaType.Contains("json", StringComparison.OrdinalIgnoreCase))
             throw new UsomFeedException($"USOM answered '{mediaType ?? "no content type"}' instead of JSON for '{type}' page {page}; the API may have moved.");
