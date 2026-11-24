@@ -6,6 +6,7 @@ using Aldanma.Api.Features.Disputes;
 using Aldanma.Api.Features.Feedback;
 using Aldanma.Api.Features.Meta;
 using Aldanma.Api.Features.Moderation;
+using Aldanma.Api.Features.Notifications;
 using Aldanma.Api.Features.Reports;
 using Aldanma.Api.Features.Submissions;
 
@@ -17,6 +18,8 @@ builder.Services.AddOptions<AldanmaOptions>()
         "Aldanma:HashKey must be set (32+ characters) outside Development.")
     .Validate(o => o.Limits.IsValid(), "Aldanma:Limits has a value out of range (see LimitOptions).")
     .Validate(o => o.Rdap.IsValid(), "Aldanma:Rdap has a value out of range (see RdapOptions).")
+    .Validate(o => o.Notify.IsValid(), "Aldanma:Notify has a value out of range or an address without @ (see NotifyOptions).")
+    .Validate(o => o.Usom.IsValid(), "Aldanma:Usom has a value out of range (see UsomOptions).")
     .ValidateOnStart();
 
 // Connection-level limits. Requests are small JSON documents; anything bigger or slower is a mistake or an attack.
@@ -68,8 +71,16 @@ builder.Services.AddScoped<DisputeService>();
 builder.Services.AddScoped<FeedbackService>();
 builder.Services.AddScoped<SubmissionService>();
 builder.Services.AddScoped<BlocklistImporter>();
-builder.Services.AddHttpClient(nameof(UsomFeedService), c => c.Timeout = TimeSpan.FromMinutes(2));
+builder.Services.AddHttpClient<UsomClient>(c =>
+{
+    c.Timeout = TimeSpan.FromMinutes(2);
+    c.DefaultRequestHeaders.UserAgent.ParseAdd("Aldanma/0.5 (+https://github.com/cahitarslan/aldanma)");
+});
 builder.Services.AddHostedService<UsomFeedService>();
+builder.Services.AddSingleton<ModerationNotifier>();
+builder.Services.AddSingleton<IModerationNotifier>(sp => sp.GetRequiredService<ModerationNotifier>());
+builder.Services.AddHttpClient<IEmailSender, ResendEmailSender>(c => c.Timeout = TimeSpan.FromSeconds(10));
+builder.Services.AddHostedService<ModerationMailService>();
 
 builder.Services.ConfigureHttpJsonOptions(o => o.SerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase);
 builder.Services.AddCors(o => o.AddDefaultPolicy(p => p.WithOrigins(options.AllowedOrigins).WithMethods("GET", "POST").WithHeaders("Content-Type")));

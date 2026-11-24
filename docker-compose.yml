@@ -29,6 +29,9 @@ services:
       Aldanma__AllowedOrigins__0: ${ALDANMA_SITE_ORIGIN:-https://aldanma.cahitarslan.com}
       # The API is published on 127.0.0.1 only, so the reverse proxy is the only way in and its header can be trusted.
       Aldanma__ClientIpHeader: ${ALDANMA_CLIENT_IP_HEADER:-X-Forwarded-For}
+      Aldanma__Notify__ResendApiKey: ${ALDANMA_NOTIFY_RESEND_API_KEY:-}
+      Aldanma__Notify__From: ${ALDANMA_NOTIFY_FROM:-}
+      Aldanma__Notify__To: ${ALDANMA_NOTIFY_TO:-}
       OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
     ports:
       - "127.0.0.1:8080:8080"

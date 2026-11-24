@@ -18,6 +18,7 @@ public sealed class AldanmaMetrics
     private readonly Counter<long> _feedback;
     private readonly Counter<long> _submissions;
     private readonly Counter<long> _rdapSkipped;
+    private readonly Counter<long> _notifications;
 
     public AldanmaMetrics(IMeterFactory meterFactory)
     {
@@ -29,6 +30,7 @@ public sealed class AldanmaMetrics
         _blocklistImports = meter.CreateCounter<long>("aldanma.blocklist.imports", description: "Block list import runs, by source and outcome.");
         _feedback = meter.CreateCounter<long>("aldanma.feedback", description: "Was-this-right answers, by level shown and verdict.");
         _submissions = meter.CreateCounter<long>("aldanma.submissions", description: "Messages sent for review, by claim.");
+        _notifications = meter.CreateCounter<long>("aldanma.notifications", description: "Moderation e-mails, by outcome.");
         _rdapSkipped = meter.CreateCounter<long>("aldanma.rdap.skipped", description: "Domain-age fetches skipped, by reason (per-request cap or server busy).");
     }
 
@@ -39,6 +41,8 @@ public sealed class AldanmaMetrics
     public void FeedbackReceived(string level, bool correct) => _feedback.Add(1, new("level", level), new("correct", correct));
     public void RdapSkipped(string reason) => _rdapSkipped.Add(1, new KeyValuePair<string, object?>("reason", reason));
     public void SubmissionReceived(string claim) => _submissions.Add(1, new KeyValuePair<string, object?>("claim", claim));
+    public void NotificationSent(bool succeeded) =>
+        _notifications.Add(1, new KeyValuePair<string, object?>("outcome", succeeded ? "success" : "failure"));
     public void BlocklistImport(string source, bool succeeded) =>
         _blocklistImports.Add(1, new("source", source), new("outcome", succeeded ? "success" : "failure"));
 }

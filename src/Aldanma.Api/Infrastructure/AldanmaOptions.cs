@@ -31,6 +31,7 @@ public sealed class AldanmaOptions
 
     public RdapOptions Rdap { get; set; } = new();
     public UsomOptions Usom { get; set; } = new();
+    public NotifyOptions Notify { get; set; } = new();
     public LimitOptions Limits { get; set; } = new();
 }
 
@@ -79,9 +80,45 @@ public sealed class RdapOptions
     public bool IsValid() => TimeoutSeconds is >= 1 and <= 30 && MaxFetchesPerRequest is >= 0 and <= 10 && MaxConcurrentFetches is >= 1 and <= 100;
 }
 
+/// <summary>
+/// E-mails to the site owner when a report, dispute or message for review arrives. Off unless the Resend key,
+/// sender and recipient are all set. A mail holds counts only, never an identifier or message text.
+/// </summary>
+public sealed class NotifyOptions
+{
+    /// <summary>Resend API key with sending access only. Secret: set it as an environment variable.</summary>
+    public string ResendApiKey { get; set; } = "";
+    /// <summary>Sender on a domain verified in Resend, e.g. "Aldanma &lt;aldanma@mail.example.com&gt;".</summary>
+    public string From { get; set; } = "";
+    public string To { get; set; } = "";
+    /// <summary>Wait after the first event so a burst becomes one mail.</summary>
+    public int BatchDelaySeconds { get; set; } = 60;
+    /// <summary>At most one mail per this many seconds, whatever arrives.</summary>
+    public int MinIntervalSeconds { get; set; } = 1800;
+
+    public bool IsEnabled => ResendApiKey.Length > 0 && From.Length > 0 && To.Length > 0;
+
+    public bool IsValid() =>
+        BatchDelaySeconds is >= 0 and <= 3600 && MinIntervalSeconds is >= 0 and <= 86_400
+        && (!IsEnabled || (To.Contains('@') && From.Contains('@')));
+}
+
 public sealed class UsomOptions
 {
     public bool Enabled { get; set; } = true;
-    public string Url { get; set; } = "https://www.usom.gov.tr/url-list.txt";
+    /// <summary>The paged address API. The old url-list.txt now redirects to an HTML page.</summary>
+    public string Url { get; set; } = "https://siberguvenlik.gov.tr/api/address/index";
+    /// <summary>Address types to import; the scorer uses domains and URLs only.</summary>
+    public string[] Types { get; set; } = ["domain", "url"];
+    /// <summary>Entries per request; the API allows at most 9999.</summary>
+    public int PageSize { get; set; } = 9999;
+    /// <summary>Safety stop: a list longer than this is treated as an error instead of being downloaded forever.</summary>
+    public int MaxPages { get; set; } = 200;
+    /// <summary>Pause between page requests, to stay polite to a public service.</summary>
+    public int PageDelayMilliseconds { get; set; } = 500;
     public int IntervalHours { get; set; } = 12;
+
+    public bool IsValid() =>
+        Uri.TryCreate(Url, UriKind.Absolute, out var u) && u.Scheme == Uri.UriSchemeHttps && Types.Length > 0
+        && PageSize is >= 1 and <= 9999 && MaxPages is >= 1 and <= 10_000 && PageDelayMilliseconds is >= 0 and <= 10_000;
 }

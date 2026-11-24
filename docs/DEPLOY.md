@@ -13,6 +13,8 @@ Two parts: a static site (`dist/`) and a .NET API with PostgreSQL. Pick one of t
 | Turnstile secret | `Aldanma__TurnstileSecret` | Cloudflare Turnstile (free). Empty = no human check; do not launch without it. |
 | Site origin | `Aldanma__AllowedOrigins__0` | e.g. `https://aldanma.cahitarslan.com` (CORS) |
 | Client IP header | `Aldanma__ClientIpHeader` | Header your proxy sets with the real client IP: `CF-Connecting-IP` behind Cloudflare, `X-Forwarded-For` behind Caddy or Cloud Run. Empty = socket address. Never set it when the API is reachable without that proxy, or rate limits can be dodged. |
+| Moderation e-mails | `Aldanma__Notify__ResendApiKey`, `Aldanma__Notify__From`, `Aldanma__Notify__To` | Optional. A short mail when a report, dispute or message for review arrives: counts only, never a number, IBAN, address or message text. Needs a [Resend](https://resend.com) API key with sending access only, and a sender on a domain verified there (e.g. `Aldanma <aldanma@mail.example.com>`). Any of the three empty = off. Bursts are batched (`Aldanma__Notify__BatchDelaySeconds`, default 60) and at most one mail goes out per `Aldanma__Notify__MinIntervalSeconds` (default 1800), so a flood cannot fill the inbox or use up the mail quota. |
+| USOM block list | `Aldanma__Usom__*` | Optional; defaults in `appsettings.json`. Reads the paged API at `https://siberguvenlik.gov.tr/api/address/index` (the old `usom.gov.tr/url-list.txt` now redirects to an HTML page). A failed or empty download is logged as an error and keeps the previous list. |
 | Telemetry | `OTEL_EXPORTER_OTLP_ENDPOINT` | Optional. Any OpenTelemetry collector (Grafana Cloud, Honeycomb, a local collector). Empty = no export. |
 
 The API refuses to start outside Development without a hash key of 32+ characters.
@@ -111,7 +113,9 @@ Watch `aldanma.rate_limited` and `aldanma.rdap.skipped` in the metrics: a sustai
 - `GET /health` returns `Healthy` (liveness, no database); `GET /health/ready` also checks the database.
 - Logs are JSON lines on stdout. Traces and metrics (including `aldanma.lookups`, `aldanma.reports`,
   `aldanma.rate_limited`, `aldanma.blocklist.imports`) go to `OTEL_EXPORTER_OTLP_ENDPOINT` when it is set.
-- `GET /api/meta` shows `blocklistCount` > 0 about 20 seconds after the first start (USOM import).
+- `GET /api/meta` shows `blocklistCount` > 0 a few minutes after the first start (the USOM import reads about 50 pages).
+  If it stays at 0, look for "USOM import failed" in the logs.
+- With moderation e-mails on, send one test report and expect a mail within a couple of minutes.
 - Check that a lookup from the site works and that reports need the Turnstile check.
 
 ## Updating the live site

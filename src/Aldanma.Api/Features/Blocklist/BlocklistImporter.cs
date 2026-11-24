@@ -7,24 +7,33 @@ namespace Aldanma.Api.Features.Blocklist;
 public sealed record ImportResult(int Total, int Added, int Removed, int Skipped);
 
 /// <summary>
-/// Imports a plain-text block list (one domain, URL or IP per line) as public identifiers.
+/// Imports a block list (domains, URLs or IPs; only domains and URLs are kept) as public identifiers.
 /// Lists can hold hundreds of thousands of lines, so rows go through PostgreSQL COPY into a temporary
 /// table and are merged with set-based SQL. Entries missing from a new download are marked removed, not deleted.
 /// </summary>
 public sealed class BlocklistImporter(AppDbContext db, InputParser parser, TimeProvider time, ILogger<BlocklistImporter> log)
 {
-    public async Task<ImportResult> ImportAsync(string source, string content, CancellationToken ct)
+    /// <summary>Imports a plain-text list: one entry per line, blank lines and # comments ignored.</summary>
+    public Task<ImportResult> ImportAsync(string source, string content, CancellationToken ct) =>
+        ImportAsync(source, content.Split('\n'), ct);
+
+    public async Task<ImportResult> ImportAsync(string source, IEnumerable<string> entries, CancellationToken ct)
     {
         var now = time.GetUtcNow();
         var wanted = new HashSet<(string Kind, string Value)>();
         var skipped = 0;
-        foreach (var rawLine in content.Split('\n'))
+        foreach (var raw in entries)
         {
-            var line = rawLine.Trim();
+            var line = raw.Trim();
             if (line.Length == 0 || line.StartsWith('#')) continue;
             if (parser.ParseSingle(line) is not { Kind: IdentifierKind.Domain or IdentifierKind.Url } id) { skipped++; continue; }
             wanted.Add((id.Kind, id.Value));
         }
+
+        // Nothing usable means the source changed format (an HTML page instead of a list): fail loudly instead of
+        // reporting a successful import of zero entries, which is how the moved USOM list went unnoticed.
+        if (wanted.Count == 0)
+            throw new InvalidOperationException($"Block list '{source}' has no usable entries ({skipped} lines skipped); refusing to import.");
 
         // A suspiciously small download (an outage page, an empty file) must not wipe the list.
         var activeCount = await db.BlocklistEntries.CountAsync(b => b.Source == source && b.RemovedAt == null, ct);
