@@ -258,13 +258,21 @@ export function createEngine(rules) {
     return null;
   }
 
+  // A token found as written wins over one that only appears once the hyphens are removed, so
+  // "sahibinden-paramguvende" names sahibinden, not the bank whose token "enpara" spans the hyphen. Within each
+  // pass the first match in rule order wins, as before. Common words (domains.tokenStopWords, e.g. "basvuruyap"
+  // for "apply") are removed from the host first so their letters cannot form a token.
   function findImpersonation(host) {
-    const parts = host.split('.').join('-').split('-');
-    const noHyphen = host.split('-').join('');
+    let h = host;
+    for (const w of D.tokenStopWords) h = h.split(w).join('');
+    const parts = h.split('.').join('-').split('-');
+    const noHyphen = h.split('-').join('');
+    let joined = null;
     for (const k of institutions) {
       for (const t of k.tokens) {
         if (t.length >= 5) {
-          if (host.indexOf(t) >= 0 || noHyphen.indexOf(t) >= 0) return { institution: k, token: t };
+          if (h.indexOf(t) >= 0) return { institution: k, token: t };
+          if (!joined && noHyphen.indexOf(t) >= 0) joined = { institution: k, token: t };
         } else {
           for (const p of parts) {
             if (p === t || p.indexOf(t) === 0 || (t.length === 4 && p.length > 4 && p.substring(p.length - 4) === t)) {
@@ -274,7 +282,7 @@ export function createEngine(rules) {
         }
       }
     }
-    return null;
+    return joined;
   }
 
   function findLookalike(registered) {

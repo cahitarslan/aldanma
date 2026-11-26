@@ -1066,7 +1066,7 @@
      "type": "link",
      "name": "Kurum adını kullanan ama resmî olmayan adres",
      "weight": 35,
-     "reason": "Adres \"turkiyegov\" içeriyor ama e-Devlet resmî adresi değil. Sahte siteler güven vermek için kurum adını adrese ekler."
+     "reason": "Adres \"turkiye-gov\" içeriyor ama e-Devlet resmî adresi değil. Sahte siteler güven vermek için kurum adını adrese ekler."
     },
     {
      "id": "institution-link-mismatch",
@@ -1334,7 +1334,7 @@
      "type": "link",
      "name": "Kurum adını kullanan ama resmî olmayan adres",
      "weight": 35,
-     "reason": "Adres \"edevlet\" içeriyor ama e-Devlet resmî adresi değil. Sahte siteler güven vermek için kurum adını adrese ekler."
+     "reason": "Adres \"e-devlet\" içeriyor ama e-Devlet resmî adresi değil. Sahte siteler güven vermek için kurum adını adrese ekler."
     },
     {
      "id": "suspicious-tld",
@@ -5433,7 +5433,7 @@
      "type": "link",
      "name": "Kurum adını kullanan ama resmî olmayan adres",
      "weight": 35,
-     "reason": "Adres \"enabiz\" içeriyor ama Sağlık Bakanlığı (e-Nabız / MHRS) resmî adresi değil. Sahte siteler güven vermek için kurum adını adrese ekler."
+     "reason": "Adres \"e-nabiz\" içeriyor ama Sağlık Bakanlığı (e-Nabız / MHRS) resmî adresi değil. Sahte siteler güven vermek için kurum adını adrese ekler."
     },
     {
      "id": "suspicious-tld",
@@ -5895,7 +5895,7 @@
      "type": "link",
      "name": "Kurum adını kullanan ama resmî olmayan adres",
      "weight": 35,
-     "reason": "Adres \"turkiyegov\" içeriyor ama e-Devlet resmî adresi değil. Sahte siteler güven vermek için kurum adını adrese ekler."
+     "reason": "Adres \"turkiye-gov\" içeriyor ama e-Devlet resmî adresi değil. Sahte siteler güven vermek için kurum adını adrese ekler."
     },
     {
      "id": "institution-link-mismatch",
@@ -9034,7 +9034,7 @@
      "type": "link",
      "name": "Kurum adını kullanan ama resmî olmayan adres",
      "weight": 35,
-     "reason": "Adres \"appleid\" içeriyor ama Dijital platform resmî adresi değil. Sahte siteler güven vermek için kurum adını adrese ekler."
+     "reason": "Adres \"apple-id\" içeriyor ama Dijital platform resmî adresi değil. Sahte siteler güven vermek için kurum adını adrese ekler."
     },
     {
      "id": "suspicious-tld",
@@ -18032,7 +18032,7 @@
      "type": "link",
      "name": "Kurum adını kullanan ama resmî olmayan adres",
      "weight": 35,
-     "reason": "Adres \"edevlet\" içeriyor ama e-Devlet resmî adresi değil. Sahte siteler güven vermek için kurum adını adrese ekler."
+     "reason": "Adres \"e-devlet\" içeriyor ama e-Devlet resmî adresi değil. Sahte siteler güven vermek için kurum adını adrese ekler."
     },
     {
      "id": "complex-address",
