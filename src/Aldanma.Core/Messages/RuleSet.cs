@@ -44,6 +44,7 @@ public sealed class RuleSet
     internal string[] KnownDomains { get; private init; } = [];
     internal string[] Shorteners { get; private init; } = [];
     internal string[] ChannelDomains { get; private init; } = [];
+    internal string[] TokenStopWords { get; private init; } = [];
     internal HashSet<string> SuspiciousTlds { get; private init; } = [];
     internal HashSet<string> BareTlds { get; private init; } = [];
     /// <summary>Link signals in file order (the order decides the output order).</summary>
@@ -112,6 +113,7 @@ public sealed class RuleSet
             KnownDomains = Strings(domains, "knownDomains"),
             Shorteners = Strings(domains, "shorteners"),
             ChannelDomains = Strings(domains, "channelDomains"),
+            TokenStopWords = Strings(domains, "tokenStopWords"),
             SuspiciousTlds = new HashSet<string>(suspicious, StringComparer.Ordinal),
             BareTlds = bare,
             LinkSignals = [.. domains.GetProperty("signals").EnumerateObject().Select(p => new KeyValuePair<string, Definition>(p.Name, ReadDefinition(p.Value)))],

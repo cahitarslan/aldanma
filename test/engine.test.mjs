@@ -58,6 +58,17 @@ test('link signals', () => {
   assert.equal(engine.analyze('Fiyat 12.50 TL, A.Ş. ve T.C. bilgi@firma.com').links.length, 0);
 });
 
+test('impersonation names the institution written in the address', () => {
+  const reason = (link) => (engine.analyze('Detay: ' + link).signals.find((s) => s.id === 'impersonating-domain') || {}).reason || '';
+  // "enpara" only appears once the hyphen is removed; the sahibinden token is written as is.
+  assert.match(reason('sahibinden-paramguvende.tr-onay.online'), /"sahibinden"/);
+  // "basvuruyap" (apply) is a common word, not the UYAP court system.
+  assert.equal(reason('konutbasvuruyap-toki.konut-sitesi.app'), '');
+  assert.match(reason('cezauyap.org'), /"uyap"/);
+  // A short token inside a longer part is not a match ("ogs" in "blogspot").
+  assert.equal(reason('bekleyiniz8899.blogspot.com'), '');
+});
+
 test('the engine never calls anything "safe"; every result has a note and basic steps', () => {
   for (const m of corpus) {
     const r = engine.analyze(m.text, m.sender);

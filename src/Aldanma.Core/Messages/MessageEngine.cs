@@ -290,17 +290,27 @@ public sealed class MessageEngine
         return null;
     }
 
+    /// <summary>
+    /// A token found as written wins over one that only appears once the hyphens are removed, so
+    /// "sahibinden-paramguvende" names sahibinden, not the bank whose token "enpara" spans the hyphen. Within each
+    /// pass the first match in rule order wins. Common words (domains.tokenStopWords, e.g. "basvuruyap" for "apply")
+    /// are removed from the host first so their letters cannot form a token.
+    /// </summary>
     private (RuleSet.Institution Institution, string Token)? FindImpersonation(string host)
     {
-        var parts = host.Replace('.', '-').Split('-');
-        var noHyphen = host.Replace("-", "", StringComparison.Ordinal);
+        var h = host;
+        foreach (var w in _r.TokenStopWords) h = h.Replace(w, "", StringComparison.Ordinal);
+        var parts = h.Replace('.', '-').Split('-');
+        var noHyphen = h.Replace("-", "", StringComparison.Ordinal);
+        (RuleSet.Institution Institution, string Token)? joined = null;
         foreach (var institution in _r.Institutions)
         {
             foreach (var t in institution.Tokens)
             {
                 if (t.Length >= 5)
                 {
-                    if (host.Contains(t, StringComparison.Ordinal) || noHyphen.Contains(t, StringComparison.Ordinal)) return (institution, t);
+                    if (h.Contains(t, StringComparison.Ordinal)) return (institution, t);
+                    if (joined is null && noHyphen.Contains(t, StringComparison.Ordinal)) joined = (institution, t);
                 }
                 else
                 {
@@ -312,7 +322,7 @@ public sealed class MessageEngine
                 }
             }
         }
-        return null;
+        return joined;
     }
 
     private (string Domain, RuleSet.Institution Institution)? FindLookalike(string registered)

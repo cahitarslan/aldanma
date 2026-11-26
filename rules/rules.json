@@ -275,6 +275,7 @@
       "tokens": [
         "ziraat",
         "isbank",
+        "cepteteb",
         "isbankasi",
         "garanti",
         "akbank",
@@ -1586,6 +1587,9 @@
     "channelDomains": [
       "t.me",
       "wa.me"
+    ],
+    "tokenStopWords": [
+      "basvuruyap"
     ],
     "suspiciousTlds": [
       "xyz",

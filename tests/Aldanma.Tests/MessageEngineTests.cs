@@ -50,6 +50,18 @@ public class MessageEngineTests
         Assert.Contains(signal, Engine.Analyze("Detay: " + link).Links.Single().Signals);
 
     [Theory]
+    [InlineData("sahibinden-paramguvende.tr-onay.online", "\"sahibinden\"")] // "enpara" only spans the hyphen
+    [InlineData("cezauyap.org", "\"uyap\"")]
+    public void Impersonation_names_the_token_written_in_the_address(string link, string token) =>
+        Assert.Contains(token, Engine.Analyze("Detay: " + link).Signals.Single(s => s.Id == "impersonating-domain").Reason);
+
+    [Theory]
+    [InlineData("konutbasvuruyap-toki.konut-sitesi.app")] // "basvuruyap" (apply) is a common word, not UYAP
+    [InlineData("bekleyiniz8899.blogspot.com")] // "ogs" inside "blogspot"
+    public void Common_words_do_not_count_as_institution_names(string link) =>
+        Assert.DoesNotContain(Engine.Analyze("Detay: " + link).Signals, s => s.Id == "impersonating-domain");
+
+    [Theory]
     [InlineData("Fiyat 12.50 TL, A.Ş. ve T.C. kısaltmaları link değildir.")]
     [InlineData("Bana bilgi@firma.com adresinden yaz.")]
     public void Non_links_are_not_treated_as_links(string text) => Assert.Empty(Engine.Analyze(text).Links);
